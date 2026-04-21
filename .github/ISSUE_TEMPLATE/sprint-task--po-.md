@@ -1,7 +1,7 @@
 ---
 name: Sprint Task (PO)
 about: Oficial template for refining Sprint tasks (UI, Logic or Mocks)
-title: "[TASK] - (name)"
+title: T(n) - TITULO
 labels: ''
 assignees: ''
 
