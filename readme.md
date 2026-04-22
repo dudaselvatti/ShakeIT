@@ -47,12 +47,19 @@ Escaneie o QR Code no terminal com a câmera do seu celular (iOS) ou pelo app Ex
 
 ## Qualidade e Testes
 
+Testes
 Implementamos uma cultura de testes desde a base do projeto para garantir que as lógicas de hardware e sorteio sejam confiáveis. Para rodar a suíte de testes, utilize:
 
 ```bash
 npm run test
 ```
 
+Linting (Padronização)
+Para verificar erros de sintaxe e manter as boas práticas do Expo:
+
+```bash
+npm run lint
+```
 ---
 
 ## Estrutura de Pastas (Arquitetura)
