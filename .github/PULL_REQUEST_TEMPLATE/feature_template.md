@@ -1,12 +1,3 @@
----
-name: Pull Request (DEV)
-about: 'Oficial template for pull requests '
-title: Pull Request - T(n)
-labels: awaiting review
-assignees: ''
-
----
-
 ### O que foi implementado?
 *Descreva brevemente as mudanças técnicas que você fez:*
 - 
