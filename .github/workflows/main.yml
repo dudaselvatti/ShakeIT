@@ -1,0 +1,33 @@
+name: Agente de Verificação
+
+on:
+  push:
+    branches: 
+      - "main"
+      - "Sprint*"
+  pull_request:
+    branches: 
+      - "main"
+      - "Sprint*"
+
+jobs:
+  inspecao:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Puxar o código mais recente do repositório
+      uses: actions/checkout@v4
+
+    - name: Preparar o ambiente Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Instalar as dependências do projeto
+      run: npm install
+
+    - name: Verificar erros de TypeScript
+      run: npx tsc --noEmit
+
+    - name: Passar o pente fino no código (ESLint)
+      run: npm run lint
