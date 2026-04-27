@@ -1,34 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { BotaoTeste } from './src/components/BotaoTeste';
+
+import React from "react";
+import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import { HomeScreen } from "./src/screens/Home";
+import { CreatePartyScreen } from "./src/screens/CreateParty";
+
+//creio que nao fica no app.tsx mas nao sabemos 
 import { usuariosMock } from './src/mocks/usuariosMock';
 import { perfisMock } from './src/mocks/perfisMock';
+
+export type RootStackParamList = {
+  Home: undefined;
+  CreateParty: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   console.log(usuariosMock);
   console.log(perfisMock);
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>ShakeIT</Text>
-      <Text>Estrutura de pastas validada!</Text>
-      
-      <BotaoTeste />
-      
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <StatusBar style="dark" />
+
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: false,
+          animation: "slide_from_right",
+        }}
+      >
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="CreateParty" component={CreatePartyScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  }
-});

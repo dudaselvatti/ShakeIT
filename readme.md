@@ -4,7 +4,7 @@ O **ShakeIT** é um aplicativo mobile desenvolvido em React Native (Expo) que mo
 
 ## Interface do Aplicativo
 
-> *(Adicione screenshots do aplicativo conforme o desenvolvimento das telas avançar nesta seção)*
+> _(Adicione screenshots do aplicativo conforme o desenvolvimento das telas avançar nesta seção)_
 
 ![Preview do Projeto](./assets/adaptive-icon.png)
 
@@ -12,10 +12,10 @@ O **ShakeIT** é um aplicativo mobile desenvolvido em React Native (Expo) que mo
 
 ## Tecnologias e Ferramentas
 
-* **Framework:** React Native com Expo (Managed Workflow)
-* **Linguagem:** TypeScript para tipagem estática e segurança
-* **Testes:** Jest e React Native Testing Library
-* **Hardware:** Expo Sensors (Acelerômetro) e Expo Barcode Scanner
+- **Framework:** React Native com Expo (Managed Workflow)
+- **Linguagem:** TypeScript para tipagem estática e segurança
+- **Testes:** Jest e React Native Testing Library
+- **Hardware:** Expo Sensors (Acelerômetro) e Expo Barcode Scanner
 
 ---
 
@@ -51,7 +51,7 @@ Testes
 Implementamos uma cultura de testes desde a base do projeto para garantir que as lógicas de hardware e sorteio sejam confiáveis. Para rodar a suíte de testes, utilize:
 
 ```bash
-npm run test
+npm test
 ```
 
 Linting (Padronização)
@@ -60,6 +60,7 @@ Para verificar erros de sintaxe e manter as boas práticas do Expo:
 ```bash
 npm run lint
 ```
+
 ---
 
 ## Estrutura de Pastas (Arquitetura)
@@ -91,7 +92,7 @@ Para diretrizes de contribuição, atas de reunião, detalhes da lógica do acel
 
 ## Equipe de Desenvolvimento
 
-* Maria Eduarda Alves Selvatti - Scrum Master
-* Ana Julia Pires Oliveira - Product Owner
-* Nathalie Gonçalves Xavier - Developer
-* Rodrigo Quadrante Freitas - Developer
+- Maria Eduarda Alves Selvatti - Scrum Master
+- Ana Julia Pires Oliveira - Product Owner
+- Nathalie Gonçalves Xavier - Developer
+- Rodrigo Quadrante Freitas - Developer
