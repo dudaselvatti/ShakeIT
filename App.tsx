@@ -1,3 +1,4 @@
+
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
@@ -5,6 +6,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { HomeScreen } from "./src/screens/Home";
 import { CreatePartyScreen } from "./src/screens/CreateParty";
+
+//creio que nao fica no app.tsx mas nao sabemos 
+import { usuariosMock } from './src/mocks/usuariosMock';
+import { perfisMock } from './src/mocks/perfisMock';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -14,6 +19,8 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  console.log(usuariosMock);
+  console.log(perfisMock);
   return (
     <NavigationContainer>
       <StatusBar style="dark" />
