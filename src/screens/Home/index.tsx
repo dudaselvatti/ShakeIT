@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Card } from "../../components/Card";
 import { IconButton } from "../../components/IconButton";
@@ -61,6 +61,17 @@ export const HomeScreen = ({ navigation }: any) => {
           </Card>
         )}
       />
+
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}> {/*Mero "botão" de teste, para validar a T06. Pode ser removido durante a implementação de outra feature*/}
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('PartyAdmin', { 
+          partyName: "Natal 2026", 
+          partyCode: "#NATAL2026" 
+          })}
+        >
+        <Text>Ir para tela de administração da Party</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.fabContainer}>
         <IconButton
