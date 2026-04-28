@@ -17,13 +17,12 @@ export const CreatePartyScreen = ({ navigation }: any) => {
   const [valorMinimo, setValorMinimo] = useState("");
   const [valorMaximo, setValorMaximo] = useState("");
 
+
   const handleBackPress = () => setModalVisible(true);
   const confirmExit = () => {
     setModalVisible(false);
     navigation.goBack();
   };
-
-  const partyCode = gerarPartyCode();
 
   return (
     <KeyboardAvoidingView
@@ -75,10 +74,12 @@ export const CreatePartyScreen = ({ navigation }: any) => {
       <View style={styles.footer}>
         <Button
           title="Criar Party"
-          onPress={() => navigation.navigate('PartyAdmin', {
+          onPress={() => {
+            const partyCode = gerarPartyCode();
+            navigation.navigate('PartyAdmin', {
             partyName: "Natal 2026", 
             partyCode: partyCode
-          })}
+          })}}
           disabled={!nomeParty}
         />
       </View>

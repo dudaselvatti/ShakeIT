@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1777402775288" clover="3.2.0">
-  <project timestamp="1777402775289" name="All files">
+<coverage generated="1777405024396" clover="3.2.0">
+  <project timestamp="1777405024396" name="All files">
     <metrics statements="94" coveredstatements="85" conditionals="60" coveredconditionals="47" methods="35" coveredmethods="31" elements="189" coveredelements="163" complexity="0" loc="94" ncloc="94" packages="19" files="25" classes="25"/>
     <package name="@types">
       <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
@@ -163,15 +163,15 @@
         <line num="16" count="8" type="stmt"/>
         <line num="17" count="8" type="stmt"/>
         <line num="18" count="8" type="stmt"/>
-        <line num="20" count="8" type="stmt"/>
         <line num="21" count="8" type="stmt"/>
-        <line num="22" count="1" type="stmt"/>
+        <line num="22" count="8" type="stmt"/>
         <line num="23" count="1" type="stmt"/>
-        <line num="26" count="8" type="stmt"/>
-        <line num="28" count="8" type="stmt"/>
-        <line num="51" count="0" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="27" count="8" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
         <line num="78" count="1" type="stmt"/>
-        <line num="92" count="1" type="stmt"/>
+        <line num="79" count="1" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
       </file>
     </package>
     <package name="screens.Home">
@@ -220,12 +220,12 @@
       <file name="PartyCode.ts" path="C:\Users\rodri\ShakeIT\src\utils\PartyCode.ts">
         <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="1" count="2" type="stmt"/>
-        <line num="2" count="20" type="stmt"/>
-        <line num="3" count="20" type="stmt"/>
-        <line num="4" count="20" type="stmt"/>
-        <line num="5" count="120" type="stmt"/>
-        <line num="6" count="120" type="stmt"/>
-        <line num="8" count="20" type="stmt"/>
+        <line num="2" count="13" type="stmt"/>
+        <line num="3" count="13" type="stmt"/>
+        <line num="4" count="13" type="stmt"/>
+        <line num="5" count="78" type="stmt"/>
+        <line num="6" count="78" type="stmt"/>
+        <line num="8" count="13" type="stmt"/>
       </file>
     </package>
   </project>
