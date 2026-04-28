@@ -61,7 +61,7 @@ describe('PartyAdminScreen', () => {
 
         expect(
             screen.getByText(
-                `Perfis confirmados: (${confirmadosCount}/${participantesMock.length})`
+                `Perfis confirmados (${confirmadosCount}/${participantesMock.length})`
             )
         ).toBeTruthy();
     });

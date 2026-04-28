@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1777375065036" clover="3.2.0">
-  <project timestamp="1777375065037" name="All files">
-    <metrics statements="86" coveredstatements="77" conditionals="60" coveredconditionals="47" methods="34" coveredmethods="30" elements="180" coveredelements="154" complexity="0" loc="86" ncloc="86" packages="18" files="24" classes="24"/>
+<coverage generated="1777402775288" clover="3.2.0">
+  <project timestamp="1777402775289" name="All files">
+    <metrics statements="94" coveredstatements="85" conditionals="60" coveredconditionals="47" methods="35" coveredmethods="31" elements="189" coveredelements="163" complexity="0" loc="94" ncloc="94" packages="19" files="25" classes="25"/>
     <package name="@types">
       <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="Participante.ts" path="C:\Users\rodri\ShakeIT\src\@types\Participante.ts">
@@ -109,8 +109,8 @@
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
       <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\PartyQRCode\index.tsx">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-        <line num="9" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
       </file>
     </package>
     <package name="components.PopupModal">
@@ -154,23 +154,24 @@
       </file>
     </package>
     <package name="screens.CreateParty">
-      <metrics statements="14" coveredstatements="13" conditionals="2" coveredconditionals="1" methods="6" coveredmethods="5"/>
+      <metrics statements="15" coveredstatements="14" conditionals="2" coveredconditionals="1" methods="6" coveredmethods="5"/>
       <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\screens\CreateParty\index.tsx">
-        <metrics statements="14" coveredstatements="13" conditionals="2" coveredconditionals="1" methods="6" coveredmethods="5"/>
-        <line num="11" count="1" type="stmt"/>
-        <line num="12" count="8" type="stmt"/>
-        <line num="14" count="8" type="stmt"/>
+        <metrics statements="15" coveredstatements="14" conditionals="2" coveredconditionals="1" methods="6" coveredmethods="5"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="13" count="8" type="stmt"/>
         <line num="15" count="8" type="stmt"/>
         <line num="16" count="8" type="stmt"/>
         <line num="17" count="8" type="stmt"/>
-        <line num="19" count="8" type="stmt"/>
+        <line num="18" count="8" type="stmt"/>
         <line num="20" count="8" type="stmt"/>
-        <line num="21" count="1" type="stmt"/>
+        <line num="21" count="8" type="stmt"/>
         <line num="22" count="1" type="stmt"/>
-        <line num="25" count="8" type="stmt"/>
-        <line num="48" count="0" type="stmt"/>
-        <line num="75" count="1" type="stmt"/>
-        <line num="89" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="26" count="8" type="stmt"/>
+        <line num="28" count="8" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="92" count="1" type="stmt"/>
       </file>
     </package>
     <package name="screens.Home">
@@ -212,6 +213,19 @@
       <file name="theme.ts" path="C:\Users\rodri\ShakeIT\src\styles\theme.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="15" type="stmt"/>
+      </file>
+    </package>
+    <package name="utils">
+      <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="PartyCode.ts" path="C:\Users\rodri\ShakeIT\src\utils\PartyCode.ts">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="2" count="20" type="stmt"/>
+        <line num="3" count="20" type="stmt"/>
+        <line num="4" count="20" type="stmt"/>
+        <line num="5" count="120" type="stmt"/>
+        <line num="6" count="120" type="stmt"/>
+        <line num="8" count="20" type="stmt"/>
       </file>
     </package>
   </project>

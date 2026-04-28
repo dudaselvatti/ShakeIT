@@ -6,6 +6,7 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { DateInput } from "../../components/DateInput";
 import { CurrencyInput } from "../../components/CurrencyInput";
+import { gerarPartyCode } from "../../utils/PartyCode";
 import { styles } from "./styles";
 
 export const CreatePartyScreen = ({ navigation }: any) => {
@@ -21,6 +22,8 @@ export const CreatePartyScreen = ({ navigation }: any) => {
     setModalVisible(false);
     navigation.goBack();
   };
+
+  const partyCode = gerarPartyCode();
 
   return (
     <KeyboardAvoidingView
@@ -74,7 +77,7 @@ export const CreatePartyScreen = ({ navigation }: any) => {
           title="Criar Party"
           onPress={() => navigation.navigate('PartyAdmin', {
             partyName: "Natal 2026", 
-            partyCode: "#NATAL2026" 
+            partyCode: partyCode
           })}
           disabled={!nomeParty}
         />
