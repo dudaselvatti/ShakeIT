@@ -2,7 +2,6 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { CreatePartyScreen } from './index';
 
-// Mock do DateTimePicker
 jest.mock('@react-native-community/datetimepicker', () => {
   const { View } = jest.requireActual('react-native');
   const MockDateTimePicker = (props: any) => <View testID="mock-date-picker" {...props} />;
@@ -10,7 +9,6 @@ jest.mock('@react-native-community/datetimepicker', () => {
   return MockDateTimePicker;
 });
 
-// Mock do IconButton
 jest.mock('../../components/IconButton', () => {
   const { TouchableOpacity } = jest.requireActual('react-native');
   const MockIconButton = ({ onPress }: any) => (
@@ -44,13 +42,10 @@ describe('Ecrã CreateParty', () => {
       <CreatePartyScreen navigation={mockNavigation} />
     );
 
-    // 1. Simula o clique no botão de voltar
     fireEvent.press(getByTestId('btn-voltar'));
 
-    // 2. Simula o clique no botão "Cancelar" do modal
     fireEvent.press(getByText('Cancelar'));
     
-    // Verifica que a navegação para voltar NÃO foi chamada
     expect(mockNavigation.goBack).not.toHaveBeenCalled();
   });
 
@@ -60,13 +55,10 @@ describe('Ecrã CreateParty', () => {
       <CreatePartyScreen navigation={mockNavigation} />
     );
 
-    // 1. Simula o clique no botão de voltar
     fireEvent.press(getByTestId('btn-voltar'));
 
-    // 2. Simula o clique no botão "Sair sem salvar" do modal
     fireEvent.press(getByText('Sair sem salvar'));
     
-    // Verifica que a função de voltar na navegação FOI chamada
     expect(mockNavigation.goBack).toHaveBeenCalled();
   });
 });

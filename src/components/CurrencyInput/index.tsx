@@ -3,7 +3,6 @@ import { View, Text, TextInput, TextInputProps, ViewStyle } from "react-native";
 import { styles } from "./styles";
 import { theme } from "../../styles/theme";
 
-// Omitimos o onChangeText padrão para usarmos o nosso customizado
 interface CurrencyInputProps extends Omit<TextInputProps, 'onChangeText'> {
   label: string;
   containerStyle?: ViewStyle;
@@ -44,7 +43,7 @@ export const CurrencyInput = ({
           keyboardType="numeric"
           value={value}
           onChangeText={handleTextChange}
-          maxLength={12} // Limita a entrada para evitar números muito grandes (ex: 999.999,99)
+          maxLength={12}
           {...rest}
         />
       </View>
