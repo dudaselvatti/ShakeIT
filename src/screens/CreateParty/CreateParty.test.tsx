@@ -31,12 +31,13 @@ describe('Tela CreateParty', () => {
   fireEvent.press(button);
   expect(mockNavigation.navigate).not.toHaveBeenCalled();
 
-  fireEvent.changeText(nameInput, 'Festa de Natal');
+  const nomeTeste = 'Natal 2026';
+  fireEvent.changeText(nameInput, nomeTeste);
   fireEvent.press(button);
 
   expect(mockNavigation.navigate).toHaveBeenCalledWith('PartyAdmin', {
-    partyName: "Natal 2026", 
-    partyCode: "#NATAL2026" 
+    partyName: nomeTeste, 
+    partyCode: expect.any(String) 
   });
 });
 
