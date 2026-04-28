@@ -72,7 +72,10 @@ export const CreatePartyScreen = ({ navigation }: any) => {
       <View style={styles.footer}>
         <Button
           title="Criar Party"
-          onPress={() => navigation.navigate("PartyCreated")}
+          onPress={() => navigation.navigate('PartyAdmin', {
+            partyName: "Natal 2026", 
+            partyCode: "#NATAL2026" 
+          })}
           disabled={!nomeParty}
         />
       </View>
@@ -87,5 +90,6 @@ export const CreatePartyScreen = ({ navigation }: any) => {
         onConfirm={confirmExit}
       />
     </KeyboardAvoidingView>
+    
   );
 };

@@ -18,23 +18,27 @@ jest.mock('../../components/IconButton', () => {
   return { IconButton: MockIconButton };
 });
 
-describe('Ecrã CreateParty', () => {
-  it('deve navegar para a próxima ecrã apenas se o Nome da Party for preenchido', () => {
-    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
-    const { getByText, getByPlaceholderText } = render(
-      <CreatePartyScreen navigation={mockNavigation} />
-    );
+describe('Tela CreateParty', () => {
+  it('deve navegar para a próxima tela apenas se o Nome da Party for preenchido', () => {
+  const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+  const { getByText, getByPlaceholderText } = render(
+    <CreatePartyScreen navigation={mockNavigation} />
+  );
 
-    const button = getByText('Criar Party');
-    const nameInput = getByPlaceholderText('Ex: Amigo Secreto da Firma');
+  const button = getByText('Criar Party');
+  const nameInput = getByPlaceholderText('Ex: Amigo Secreto da Firma');
 
-    fireEvent.press(button);
-    expect(mockNavigation.navigate).not.toHaveBeenCalled();
+  fireEvent.press(button);
+  expect(mockNavigation.navigate).not.toHaveBeenCalled();
 
-    fireEvent.changeText(nameInput, 'Festa de Natal');
-    fireEvent.press(button);
-    expect(mockNavigation.navigate).toHaveBeenCalledWith('PartyCreated');
+  fireEvent.changeText(nameInput, 'Festa de Natal');
+  fireEvent.press(button);
+
+  expect(mockNavigation.navigate).toHaveBeenCalledWith('PartyAdmin', {
+    partyName: "Natal 2026", 
+    partyCode: "#NATAL2026" 
   });
+});
 
   it('deve abrir o modal ao clicar em voltar e fechar ao clicar em Cancelar', () => {
     const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
