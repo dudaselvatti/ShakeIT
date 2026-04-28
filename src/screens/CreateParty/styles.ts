@@ -15,17 +15,21 @@ export const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    paddingHorizontal: 24,
+    paddingTop: 16,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "bold",
     color: theme.colors.primary,
-    marginBottom: 8,
+    marginBottom: 24,
   },
-  subtitle: {
-    fontSize: 18,
-    color: theme.colors.textLight,
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
+  footer: {
+    padding: 24,
+    backgroundColor: theme.colors.background,
+  }
 });
