@@ -1,30 +1,81 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { IconButton } from "../../components/IconButton";
 import { PopupModal } from "../../components/PopupModal";
+import { Button } from "../../components/Button";
+import { Input } from "../../components/Input";
+import { DateInput } from "../../components/DateInput";
+import { CurrencyInput } from "../../components/CurrencyInput";
 import { styles } from "./styles";
 
 export const CreatePartyScreen = ({ navigation }: any) => {
   const [isModalVisible, setModalVisible] = useState(false);
-  const handleBackPress = () => {
-    setModalVisible(true);
-  };
+
+  const [nomeParty, setNomeParty] = useState("");
+  const [dataRevelacao, setDataRevelacao] = useState<Date | undefined>(undefined);
+  const [valorMinimo, setValorMinimo] = useState("");
+  const [valorMaximo, setValorMaximo] = useState("");
+
+  const handleBackPress = () => setModalVisible(true);
   const confirmExit = () => {
     setModalVisible(false);
     navigation.goBack();
   };
 
   return (
-    <View style={styles.container}>
-      {/* header falso (apenas com o botão de voltar por enquanto) */}
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
       <View style={styles.header}>
         <IconButton iconName="chevron-left" onPress={handleBackPress} />
       </View>
 
-      {/* conteudo generico para teste*/}
-      <View style={styles.content}>
-        <Text style={styles.title}>Tela 3</Text>
-        <Text style={styles.subtitle}>Criação de Party</Text>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <Text style={styles.title}>Nova Party</Text>
+
+        <Input
+          label="Nome da Party"
+          placeholder="Ex: Amigo Secreto da Firma"
+          value={nomeParty}
+          onChangeText={setNomeParty}
+          maxLength={30}
+        />
+
+        {/* --- NOVO COMPONENTE DE DATA AQUI --- */}
+        <DateInput
+          label="Data da Revelação"
+          value={dataRevelacao}
+          onChangeDate={(dataEscolhida) => setDataRevelacao(dataEscolhida)}
+        />
+
+        <View style={styles.row}>
+          <CurrencyInput
+            label="Valor Mínimo"
+            placeholder="0,00"
+            value={valorMinimo}
+            onChangeText={setValorMinimo}
+            keyboardType="numeric"
+            containerStyle={{ width: "48%" }} // Usando a prop customizada para dividir a tela!
+          />
+
+          <CurrencyInput
+            label="Valor Máximo"
+            placeholder="50,00"
+            value={valorMaximo}
+            onChangeText={setValorMaximo}
+            keyboardType="numeric"
+            containerStyle={{ width: "48%" }}
+          />
+        </View>
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <Button
+          title="Criar Party"
+          onPress={() => navigation.navigate("PartyCreated")}
+          disabled={!nomeParty}
+        />
       </View>
 
       <PopupModal
@@ -36,6 +87,6 @@ export const CreatePartyScreen = ({ navigation }: any) => {
         onCancel={() => setModalVisible(false)}
         onConfirm={confirmExit}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };

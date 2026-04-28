@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { HomeScreen } from "./src/screens/Home";
 import { CreatePartyScreen } from "./src/screens/CreateParty";
+import { PartyCreatedScreen } from "./src/screens/PartyCreated";
 
 //creio que nao fica no app.tsx mas nao sabemos 
 import { usuariosMock } from './src/mocks/usuariosMock';
@@ -14,6 +15,7 @@ import { perfisMock } from './src/mocks/perfisMock';
 export type RootStackParamList = {
   Home: undefined;
   CreateParty: undefined;
+  PartyCreated: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -34,6 +36,7 @@ export default function App() {
       >
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="CreateParty" component={CreatePartyScreen} />
+        <Stack.Screen name="PartyCreated" component={PartyCreatedScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
