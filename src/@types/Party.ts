@@ -10,9 +10,7 @@ export interface Party {
   drawDate?: string;
   minPrice: number;
   maxPrice: number;
-  maxParticipants: number; //pessoas convidadas que ainda nao confirmaram presença
-  totalParticipants?: number; //pessoas que já confirmaram presença
+  maxParticipants: number;
+  totalParticipants?: number;
   status: PartyStatus;
-  //tem que trazer profiles aqui tambem(perfils dos usuarios que lockaram)
-  //dono da party -> pensar como vamos diferenciar party criadas do usuario e party que ele participa
 }

@@ -6,8 +6,8 @@ import { theme } from "../../styles/theme";
 
 interface DateInputProps {
   label: string;
-  value: Date | undefined; // Agora recebemos um objeto Date real
-  onChangeDate: (date: Date) => void; // Função que devolve a data escolhida
+  value: Date | undefined;
+  onChangeDate: (date: Date) => void;
   placeholder?: string;
   containerStyle?: ViewStyle;
 }
@@ -21,14 +21,10 @@ export const DateInput = ({
 }: DateInputProps) => {
   const [showPicker, setShowPicker] = useState(false);
 
-  // Formata a data para exibir no input (ex: 25/12/2026)
   const formattedDate = value ? value.toLocaleDateString("pt-BR") : "";
 
   const handleChange = (event: any, selectedDate?: Date) => {
-    // Fecha o calendário assim que o utilizador escolhe uma data
-    setShowPicker(Platform.OS === "ios"); 
-    
-    // Se o utilizador cancelou, selectedDate vem indefinido, por isso verificamos
+    setShowPicker(Platform.OS === "ios");
     if (event.type === "set" && selectedDate) {
       setShowPicker(false);
       onChangeDate(selectedDate);
@@ -54,14 +50,13 @@ export const DateInput = ({
         </Text>
       </TouchableOpacity>
 
-      {/* Renderiza o calendário apenas quando showPicker for true */}
       {showPicker && (
         <DateTimePicker
-          value={value || new Date()} // Se não tiver data, mostra a data de hoje
+          value={value || new Date()}
           mode="date"
           display="default"
           onChange={handleChange}
-          minimumDate={new Date()} // Impede o utilizador de escolher datas que já passaram!
+          minimumDate={new Date()}
         />
       )}
     </View>

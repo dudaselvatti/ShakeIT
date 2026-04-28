@@ -8,7 +8,6 @@ import { HomeScreen } from "./src/screens/Home";
 import { CreatePartyScreen } from "./src/screens/CreateParty";
 import { PartyCreatedScreen } from "./src/screens/PartyCreated";
 
-//creio que nao fica no app.tsx mas nao sabemos 
 import { usuariosMock } from './src/mocks/usuariosMock';
 import { perfisMock } from './src/mocks/perfisMock';
 
@@ -21,8 +20,6 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  console.log(usuariosMock);
-  console.log(perfisMock);
   return (
     <NavigationContainer>
       <StatusBar style="dark" />

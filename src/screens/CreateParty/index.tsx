@@ -42,7 +42,6 @@ export const CreatePartyScreen = ({ navigation }: any) => {
           maxLength={30}
         />
 
-        {/* --- NOVO COMPONENTE DE DATA AQUI --- */}
         <DateInput
           label="Data da Revelação"
           value={dataRevelacao}
@@ -56,7 +55,7 @@ export const CreatePartyScreen = ({ navigation }: any) => {
             value={valorMinimo}
             onChangeText={setValorMinimo}
             keyboardType="numeric"
-            containerStyle={{ width: "48%" }} // Usando a prop customizada para dividir a tela!
+            containerStyle={{ width: "48%" }}
           />
 
           <CurrencyInput

@@ -9,17 +9,15 @@ describe('Componente CurrencyInput', () => {
       <CurrencyInput 
         label="Valor" 
         onChangeText={mockOnChangeText} 
-        testID="currency-input" // Usamos testID para encontrar facilmente o TextInput nativo
+        testID="currency-input"
       />
     );
 
     const inputElement = getByTestId('currency-input');
 
-    // Simula digitar "1234" (esperamos "12,34")
     fireEvent.changeText(inputElement, '1234');
     expect(mockOnChangeText).toHaveBeenCalledWith('12,34');
 
-    // Simula digitar "1234567" (esperamos "12.345,67")
     fireEvent.changeText(inputElement, '1234567');
     expect(mockOnChangeText).toHaveBeenCalledWith('12.345,67');
   });
