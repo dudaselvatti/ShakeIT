@@ -4,8 +4,10 @@ import { DateInput } from './index';
 
 // Simulamos o componente nativo para não dar erro no ambiente de testes
 jest.mock('@react-native-community/datetimepicker', () => {
-  const { View } = require('react-native');
-  return (props: any) => <View testID="mock-date-picker" {...props} />;
+  const { View } = jest.requireActual('react-native');
+  const MockDateTimePicker = (props: any) => <View testID="mock-date-picker" {...props} />;
+  MockDateTimePicker.displayName = 'MockDateTimePicker';
+  return MockDateTimePicker;
 });
 
 describe('Componente DateInput', () => {

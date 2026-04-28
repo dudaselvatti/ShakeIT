@@ -2,20 +2,23 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { CreatePartyScreen } from './index';
 
-// Simula o calendário para não dar erro no ambiente Node
+// Mock do DateTimePicker
 jest.mock('@react-native-community/datetimepicker', () => {
-  const { View } = require('react-native');
-  return (props: any) => <View testID="mock-date-picker" {...props} />;
+  const { View } = jest.requireActual('react-native');
+  const MockDateTimePicker = (props: any) => <View testID="mock-date-picker" {...props} />;
+  MockDateTimePicker.displayName = 'MockDateTimePicker';
+  return MockDateTimePicker;
 });
 
-// Simula o IconButton para podermos clicar facilmente no botão de voltar
-jest.mock('../../components/IconButton', () => ({
-  IconButton: ({ onPress }: any) => {
-    const { TouchableOpacity } = require('react-native');
-    // Criamos um botão falso com o testID para o teste conseguir clicar
-    return <TouchableOpacity testID="btn-voltar" onPress={onPress} />;
-  }
-}));
+// Mock do IconButton
+jest.mock('../../components/IconButton', () => {
+  const { TouchableOpacity } = jest.requireActual('react-native');
+  const MockIconButton = ({ onPress }: any) => (
+    <TouchableOpacity testID="btn-voltar" onPress={onPress} />
+  );
+  MockIconButton.displayName = 'MockIconButton';
+  return { IconButton: MockIconButton };
+});
 
 describe('Ecrã CreateParty', () => {
   it('deve navegar para a próxima ecrã apenas se o Nome da Party for preenchido', () => {
