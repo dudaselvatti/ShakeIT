@@ -32,7 +32,7 @@ export const PartyAdminScreen = () => {
                 </View>
                 <PartyQRCode partyCode={partyCode} />
                 <Text style={styles.participantesCount}>
-                    Perfis confirmados: ({confirmadosCount}/{participantesTotal})
+                    Perfis confirmados ({confirmadosCount}/{participantesTotal})
                 </Text>
                 <View style={styles.flatListContainer}>
                     <FlatList
