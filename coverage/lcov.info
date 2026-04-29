@@ -263,12 +263,12 @@ FN:11,(anonymous_0)
 FN:18,(anonymous_1)
 FNF:2
 FNH:2
-FNDA:4,(anonymous_0)
-FNDA:4,(anonymous_1)
+FNDA:2,(anonymous_0)
+FNDA:2,(anonymous_1)
 DA:11,1
-DA:18,4
-DA:19,4
-DA:22,4
+DA:18,2
+DA:19,2
+DA:22,2
 LF:4
 LH:4
 BRF:0

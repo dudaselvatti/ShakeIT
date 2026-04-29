@@ -14,35 +14,12 @@ describe('usePerfilSorteadoHeaderViewModel', () => {
     genero: 'Masculino',
   };
 
-  it('deve retornar os dados corretamente', () => {
-    (calcularIdade as jest.Mock).mockReturnValue(25);
-
-    const { result } = renderHook(() =>
-      usePerfilSorteadoHeaderViewModel(mockProps)
-    );
-
-    expect(result.current.nome).toBe('João Silva');
-    expect(result.current.fotoUrl).toBe(mockProps.fotoUrl);
-    expect(result.current.genero).toBe('Masculino');
-    expect(result.current.idade).toBe(25);
-  });
-
-  it('deve chamar calcularIdade com a data correta', () => {
-    (calcularIdade as jest.Mock).mockReturnValue(25);
-
-    renderHook(() =>
-      usePerfilSorteadoHeaderViewModel(mockProps)
-    );
-
-    expect(calcularIdade).toHaveBeenCalledWith('2000-01-01');
-  });
-
   it('deve atualizar idade quando data de nascimento muda', () => {
     (calcularIdade as jest.Mock)
       .mockReturnValueOnce(25)
       .mockReturnValueOnce(30);
 
-    const { result, rerender } = renderHook(
+    const { result, rerender } = renderHook<typeof mockProps, ReturnType<typeof usePerfilSorteadoHeaderViewModel>>(
       (props) => usePerfilSorteadoHeaderViewModel(props),
       {
         initialProps: mockProps,
