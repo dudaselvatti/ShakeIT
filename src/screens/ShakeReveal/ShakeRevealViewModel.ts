@@ -71,7 +71,11 @@ export const useShakeRevealViewModel = (navigation: any) => {
   }, [hasShaken, handleShakeDetected]);
 
   const simularShake = () => {
+<<<<<<< HEAD
     if (!hasShaken) handleShakeDetected();
+=======
+    navigation.navigate("PerfilSorteado", { idUsuario: 11 }); //Como não temos lógica de sorteio, usa-se idUsuario 11 para testar a tela 7
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
   };
 
   return {

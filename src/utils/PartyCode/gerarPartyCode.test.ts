@@ -1,4 +1,4 @@
-import { gerarPartyCode } from '../PartyCode';
+import { gerarPartyCode } from './gerarPartyCode';
 
 describe('generatePartyCode', () => {
     it('deve gerar um código com prefixo # e exatamente 7 caracteres', () => {

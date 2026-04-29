@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <coverage generated="1777504595592" clover="3.2.0">
   <project timestamp="1777504595592" name="All files">
     <metrics statements="174" coveredstatements="153" conditionals="106" coveredconditionals="81" methods="59" coveredmethods="46" elements="339" coveredelements="280" complexity="0" loc="174" ncloc="174" packages="22" files="30" classes="30"/>
+=======
+<coverage generated="1777505385555" clover="3.2.0">
+  <project timestamp="1777505385555" name="All files">
+    <metrics statements="191" coveredstatements="170" conditionals="104" coveredconditionals="84" methods="61" coveredmethods="48" elements="356" coveredelements="302" complexity="0" loc="191" ncloc="191" packages="25" files="35" classes="35"/>
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
     <package name="@types">
       <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="Participante.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\@types\Participante.ts">
+      <file name="Participante.ts" path="C:\Users\rodri\ShakeIT\src\@types\Participante.ts">
         <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       </file>
-      <file name="Party.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\@types\Party.ts">
+      <file name="Party.ts" path="C:\Users\rodri\ShakeIT\src\@types\Party.ts">
         <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       </file>
-      <file name="Perfil.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\@types\Perfil.ts">
+      <file name="Perfil.ts" path="C:\Users\rodri\ShakeIT\src\@types\Perfil.ts">
         <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       </file>
-      <file name="Usuario.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\@types\Usuario.ts">
+      <file name="Usuario.ts" path="C:\Users\rodri\ShakeIT\src\@types\Usuario.ts">
         <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       </file>
     </package>
     <package name="components.AppHeader">
       <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\AppHeader\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\AppHeader\index.tsx">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="2" type="stmt"/>
@@ -29,7 +35,7 @@
     </package>
     <package name="components.Button">
       <metrics statements="2" coveredstatements="2" conditionals="10" coveredconditionals="5" methods="1" coveredmethods="1"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\Button\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\Button\index.tsx">
         <metrics statements="2" coveredstatements="2" conditionals="10" coveredconditionals="5" methods="1" coveredmethods="1"/>
         <line num="17" count="5" type="stmt"/>
         <line num="24" count="24" type="stmt"/>
@@ -37,7 +43,7 @@
     </package>
     <package name="components.Card">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\Card\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\Card\index.tsx">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="9" count="2" type="stmt"/>
         <line num="10" count="3" type="stmt"/>
@@ -45,7 +51,7 @@
     </package>
     <package name="components.CurrencyInput">
       <metrics statements="12" coveredstatements="10" conditionals="4" coveredconditionals="2" methods="2" coveredmethods="2"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\CurrencyInput\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\CurrencyInput\index.tsx">
         <metrics statements="12" coveredstatements="10" conditionals="4" coveredconditionals="2" methods="2" coveredmethods="2"/>
         <line num="12" count="2" type="stmt"/>
         <line num="20" count="25" type="stmt"/>
@@ -63,7 +69,7 @@
     </package>
     <package name="components.DateInput">
       <metrics statements="11" coveredstatements="6" conditionals="15" coveredconditionals="11" methods="3" coveredmethods="2"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\DateInput\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\DateInput\index.tsx">
         <metrics statements="11" coveredstatements="6" conditionals="15" coveredconditionals="11" methods="3" coveredmethods="2"/>
         <line num="15" count="1" type="stmt"/>
         <line num="22" count="4" type="stmt"/>
@@ -80,7 +86,7 @@
     </package>
     <package name="components.IconButton">
       <metrics statements="4" coveredstatements="4" conditionals="9" coveredconditionals="9" methods="1" coveredmethods="1"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\IconButton\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\IconButton\index.tsx">
         <metrics statements="4" coveredstatements="4" conditionals="9" coveredconditionals="9" methods="1" coveredmethods="1"/>
         <line num="14" count="2" type="stmt"/>
         <line num="23" count="2" type="cond" truecount="2" falsecount="0"/>
@@ -90,7 +96,7 @@
     </package>
     <package name="components.Input">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\Input\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\Input\index.tsx">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="11" count="2" type="stmt"/>
         <line num="12" count="14" type="stmt"/>
@@ -98,7 +104,7 @@
     </package>
     <package name="components.MockButton">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\MockButton\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\MockButton\index.tsx">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="9" count="3" type="stmt"/>
         <line num="10" count="5" type="stmt"/>
@@ -106,7 +112,7 @@
     </package>
     <package name="components.ParticipanteCard">
       <metrics statements="3" coveredstatements="3" conditionals="4" coveredconditionals="4" methods="1" coveredmethods="1"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\ParticipanteCard\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\ParticipanteCard\index.tsx">
         <metrics statements="3" coveredstatements="3" conditionals="4" coveredconditionals="4" methods="1" coveredmethods="1"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="3" type="stmt"/>
@@ -115,15 +121,41 @@
     </package>
     <package name="components.PartyQRCode">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\PartyQRCode\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\PartyQRCode\index.tsx">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="2" type="stmt"/>
       </file>
     </package>
+    <package name="components.PerfilSorteadoContent">
+      <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\PerfilSorteadoContent\index.tsx">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="4" type="stmt"/>
+        <line num="27" count="12" type="stmt"/>
+        <line num="35" count="8" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.PerfilSorteadoHeader">
+      <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+      <file name="PerfilSorteadoHeaderViewModel.ts" path="C:\Users\rodri\ShakeIT\src\components\PerfilSorteadoHeader\PerfilSorteadoHeaderViewModel.ts">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="19" count="2" type="stmt"/>
+        <line num="22" count="2" type="stmt"/>
+      </file>
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\PerfilSorteadoHeader\index.tsx">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="15" count="4" type="stmt"/>
+      </file>
+    </package>
     <package name="components.PopupModal">
       <metrics statements="2" coveredstatements="2" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\PopupModal\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\PopupModal\index.tsx">
         <metrics statements="2" coveredstatements="2" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
         <line num="16" count="2" type="stmt"/>
         <line num="26" count="13" type="stmt"/>
@@ -131,7 +163,7 @@
     </package>
     <package name="components.Tag">
       <metrics statements="4" coveredstatements="4" conditionals="6" coveredconditionals="6" methods="1" coveredmethods="1"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\components\Tag\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\components\Tag\index.tsx">
         <metrics statements="4" coveredstatements="4" conditionals="6" coveredconditionals="6" methods="1" coveredmethods="1"/>
         <line num="13" count="2" type="stmt"/>
         <line num="14" count="5" type="cond" truecount="2" falsecount="0"/>
@@ -141,29 +173,29 @@
     </package>
     <package name="mocks">
       <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="1" methods="3" coveredmethods="3"/>
-      <file name="participantesMock.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\mocks\participantesMock.ts">
+      <file name="participantesMock.ts" path="C:\Users\rodri\ShakeIT\src\mocks\participantesMock.ts">
         <metrics statements="4" coveredstatements="4" conditionals="2" coveredconditionals="1" methods="3" coveredmethods="3"/>
-        <line num="5" count="1" type="stmt"/>
-        <line num="7" count="120" type="stmt"/>
-        <line num="8" count="15" type="cond" truecount="1" falsecount="1"/>
-        <line num="10" count="15" type="stmt"/>
+        <line num="5" count="4" type="stmt"/>
+        <line num="7" count="480" type="stmt"/>
+        <line num="8" count="60" type="cond" truecount="1" falsecount="1"/>
+        <line num="10" count="60" type="stmt"/>
       </file>
-      <file name="parties.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\mocks\parties.ts">
+      <file name="parties.ts" path="C:\Users\rodri\ShakeIT\src\mocks\parties.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="3" count="1" type="stmt"/>
       </file>
-      <file name="perfisMock.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\mocks\perfisMock.ts">
+      <file name="perfisMock.ts" path="C:\Users\rodri\ShakeIT\src\mocks\perfisMock.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="3" count="1" type="stmt"/>
+        <line num="3" count="4" type="stmt"/>
       </file>
-      <file name="usuariosMock.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\mocks\usuariosMock.ts">
+      <file name="usuariosMock.ts" path="C:\Users\rodri\ShakeIT\src\mocks\usuariosMock.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="3" count="1" type="stmt"/>
+        <line num="3" count="4" type="stmt"/>
       </file>
     </package>
     <package name="screens.CreateParty">
       <metrics statements="53" coveredstatements="49" conditionals="30" coveredconditionals="22" methods="15" coveredmethods="10"/>
-      <file name="CreatePartyViewModel.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\screens\CreateParty\CreatePartyViewModel.ts">
+      <file name="CreatePartyViewModel.ts" path="C:\Users\rodri\ShakeIT\src\screens\CreateParty\CreatePartyViewModel.ts">
         <metrics statements="50" coveredstatements="46" conditionals="22" coveredconditionals="16" methods="14" coveredmethods="9"/>
         <line num="5" count="1" type="stmt"/>
         <line num="6" count="12" type="stmt"/>
@@ -216,7 +248,7 @@
         <line num="87" count="1" type="stmt"/>
         <line num="92" count="12" type="stmt"/>
       </file>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\screens\CreateParty\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\screens\CreateParty\index.tsx">
         <metrics statements="3" coveredstatements="3" conditionals="8" coveredconditionals="6" methods="1" coveredmethods="1"/>
         <line num="14" count="1" type="stmt"/>
         <line num="31" count="12" type="stmt"/>
@@ -225,7 +257,7 @@
     </package>
     <package name="screens.Home">
       <metrics statements="6" coveredstatements="4" conditionals="6" coveredconditionals="6" methods="6" coveredmethods="3"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\screens\Home\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\screens\Home\index.tsx">
         <metrics statements="6" coveredstatements="4" conditionals="6" coveredconditionals="6" methods="6" coveredmethods="3"/>
         <line num="12" count="1" type="stmt"/>
         <line num="13" count="1" type="stmt"/>
@@ -237,7 +269,7 @@
     </package>
     <package name="screens.PartyAdmin">
       <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\screens\PartyAdmin\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\screens\PartyAdmin\index.tsx">
         <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
         <line num="11" count="1" type="stmt"/>
         <line num="12" count="6" type="stmt"/>
@@ -252,7 +284,7 @@
     </package>
     <package name="screens.PartyCreated">
       <metrics statements="5" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\screens\PartyCreated\index.tsx">
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\screens\PartyCreated\index.tsx">
         <metrics statements="5" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
         <line num="6" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
@@ -261,16 +293,29 @@
         <line num="13" count="1" type="stmt"/>
       </file>
     </package>
-    <package name="screens.RevealResult">
-      <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-      <file name="index.tsx" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\screens\RevealResult\index.tsx">
-        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="6" count="0" type="stmt"/>
-        <line num="7" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
+    <package name="screens.PerfilSorteado">
+      <metrics statements="12" coveredstatements="12" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="3"/>
+      <file name="PerfilSorteadoViewModel.ts" path="C:\Users\rodri\ShakeIT\src\screens\PerfilSorteado\PerfilSorteadoViewModel.ts">
+        <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="11" count="8" type="stmt"/>
+        <line num="12" count="8" type="stmt"/>
+        <line num="14" count="8" type="stmt"/>
+        <line num="15" count="64" type="stmt"/>
+        <line num="18" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="19" count="4" type="stmt"/>
+        <line num="22" count="4" type="stmt"/>
+      </file>
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\screens\PerfilSorteado\index.tsx">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
       </file>
     </package>
     <package name="screens.ShakeReveal">
+<<<<<<< HEAD
       <metrics statements="33" coveredstatements="29" conditionals="18" coveredconditionals="13" methods="10" coveredmethods="9"/>
       <file name="ShakeRevealViewModel.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\screens\ShakeReveal\ShakeRevealViewModel.ts">
         <metrics statements="30" coveredstatements="26" conditionals="12" coveredconditionals="7" methods="9" coveredmethods="8"/>
@@ -310,18 +355,37 @@
         <line num="7" count="1" type="stmt"/>
         <line num="14" count="3" type="stmt"/>
         <line num="16" count="3" type="stmt"/>
+=======
+      <metrics statements="11" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="1"/>
+      <file name="ShakeRevealViewModel.ts" path="C:\Users\rodri\ShakeIT\src\screens\ShakeReveal\ShakeRevealViewModel.ts">
+        <metrics statements="8" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+      </file>
+      <file name="index.tsx" path="C:\Users\rodri\ShakeIT\src\screens\ShakeReveal\index.tsx">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="3" type="stmt"/>
+        <line num="10" count="3" type="stmt"/>
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
       </file>
     </package>
     <package name="styles">
       <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="theme.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\styles\theme.ts">
+      <file name="theme.ts" path="C:\Users\rodri\ShakeIT\src\styles\theme.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="1" count="16" type="stmt"/>
+        <line num="1" count="19" type="stmt"/>
       </file>
     </package>
-    <package name="utils">
+    <package name="utils.PartyCode">
       <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-      <file name="PartyCode.ts" path="C:\Users\SAMSUNG\Downloads\GitHub\ShakeIT\src\utils\PartyCode.ts">
+      <file name="gerarPartyCode.ts" path="C:\Users\rodri\ShakeIT\src\utils\PartyCode\gerarPartyCode.ts">
         <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="12" type="stmt"/>
@@ -330,6 +394,31 @@
         <line num="5" count="72" type="stmt"/>
         <line num="6" count="72" type="stmt"/>
         <line num="8" count="12" type="stmt"/>
+      </file>
+    </package>
+    <package name="utils.Usuario">
+      <metrics statements="19" coveredstatements="19" conditionals="14" coveredconditionals="14" methods="1" coveredmethods="1"/>
+      <file name="calcularIdade.ts" path="C:\Users\rodri\ShakeIT\src\utils\Usuario\calcularIdade.ts">
+        <metrics statements="19" coveredstatements="19" conditionals="14" coveredconditionals="14" methods="1" coveredmethods="1"/>
+        <line num="2" count="6" type="stmt"/>
+        <line num="3" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="10" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="18" count="4" type="stmt"/>
+        <line num="20" count="4" type="stmt"/>
+        <line num="22" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="26" count="3" type="stmt"/>
+        <line num="28" count="3" type="stmt"/>
+        <line num="29" count="3" type="stmt"/>
+        <line num="31" count="3" type="stmt"/>
+        <line num="32" count="3" type="stmt"/>
+        <line num="34" count="3" type="cond" truecount="5" falsecount="0"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="38" count="3" type="stmt"/>
       </file>
     </package>
   </project>

@@ -23,9 +23,15 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
+<<<<<<< HEAD
                 <span class="strong">87.5% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>28/32</span>
+=======
+                <span class="strong">12.5% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>1/8</span>
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
             </div>
         
             
@@ -37,16 +43,28 @@
         
             
             <div class='fl pad1y space-right2'>
+<<<<<<< HEAD
                 <span class="strong">88.88% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>8/9</span>
+=======
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/3</span>
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
             </div>
         
             
             <div class='fl pad1y space-right2'>
+<<<<<<< HEAD
                 <span class="strong">86.66% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>26/30</span>
+=======
+                <span class="strong">12.5% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>1/8</span>
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
             </div>
         
             
@@ -61,7 +79,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -162,6 +180,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<<<<<<< HEAD
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -173,6 +192,12 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+=======
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -180,9 +205,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<<<<<<< HEAD
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -222,6 +248,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+=======
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -254,6 +287,7 @@ import { Animated, Vibration } from "react-native";
 import { Accelerometer } from "expo-sensors";
 &nbsp;
 &nbsp;
+<<<<<<< HEAD
 export const useShakeRevealViewModel = (navigation: any) =&gt; {
   const shakeAnimation = useRef(new Animated.Value(0)).current;
   const explodeScale = useRef(new Animated.Value(1)).current; // Controla o tamanho da explosão
@@ -266,6 +300,13 @@ export const useShakeRevealViewModel = (navigation: any) =&gt; {
     if (hasShaken) return; // Se já chacoalhou, pára o tremor base
 &nbsp;
     const shakeSequence = Animated.sequence([
+=======
+export const useShakeRevealViewModel = <span class="fstat-no" title="function not covered" >(n</span>avigation: any) =&gt; {
+  const shakeAnimation = <span class="cstat-no" title="statement not covered" >useRef(new Animated.Value(0)).current;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+    const shakeSequence = <span class="cstat-no" title="statement not covered" >Animated.sequence([</span>
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
       Animated.timing(shakeAnimation, { toValue: 10, duration: 100, useNativeDriver: true }),
       Animated.timing(shakeAnimation, { toValue: -10, duration: 100, useNativeDriver: true }),
       Animated.timing(shakeAnimation, { toValue: 10, duration: 100, useNativeDriver: true }),
@@ -273,6 +314,7 @@ export const useShakeRevealViewModel = (navigation: any) =&gt; {
       Animated.delay(1500),
     ]);
 &nbsp;
+<<<<<<< HEAD
     Animated.loop(shakeSequence).start();
   }, [shakeAnimation, hasShaken]);
 &nbsp;
@@ -333,9 +375,16 @@ export const useShakeRevealViewModel = (navigation: any) =&gt; {
   // Botão Mock para testes na equipa
   const simularShake = () =&gt; {
     <span class="missing-if-branch" title="else path not taken" >E</span>if (!hasShaken) handleShakeDetected();
+=======
+<span class="cstat-no" title="statement not covered" >    Animated.loop(shakeSequence).start();</span>
+  }, [shakeAnimation]);
+&nbsp;
+  const simularShake = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    navigation.navigate("PerfilSorteado", { idUsuario: 11 }); </span>//Como não temos lógica de sorteio, usa-se idUsuario 11 para testar a tela 7
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
   };
 &nbsp;
-  return {
+<span class="cstat-no" title="statement not covered" >  return {</span>
     shakeAnimation,
     explodeScale,
     explodeOpacity,
@@ -349,7 +398,11 @@ export const useShakeRevealViewModel = (navigation: any) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+<<<<<<< HEAD
                 at 2026-04-29T23:16:35.456Z
+=======
+                at 2026-04-29T23:29:45.511Z
+>>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
             </div>
         <script src="../../prettify.js"></script>
         <script>
