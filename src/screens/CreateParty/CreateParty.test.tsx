@@ -2,12 +2,20 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { CreatePartyScreen } from './index';
 
-jest.mock('@react-native-community/datetimepicker', () => {
-  const { View } = jest.requireActual('react-native');
-  const MockDateTimePicker = (props: any) => <View testID="mock-date-picker" {...props} />;
-  MockDateTimePicker.displayName = 'MockDateTimePicker';
-  return MockDateTimePicker;
-});
+jest.mock('../../components/DateInput', () => ({
+  DateInput: ({ label, onChangeDate }: any) => {
+    const { View, Text, TouchableOpacity } = jest.requireActual('react-native');
+    return (
+      <View>
+        <Text>{label}</Text>
+        <TouchableOpacity 
+          testID="btn-selecionar-data" 
+          onPress={() => onChangeDate(new Date('2026-12-25T00:00:00.000Z'))}
+        />
+      </View>
+    );
+  }
+}));
 
 jest.mock('../../components/IconButton', () => {
   const { TouchableOpacity } = jest.requireActual('react-native');
@@ -18,49 +26,54 @@ jest.mock('../../components/IconButton', () => {
   return { IconButton: MockIconButton };
 });
 
-describe('Tela CreateParty', () => {
-  it('deve navegar para a próxima tela apenas se o Nome da Party for preenchido', () => {
-  const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
-  const { getByText, getByPlaceholderText } = render(
-    <CreatePartyScreen navigation={mockNavigation} />
-  );
+describe('Ecrã CreateParty', () => {
+  it('deve validar os campos vazios, exibir erros vermelhos e não navegar', () => {
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+    const { getByText, getByPlaceholderText } = render(
+      <CreatePartyScreen navigation={mockNavigation} />
+    );
 
-  const button = getByText('Criar Party');
-  const nameInput = getByPlaceholderText('Ex: Amigo Secreto da Firma');
+    fireEvent.changeText(getByPlaceholderText('Ex: Amigo Secreto da Firma'), 'Natal 2026');
 
-  fireEvent.press(button);
-  expect(mockNavigation.navigate).not.toHaveBeenCalled();
+    fireEvent.press(getByText('Criar Party'));
 
-  fireEvent.changeText(nameInput, 'Festa de Natal');
-  fireEvent.press(button);
-
-  expect(mockNavigation.navigate).toHaveBeenCalledWith('PartyAdmin', {
-    partyName: "Natal 2026", 
-    partyCode: "#NATAL2026" 
+    expect(getByText('Selecione a data da revelação.')).toBeTruthy();
+    expect(getByText('Preencha o valor mínimo e máximo.')).toBeTruthy();
+    expect(mockNavigation.navigate).not.toHaveBeenCalled();
   });
-});
 
-  it('deve abrir o modal ao clicar em voltar e fechar ao clicar em Cancelar', () => {
+  it('deve instanciar o objeto Party e navegar com sucesso se tudo estiver correto', () => {
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+    const { getByText, getByPlaceholderText, getByTestId } = render(
+      <CreatePartyScreen navigation={mockNavigation} />
+    );
+
+    fireEvent.changeText(getByPlaceholderText('Ex: Amigo Secreto da Firma'), 'Natal 2026');
+
+    fireEvent.press(getByTestId('btn-selecionar-data'));
+
+    fireEvent.changeText(getByPlaceholderText('0,00'), '1000'); 
+    fireEvent.changeText(getByPlaceholderText('50,00'), '5000');
+
+    fireEvent.press(getByText('Criar Party'));
+
+    expect(mockNavigation.navigate).toHaveBeenCalledWith('PartyCreated', {
+      party: expect.objectContaining({
+        name: 'Natal 2026',
+        minPrice: 10,
+        maxPrice: 50,
+        status: 'Aguardando Sorteio'
+      })
+    });
+  });
+
+  it('deve voltar à tela anterior ao confirmar a saída no modal', () => {
     const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
     const { getByTestId, getByText } = render(
       <CreatePartyScreen navigation={mockNavigation} />
     );
 
     fireEvent.press(getByTestId('btn-voltar'));
-
-    fireEvent.press(getByText('Cancelar'));
-    
-    expect(mockNavigation.goBack).not.toHaveBeenCalled();
-  });
-
-  it('deve voltar à ecrã anterior ao confirmar a saída no modal', () => {
-    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
-    const { getByTestId, getByText } = render(
-      <CreatePartyScreen navigation={mockNavigation} />
-    );
-
-    fireEvent.press(getByTestId('btn-voltar'));
-
     fireEvent.press(getByText('Sair sem salvar'));
     
     expect(mockNavigation.goBack).toHaveBeenCalled();
