@@ -2,6 +2,13 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { PerfilSorteadoHeader } from './index';
 
+interface Props {
+  fotoUrl: string;
+  nome: string;
+  dataDeNascimento: string;
+  genero: string;
+}
+
 jest.mock('./PerfilSorteadoHeaderViewModel', () => ({
   usePerfilSorteadoHeaderViewModel: jest.fn((props: Props) => ({
     nome: props.nome,
