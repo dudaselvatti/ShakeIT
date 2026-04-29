@@ -1,20 +1,28 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { Image } from 'react-native';
 import { PartyQRCode } from '../PartyQRCode';
+import QRCode from 'react-native-qrcode-svg';
 
 describe('PartyQRCode', () => {
-    it('deve renderizar a imagem do QR Code', () => {
+    it('deve garantir que o QR Code receba o partyCode corretamente', () => {
+        const testCode = "#ABC123";
         const { UNSAFE_getByType } = render(
-            <PartyQRCode partyCode="#NATAL2026" />
+            <PartyQRCode partyCode={testCode} />
         );
 
-        const image = UNSAFE_getByType(Image);
+        const qrCodeComponent = UNSAFE_getByType(QRCode);
 
-        expect(image).toBeTruthy();
+        expect(qrCodeComponent.props.value).toBe(testCode);
+    });
 
-        expect(image.props.source).toEqual(
-        require('../../assets/qrcode.png')
+    it('deve garantir que o código seja renderizado com as cores de contraste necessárias', () => {
+        const { UNSAFE_getByType } = render(
+            <PartyQRCode partyCode="#ABC123" />
         );
+
+        const qrCodeComponent = UNSAFE_getByType(QRCode);
+
+        expect(qrCodeComponent.props.backgroundColor).toBe('white');
+        expect(qrCodeComponent.props.color).toBe('black');
     });
 });

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
 import { styles } from './styles';
 
 interface Props {
@@ -9,7 +10,12 @@ interface Props {
 export const PartyQRCode = ({ partyCode }: Props) => {
     return (
         <View style={styles.qrWrapper}>
-            <Image source={require('../../assets/qrcode.png')} />
+            <QRCode
+                value={partyCode}
+                size={150}
+                color="black"
+                backgroundColor="white"
+            />
         </View>
     );
 }
