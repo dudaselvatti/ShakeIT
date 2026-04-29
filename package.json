@@ -18,6 +18,7 @@
     "@react-navigation/native-stack": "^7.14.11",
     "axios": "^1.15.2",
     "expo": "~54.0.33",
+    "expo-sensors": "~15.0.8",
     "expo-status-bar": "~3.0.9",
     "jest": "~29.7.0",
     "jest-expo": "~54.0.17",
