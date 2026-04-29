@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native';
 import { PerfilSorteadoHeader } from './index';
 
 jest.mock('./PerfilSorteadoHeaderViewModel', () => ({
-  usePerfilSorteadoHeaderViewModel: jest.fn((props) => ({
+  usePerfilSorteadoHeaderViewModel: jest.fn((props: Props) => ({
     nome: props.nome,
     fotoUrl: props.fotoUrl,
     idade: 25,
