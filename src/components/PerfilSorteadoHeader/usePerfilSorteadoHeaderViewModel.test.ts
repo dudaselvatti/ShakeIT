@@ -14,25 +14,25 @@ describe('usePerfilSorteadoHeaderViewModel', () => {
     genero: 'Masculino',
   };
 
+  type Props = typeof mockProps;
+
   it('deve atualizar idade quando data de nascimento muda', () => {
     (calcularIdade as jest.Mock)
       .mockReturnValueOnce(25)
       .mockReturnValueOnce(30);
 
-    const { result, rerender } = renderHook<typeof mockProps>(
+    const { result, rerender } = renderHook<
+      ReturnType<typeof usePerfilSorteadoHeaderViewModel>,
+      Props
+    >(
       (props) => usePerfilSorteadoHeaderViewModel(props),
-      {
-        initialProps: mockProps,
-      }
+      { initialProps: mockProps }
     );
 
     expect(result.current.idade).toBe(25);
 
-    // Pass proper Props to rerender
-    rerender({
-      ...mockProps,
-      dataDeNascimento: '1990-01-01', // still a valid Prop
-    });
+    // Update props
+    rerender({ ...mockProps, dataDeNascimento: '1990-01-01' });
 
     expect(calcularIdade).toHaveBeenCalledWith('1990-01-01');
     expect(result.current.idade).toBe(30);
