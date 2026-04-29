@@ -7,8 +7,9 @@ import { Tag } from "../../components/Tag";
 import { MOCK_PARTIES } from "../../mocks/parties";
 import { styles } from "./styles";
 import { theme } from "../../styles/theme";
+import { MockButton } from "../../components/MockButton";
 
-export const HomeScreen = ({ navigation }: any) => {
+export const HomeScreen = ({ navigation, route }: any) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerPlaceholder}>
@@ -67,6 +68,14 @@ export const HomeScreen = ({ navigation }: any) => {
           iconName="plus"
           variant="fab"
           onPress={() => navigation.navigate("CreateParty")}
+        />
+      </View>
+
+      <View style={styles.cardFooter}>
+        {/* BOTÃO PROVISÓRIO PARA TESTAR A T08 */}
+        <MockButton 
+          title="[Dev] Testar Tela de Shake (T08)" 
+          onPress={() => navigation.navigate("ShakeReveal")} 
         />
       </View>
     </View>
