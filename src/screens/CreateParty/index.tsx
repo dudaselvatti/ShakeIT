@@ -8,11 +8,9 @@ import { DateInput } from "../../components/DateInput";
 import { CurrencyInput } from "../../components/CurrencyInput";
 import { styles } from "./styles";
 
-// Importamos a nossa inteligência (ViewModel)
 import { useCreatePartyViewModel } from "./CreatePartyViewModel";
 
 export const CreatePartyScreen = ({ navigation }: any) => {
-  // Conectamos a View ao ViewModel
   const {
     nomeParty,
     updateNomeParty,
@@ -30,7 +28,6 @@ export const CreatePartyScreen = ({ navigation }: any) => {
     handleCriarParty,
   } = useCreatePartyViewModel(navigation);
 
-  // A partir daqui, é apenas UI! Nenhuma lógica complexa permitida.
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <View style={styles.header}>

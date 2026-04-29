@@ -17,7 +17,6 @@ export const ShakeRevealScreen = ({ navigation }: any) => {
     <View style={styles.container}>
       <Text style={styles.title}>O Sorteio realizado!</Text>
       
-      {/* Texto dinâmico: Muda quando o utilizador chacoalha o telemóvel */}
       <Text style={styles.subtitle}>
         {hasShaken ? "Preparando a surpresa..." : "Chacoalhe o celular para descobrir o seu amigo secreto..."}
       </Text>
@@ -26,10 +25,10 @@ export const ShakeRevealScreen = ({ navigation }: any) => {
         style={[
           styles.box, 
           { 
-            opacity: explodeOpacity, // Controla o fade out
+            opacity: explodeOpacity,
             transform: [
-              { translateX: hasShaken ? 0 : shakeAnimation }, // Pára de tremer quando explode
-              { scale: explodeScale } // Aumenta de tamanho drasticamente
+              { translateX: hasShaken ? 0 : shakeAnimation },
+              { scale: explodeScale }
             ] 
           }
         ]}
@@ -38,7 +37,6 @@ export const ShakeRevealScreen = ({ navigation }: any) => {
       </Animated.View>
 
       <View style={styles.mockButtonContainer}>
-        {/* Esconde o botão se a animação já estiver a correr */}
         {!hasShaken && (
           <MockButton 
             title="Simular Shake Físico" 
