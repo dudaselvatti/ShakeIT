@@ -19,7 +19,7 @@ describe('usePerfilSorteadoHeaderViewModel', () => {
       .mockReturnValueOnce(25)
       .mockReturnValueOnce(30);
 
-    const { result, rerender } = renderHook<typeof mockProps, ReturnType<typeof usePerfilSorteadoHeaderViewModel>>(
+    const { result, rerender } = renderHook<typeof mockProps>(
       (props) => usePerfilSorteadoHeaderViewModel(props),
       {
         initialProps: mockProps,
@@ -28,9 +28,10 @@ describe('usePerfilSorteadoHeaderViewModel', () => {
 
     expect(result.current.idade).toBe(25);
 
+    // Pass proper Props to rerender
     rerender({
       ...mockProps,
-      dataDeNascimento: '1990-01-01',
+      dataDeNascimento: '1990-01-01', // still a valid Prop
     });
 
     expect(calcularIdade).toHaveBeenCalledWith('1990-01-01');
