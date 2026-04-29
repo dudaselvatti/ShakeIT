@@ -1,10 +1,10 @@
-interface Medidas {
+export interface Medidas {
     camisa: string;
     calca: string;
     calcado: string;
 };
 
-interface Preferencias {
+export interface Preferencias {
     coisasQueAmo: string[];
     melhorEvitar: string[];
 };
