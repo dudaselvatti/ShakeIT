@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">12.5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>1/8</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">12.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>1/8</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -93,36 +93,36 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useRef, useEffect } from "react";
 import { Animated } from "react-native";
 &nbsp;
-export const useShakeRevealViewModel = (navigation: any) =&gt; {
-  const shakeAnimation = useRef(new Animated.Value(0)).current;
+export const useShakeRevealViewModel = <span class="fstat-no" title="function not covered" >(n</span>avigation: any) =&gt; {
+  const shakeAnimation = <span class="cstat-no" title="statement not covered" >useRef(new Animated.Value(0)).current;</span>
 &nbsp;
-  useEffect(() =&gt; {
-    const shakeSequence = Animated.sequence([
+<span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+    const shakeSequence = <span class="cstat-no" title="statement not covered" >Animated.sequence([</span>
       Animated.timing(shakeAnimation, { toValue: 10, duration: 100, useNativeDriver: true }),
       Animated.timing(shakeAnimation, { toValue: -10, duration: 100, useNativeDriver: true }),
       Animated.timing(shakeAnimation, { toValue: 10, duration: 100, useNativeDriver: true }),
@@ -130,14 +130,14 @@ export const useShakeRevealViewModel = (navigation: any) =&gt; {
       Animated.delay(1500),
     ]);
 &nbsp;
-    Animated.loop(shakeSequence).start();
+<span class="cstat-no" title="statement not covered" >    Animated.loop(shakeSequence).start();</span>
   }, [shakeAnimation]);
 &nbsp;
-  const simularShake = () =&gt; {
-    navigation.navigate("RevealResult");
+  const simularShake = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    navigation.navigate("PerfilSorteado", { idUsuario: 11 }); </span>//Como não temos lógica de sorteio, usa-se idUsuario 11 para testar a tela 7
   };
 &nbsp;
-  return {
+<span class="cstat-no" title="statement not covered" >  return {</span>
     shakeAnimation,
     simularShake,
   };
@@ -148,7 +148,7 @@ export const useShakeRevealViewModel = (navigation: any) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-04-29T04:59:48.033Z
+                at 2026-04-29T22:33:58.017Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

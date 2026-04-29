@@ -1,6 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { PerfilSorteado } from './index';
+import { PerfilSorteadoScreen } from './index';
+import { usePerfilSorteadoViewModel } from './PerfilSorteadoViewModel';
+
+jest.mock('./PerfilSorteadoViewModel');
 
 jest.mock('../../components/PerfilSorteadoHeader', () => ({
   __esModule: true,
@@ -12,52 +15,55 @@ jest.mock('../../components/PerfilSorteadoContent', () => ({
   PerfilSorteadoContent: jest.fn(() => null),
 }));
 
-jest.mock('react-native-gesture-handler', () => {
-  const { View } = require('react-native');
-  return {
-    ScrollView: ({ children }: { children: React.ReactNode }) => <View>{children}</View>,
-  };
-});
-
 describe('Screen: PerfilSorteado', () => {
-  const mockData = {
-    fotoUrl: 'https://github.com/usuario.png',
-    nome: 'Amigo Secreto',
-    dataDeNascimento: '1995-05-15',
-    genero: 'Feminino',
-    medidas: {
-      camisa: 'P',
-      calca: '38',
-      calcado: '36',
+  const mockParticipante = {
+    usuario: {
+      fotoUrl: 'https://github.com/usuario.png',
+      nome: 'Amigo Secreto',
+      dataDeNascimento: '1995-05-15',
+      genero: 'Feminino',
     },
-    preferencias: {
-      coisasQueAmo: ['Livros'],
-      melhorEvitar: ['Doces'],
+    perfil: {
+      medidas: {
+        camisa: 'P',
+        calca: '38',
+        calcado: '36',
+      },
+      preferencias: {
+        coisasQueAmo: ['Livros'],
+        melhorEvitar: ['Doces'],
+      },
     },
   };
+
+  beforeEach(() => {
+    (usePerfilSorteadoViewModel as jest.Mock).mockReturnValue({
+      participante: mockParticipante,
+    });
+  });
 
   it('deve renderizar corretamente e passar as props para os componentes filhos', () => {
     const { PerfilSorteadoHeader } = require('../../components/PerfilSorteadoHeader');
     const { PerfilSorteadoContent } = require('../../components/PerfilSorteadoContent');
 
-    render(<PerfilSorteado {...mockData} />);
+    render(<PerfilSorteadoScreen />);
 
     expect(PerfilSorteadoHeader).toHaveBeenCalledWith(
-        expect.objectContaining({
-            nome: mockData.nome,
-            fotoUrl: mockData.fotoUrl,
-            dataDeNascimento: mockData.dataDeNascimento,
-            genero: mockData.genero,
-        }),
-        undefined
-        );
+      expect.objectContaining({
+        nome: mockParticipante.usuario.nome,
+        fotoUrl: mockParticipante.usuario.fotoUrl,
+        dataDeNascimento: mockParticipante.usuario.dataDeNascimento,
+        genero: mockParticipante.usuario.genero,
+      }),
+      undefined
+    );
 
     expect(PerfilSorteadoContent).toHaveBeenCalledWith(
-        expect.objectContaining({
-            medidas: mockData.medidas,
-            preferencias: mockData.preferencias,
-        }),
-        undefined
-        );
+      expect.objectContaining({
+        medidas: mockParticipante.perfil.medidas,
+        preferencias: mockParticipante.perfil.preferencias,
+      }),
+      undefined
+    );
   });
 });
