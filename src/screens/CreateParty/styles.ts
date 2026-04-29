@@ -31,5 +31,12 @@ export const styles = StyleSheet.create({
   footer: {
     padding: 24,
     backgroundColor: theme.colors.background,
+  },
+  errorText: {
+    color: theme.colors.danger,
+    fontSize: 14,
+    marginTop: -16,
+    marginBottom: 16,
+    marginLeft: 4,
   }
 });

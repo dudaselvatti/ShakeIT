@@ -8,11 +8,12 @@ import { HomeScreen } from "./src/screens/Home";
 import { CreatePartyScreen } from "./src/screens/CreateParty";
 import { PartyCreatedScreen } from "./src/screens/PartyCreated";
 import { PartyAdminScreen } from "./src/screens/PartyAdmin"
+import { Party } from "./src/@types/Party";
 
 export type RootStackParamList = {
-  Home: undefined;
+  Home: { novaParty?: Party } | undefined;
   CreateParty: undefined;
-  PartyCreated: undefined;
+  PartyCreated: { party: Party };
   PartyAdmin: { partyName: string; partyCode: string };
 };
 

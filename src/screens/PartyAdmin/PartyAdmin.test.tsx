@@ -14,6 +14,7 @@ jest.mock('@react-navigation/native', () => ({
 
 jest.mock('../../components/AppHeader', () => ({
     AppHeader: ({ headerTitle }: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { Text } = require('react-native');
         return <Text>{headerTitle}</Text>;
     },
@@ -21,6 +22,7 @@ jest.mock('../../components/AppHeader', () => ({
 
 jest.mock('../../components/PartyQRCode', () => ({
     PartyQRCode: ({ partyCode }: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { Text } = require('react-native');
         return <Text>QR: {partyCode}</Text>;
     },
@@ -28,6 +30,7 @@ jest.mock('../../components/PartyQRCode', () => ({
 
 jest.mock('../../components/ParticipanteCard', () => ({
     ParticipanteCard: ({ participante }: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { Text } = require('react-native');
         return <Text>{participante.usuario.nome}</Text>;
     },

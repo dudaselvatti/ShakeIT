@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { IconButton } from "../../components/IconButton";
 import { PopupModal } from "../../components/PopupModal";
@@ -6,29 +6,33 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { DateInput } from "../../components/DateInput";
 import { CurrencyInput } from "../../components/CurrencyInput";
-import { gerarPartyCode } from "../../utils/PartyCode";
 import { styles } from "./styles";
 
+// Importamos a nossa inteligência (ViewModel)
+import { useCreatePartyViewModel } from "./CreatePartyViewModel";
+
 export const CreatePartyScreen = ({ navigation }: any) => {
-  const [isModalVisible, setModalVisible] = useState(false);
+  // Conectamos a View ao ViewModel
+  const {
+    nomeParty,
+    updateNomeParty,
+    dataRevelacao,
+    updateDataRevelacao,
+    valorMinimo,
+    updateValorMinimo,
+    valorMaximo,
+    updateValorMaximo,
+    errors,
+    isModalVisible,
+    cancelExit,
+    handleBackPress,
+    confirmExit,
+    handleCriarParty,
+  } = useCreatePartyViewModel(navigation);
 
-  const [nomeParty, setNomeParty] = useState("");
-  const [dataRevelacao, setDataRevelacao] = useState<Date | undefined>(undefined);
-  const [valorMinimo, setValorMinimo] = useState("");
-  const [valorMaximo, setValorMaximo] = useState("");
-
-
-  const handleBackPress = () => setModalVisible(true);
-  const confirmExit = () => {
-    setModalVisible(false);
-    navigation.goBack();
-  };
-
+  // A partir daqui, é apenas UI! Nenhuma lógica complexa permitida.
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <View style={styles.header}>
         <IconButton iconName="chevron-left" onPress={handleBackPress} />
       </View>
@@ -40,47 +44,42 @@ export const CreatePartyScreen = ({ navigation }: any) => {
           label="Nome da Party"
           placeholder="Ex: Amigo Secreto da Firma"
           value={nomeParty}
-          onChangeText={setNomeParty}
+          onChangeText={updateNomeParty}
           maxLength={30}
         />
+        {errors.nome ? <Text style={styles.errorText}>{errors.nome}</Text> : null}
 
         <DateInput
           label="Data da Revelação"
           value={dataRevelacao}
-          onChangeDate={(dataEscolhida) => setDataRevelacao(dataEscolhida)}
+          onChangeDate={updateDataRevelacao}
         />
+        {errors.data ? <Text style={styles.errorText}>{errors.data}</Text> : null}
 
         <View style={styles.row}>
           <CurrencyInput
             label="Valor Mínimo"
             placeholder="0,00"
             value={valorMinimo}
-            onChangeText={setValorMinimo}
-            keyboardType="numeric"
+            onChangeText={updateValorMinimo}
             containerStyle={{ width: "48%" }}
           />
-
           <CurrencyInput
             label="Valor Máximo"
             placeholder="50,00"
             value={valorMaximo}
-            onChangeText={setValorMaximo}
-            keyboardType="numeric"
+            onChangeText={updateValorMaximo}
             containerStyle={{ width: "48%" }}
           />
         </View>
+        {errors.valores ? <Text style={styles.errorText}>{errors.valores}</Text> : null}
       </ScrollView>
 
       <View style={styles.footer}>
         <Button
           title="Criar Party"
-          onPress={() => {
-            const partyCode = gerarPartyCode();
-            navigation.navigate('PartyAdmin', {
-            partyName: "Natal 2026", 
-            partyCode: partyCode
-          })}}
-          disabled={!nomeParty}
+          onPress={handleCriarParty}
+          disabled={!nomeParty} 
         />
       </View>
 
@@ -90,10 +89,9 @@ export const CreatePartyScreen = ({ navigation }: any) => {
         message="Se você voltar agora, os dados da Party serão perdidos. Deseja sair?"
         cancelText="Cancelar"
         confirmText="Sair sem salvar"
-        onCancel={() => setModalVisible(false)}
+        onCancel={cancelExit}
         onConfirm={confirmExit}
       />
     </KeyboardAvoidingView>
-    
   );
 };

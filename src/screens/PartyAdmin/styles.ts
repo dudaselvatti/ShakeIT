@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
         marginBottom: 10,
     },
     flatListContainer: {
-        height: 300, //A scroll bar do FlatList não queria funcionar sem uma height definida
+        height: 300,
     },
     footer: {
         padding: theme.metrics.padding,

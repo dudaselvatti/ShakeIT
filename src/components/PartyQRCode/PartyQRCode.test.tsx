@@ -3,6 +3,13 @@ import { render } from '@testing-library/react-native';
 import { PartyQRCode } from '../PartyQRCode';
 import QRCode from 'react-native-qrcode-svg';
 
+jest.mock('react-native-qrcode-svg', () => { 
+  const { View } = jest.requireActual('react-native');
+  const MockQRCode = (props: any) => <View testID="mock-qrcode" {...props} />;
+  MockQRCode.displayName = 'MockQRCode';
+  return MockQRCode;
+});
+
 describe('PartyQRCode', () => {
     it('deve garantir que o QR Code receba o partyCode corretamente', () => {
         const testCode = "#ABC123";
