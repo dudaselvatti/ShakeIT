@@ -1,4 +1,4 @@
-import { Participante } from '../@types/Participante';
+import { Participante } from '../types/Participante';
 import { usuariosMock } from '../mocks/usuariosMock';
 import { perfisMock } from '../mocks/perfisMock';
 

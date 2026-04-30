@@ -9,6 +9,12 @@ export const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: theme.colors.border,
     },
+    returnArrow: {
+        position: 'absolute',
+        top: 16,
+        left: 16,
+        zIndex: 10,
+    },
     logoContainer: {
         marginTop: 25,
         justifyContent: 'center',

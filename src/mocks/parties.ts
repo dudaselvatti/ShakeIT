@@ -1,6 +1,6 @@
-import { Party } from "../@types/Party";
+import { Party } from "../types/Party";
 
-export const MOCK_PARTIES: Party[] = [
+export const partiesMock: Party[] = [
   {
     id: "1",
     name: "Amigo Secreto IFSP",

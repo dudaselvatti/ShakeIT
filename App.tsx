@@ -4,13 +4,13 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { Medidas, Preferencias } from './src/@types/Perfil';
+import { Medidas, Preferencias } from './src/types/Perfil';
 
 import { HomeScreen } from "./src/screens/Home";
 import { CreatePartyScreen } from "./src/screens/CreateParty";
 import { PartyCreatedScreen } from "./src/screens/PartyCreated";
 import { PartyAdminScreen } from "./src/screens/PartyAdmin"
-import { Party } from "./src/@types/Party";
+import { Party } from "./src/types/Party";
 import { ShakeRevealScreen } from "./src/screens/ShakeReveal";
 import { PerfilSorteadoScreen } from "./src/screens/PerfilSorteado";
 

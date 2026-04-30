@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { ParticipanteCard } from './index';
-import { Participante } from '../../@types/Participante';
+import { Participante } from '../../types/Participante';
 
 const mockParticipante: Participante = {
     usuario: {

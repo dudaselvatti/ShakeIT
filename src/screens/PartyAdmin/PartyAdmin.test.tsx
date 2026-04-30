@@ -1,85 +1,77 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react-native';
+import { Text as MockText } from 'react-native'; 
+import { render, screen, fireEvent } from '@testing-library/react-native';
 import { PartyAdminScreen } from './index';
-import { participantesMock } from '../../mocks/participantesMock';
+import { usePartyAdminViewModel } from './PartyAdminViewModel';
 
-jest.mock('@react-navigation/native', () => ({
-    useRoute: () => ({
-        params: {
-        partyName: 'Festa Teste',
-        partyCode: 'ABC123',
-        },
-    }),
-}));
+jest.mock('./PartyAdminViewModel');
 
 jest.mock('../../components/AppHeader', () => ({
-    AppHeader: ({ headerTitle }: any) => {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const { Text } = require('react-native');
-        return <Text>{headerTitle}</Text>;
-    },
+  AppHeader: ({ headerTitle }: any) => <MockText>{headerTitle}</MockText>,
 }));
 
 jest.mock('../../components/PartyQRCode', () => ({
-    PartyQRCode: ({ partyCode }: any) => {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const { Text } = require('react-native');
-        return <Text>QR: {partyCode}</Text>;
-    },
+  PartyQRCode: ({ partyCode }: any) => <MockText>QR: {partyCode}</MockText>,
 }));
 
 jest.mock('../../components/ParticipanteCard', () => ({
-    ParticipanteCard: ({ participante }: any) => {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const { Text } = require('react-native');
-        return <Text>{participante.usuario.nome}</Text>;
-    },
+  ParticipanteCard: ({ participante }: any) => <MockText>{participante.usuario.nome}</MockText>,
 }));
 
 describe('PartyAdminScreen', () => {
-    it('deve renderizar título do header', () => {
-        render(<PartyAdminScreen />);
-        expect(screen.getByText('Painel do Evento')).toBeTruthy();
-    });
+  const mockHandleSorteioPress = jest.fn();
+  
+  const mockData = {
+    partyName: 'Festa de Natal',
+    partyCode: 'XMAS24',
+    participantes: [
+      { usuario: { id: 1, nome: 'Duda' }, perfil: { isConfirmado: true } },
+      { usuario: { id: 2, nome: 'João' }, perfil: { isConfirmado: false } },
+    ],
+    confirmadosCount: 1,
+    participantesTotal: 2,
+    headerTitle: 'Painel do Evento',
+    handleSorteioPress: mockHandleSorteioPress,
+  };
 
-    it('deve renderizar nome e código da festa', () => {
-        render(<PartyAdminScreen />);
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (usePartyAdminViewModel as jest.Mock).mockReturnValue(mockData);
+  });
 
-        expect(screen.getByText('Festa Teste')).toBeTruthy();
-        expect(screen.getByText(/Código:/)).toBeTruthy();
-        expect(screen.getByText('ABC123')).toBeTruthy();
-    });
+  it('deve renderizar o título do header corretamente', () => {
+    render(<PartyAdminScreen />);
+    expect(screen.getByText('Painel do Evento')).toBeTruthy();
+  });
 
-    it('deve renderizar QR Code com partyCode', () => {
-        render(<PartyAdminScreen />);
-        expect(screen.getByText('QR: ABC123')).toBeTruthy();
-    });
+  it('deve exibir o nome da festa e o código', () => {
+    render(<PartyAdminScreen />);
+    expect(screen.getByText('Festa de Natal')).toBeTruthy();
+    expect(screen.getByText('XMAS24')).toBeTruthy();
+  });
 
-    it('deve exibir quantidade de perfis confirmados', () => {
-        render(<PartyAdminScreen />);
+  it('deve exibir o QR Code com o código correto', () => {
+    render(<PartyAdminScreen />);
+    expect(screen.getByText('QR: XMAS24')).toBeTruthy();
+  });
 
-        const confirmadosCount = participantesMock.filter(
-            (p) => p.perfil.isConfirmado
-        ).length;
+  it('deve exibir o contador de perfis confirmados formatado', () => {
+    render(<PartyAdminScreen />);
+    expect(screen.getByText('Perfis confirmados (1/2)')).toBeTruthy();
+  });
 
-        expect(
-            screen.getByText(
-                `Perfis confirmados (${confirmadosCount}/${participantesMock.length})`
-            )
-        ).toBeTruthy();
-    });
+  it('deve renderizar a lista de participantes baseada nos dados do ViewModel', () => {
+    render(<PartyAdminScreen />);
+    expect(screen.getByText('Duda')).toBeTruthy();
+    expect(screen.getByText('João')).toBeTruthy();
+  });
+
+  it('deve chamar handleSorteioPress ao clicar no botão de sorteio', () => {
+    render(<PartyAdminScreen />);
     
-    it('deve renderizar botão de sorteio', () => {
-        render(<PartyAdminScreen />);
+    const botaoSorteio = screen.getByText('Realizar Sorteio');
+    fireEvent.press(botaoSorteio);
 
-        expect(screen.getByText('Realizar Sorteio')).toBeTruthy();
-    });
-
-    it('deve renderizar lista de participantes', () => {
-        render(<PartyAdminScreen />);
-
-        participantesMock.forEach((p) => {
-        expect(screen.getByText(p.usuario.nome)).toBeTruthy();
-        });
-    });
+    expect(mockHandleSorteioPress).toHaveBeenCalledTimes(1);
+  });
 });

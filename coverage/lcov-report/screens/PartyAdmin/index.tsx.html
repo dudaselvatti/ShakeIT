@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
@@ -112,11 +112,7 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,16 +123,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">90x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -154,9 +140,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">96x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">90x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -169,29 +163,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react';
 import { View, Text, FlatList } from 'react-native';
-import { participantesMock } from "../../mocks/participantesMock";
 import { AppHeader } from '../../components/AppHeader';
 import { PartyQRCode } from '../../components/PartyQRCode';
 import { Button } from "../../components/Button";
 import { ParticipanteCard } from '../../components/ParticipanteCard';
-import { useRoute } from '@react-navigation/native';
+import { usePartyAdminViewModel } from './PartyAdminViewModel';
 import { styles } from './styles';
 &nbsp;
 export const PartyAdminScreen = () =&gt; {
-    const route = useRoute();
-&nbsp;
-    const { partyName, partyCode } = route.params as {
-        partyName: string;
-        partyCode: string;
-    };
-&nbsp;
-    const confirmadosCount = participantesMock.filter(p =&gt; p.perfil.isConfirmado).length;
-    const participantesTotal = participantesMock.length;
-    const headerTitle = "Painel do Evento";
-&nbsp;
+    const { partyName, partyCode, participantes, confirmadosCount, participantesTotal, headerTitle, handleSorteioPress } = usePartyAdminViewModel();
     return (
         &lt;View style={styles.container}&gt;
             &lt;AppHeader headerTitle={headerTitle} /&gt;
+&nbsp;
             &lt;View style={styles.contentBody}&gt;
                 &lt;View style={styles.eventInfo}&gt;
                     &lt;Text style={styles.partyName}&gt;{partyName}&lt;/Text&gt;
@@ -199,23 +183,30 @@ export const PartyAdminScreen = () =&gt; {
                         Código: &lt;Text style={styles.codeValue}&gt;{partyCode}&lt;/Text&gt;
                     &lt;/Text&gt;
                 &lt;/View&gt;
+&nbsp;
                 &lt;PartyQRCode partyCode={partyCode} /&gt;
+&nbsp;
                 &lt;Text style={styles.participantesCount}&gt;
                     Perfis confirmados ({confirmadosCount}/{participantesTotal})
                 &lt;/Text&gt;
+&nbsp;
                 &lt;View style={styles.flatListContainer}&gt;
                     &lt;FlatList
-                        data={participantesMock}
+                        data={participantes}
                         keyExtractor={(item) =&gt; item.usuario.id.toString()}
                         renderItem={({ item }) =&gt; (
                             &lt;ParticipanteCard participante={item} /&gt;
                         )}
-                        initialNumToRender={participantesMock.length}
+                        initialNumToRender={participantes.length}
                     /&gt;
                 &lt;/View&gt;
             &lt;/View&gt;
+&nbsp;
             &lt;View style={styles.footer}&gt;
-                &lt;Button title="Realizar Sorteio"/&gt;
+                &lt;Button 
+                    title="Realizar Sorteio" 
+                    onPress={handleSorteioPress}
+                /&gt;
             &lt;/View&gt;
         &lt;/View&gt;
     );
@@ -226,7 +217,7 @@ export const PartyAdminScreen = () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-04-30T01:29:10.488Z
+                at 2026-04-30T12:43:55.870Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
