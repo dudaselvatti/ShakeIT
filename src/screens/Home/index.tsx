@@ -26,13 +26,11 @@ export const HomeScreen = ({ navigation, route }: any) => {
           <Card onPress={() => console.log("Abrir Party", item.id)}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>{item.name}</Text>
-              <View style={styles.statusRow}>
-                <Feather
-                  name={item.status === "Sorteio Realizado" ? "gift" : "clock"}
-                  size={20}
-                  color={theme.colors.primary}
-                />
-              </View>
+              <Feather
+                name={item.status === "Sorteio Realizado" ? "gift" : "clock"}
+                size={20}
+                color={theme.colors.primary}
+              />
             </View>
 
             <View style={styles.cardInfoRow}>
