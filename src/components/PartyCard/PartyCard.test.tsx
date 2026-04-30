@@ -9,7 +9,7 @@ const mockProps = {
   id: '1',
   name: 'Natal 1959',
   eventDate: '1959-05-20',
-  status: 'Aguardando Sorteio',
+  status: 'Aguardando Sorteio' as const,
   onPress: jest.fn(),
 };
 
