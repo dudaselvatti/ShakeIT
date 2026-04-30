@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Party } from "../../@types/Party";
 
-// O ViewModel é apenas um Custom Hook que recebe a navegação para conseguir mudar de tela
 export const useCreatePartyViewModel = (navigation: any) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [nomeParty, setNomeParty] = useState("");
@@ -10,7 +9,6 @@ export const useCreatePartyViewModel = (navigation: any) => {
   const [valorMaximo, setValorMaximo] = useState("");
   const [errors, setErrors] = useState({ nome: "", data: "", valores: "" });
 
-  // Funções de atualização que já limpam os erros automaticamente
   const updateNomeParty = (text: string) => {
     setNomeParty(text);
     if (errors.nome) setErrors((prev) => ({ ...prev, nome: "" }));
@@ -31,7 +29,6 @@ export const useCreatePartyViewModel = (navigation: any) => {
     if (errors.valores) setErrors((prev) => ({ ...prev, valores: "" }));
   };
 
-  // Funções de Navegação e Modal
   const handleBackPress = () => setModalVisible(true);
   const cancelExit = () => setModalVisible(false);
   const confirmExit = () => {
@@ -44,7 +41,6 @@ export const useCreatePartyViewModel = (navigation: any) => {
     return parseFloat(value.replace(/\./g, "").replace(",", "."));
   };
 
-  // Validação e Regra de Negócio (T04)
   const handleCriarParty = () => {
     let isValid = true;
     let newErrors = { nome: "", data: "", valores: "" };
@@ -88,7 +84,6 @@ export const useCreatePartyViewModel = (navigation: any) => {
     }
   };
 
-  // Retornamos apenas o que a View precisa enxergar e utilizar
   return {
     nomeParty,
     updateNomeParty,
