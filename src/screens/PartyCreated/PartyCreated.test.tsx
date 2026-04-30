@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { PartyCreatedScreen } from './index';
-import { Party } from '../../@types/Party';
+import { Party } from '../../types/Party';
 
 describe('Ecrã PartyCreated', () => {
   it('deve renderizar a mensagem de sucesso e os dados da party', () => {

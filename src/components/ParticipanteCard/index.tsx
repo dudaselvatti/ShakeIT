@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Participante } from '../../@types/Participante';
+import { Participante } from '../../types/Participante';
 import { styles } from './styles';
 
 interface Props {

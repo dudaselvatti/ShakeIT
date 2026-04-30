@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Medidas, Preferencias } from '../../@types/Perfil'
+import { Medidas, Preferencias } from '../../types/Perfil'
 import { styles } from './styles';
 
 interface Props {

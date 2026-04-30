@@ -1,4 +1,4 @@
-import { Perfil } from '../@types/Perfil'
+import { Perfil } from '../types/Perfil'
 
 export const perfisMock: Perfil[] = [
     {

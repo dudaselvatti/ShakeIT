@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Party } from "../../@types/Party";
+import { Party } from "../../types/Party";
 
 export const useCreatePartyViewModel = (navigation: any) => {
   const [isModalVisible, setModalVisible] = useState(false);
