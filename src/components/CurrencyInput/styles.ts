@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
     borderColor: theme.colors.border,
     borderRadius: theme.metrics.borderRadius,
     paddingHorizontal: theme.metrics.padding,
-    height: 54, // Mantém a altura consistente com os outros
+    height: 54,
   },
   prefix: {
     fontSize: 16,
@@ -28,9 +28,9 @@ export const styles = StyleSheet.create({
     fontWeight: "500",
   },
   input: {
-    flex: 1, // Ocupa o resto do espaço
+    flex: 1,
     fontSize: 16,
     color: theme.colors.text,
-    height: "100%", // Garante que a área clicável seja grande
+    height: "100%",
   },
 });

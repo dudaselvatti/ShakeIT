@@ -1,22 +1,4 @@
-interface Medidas {
-    camisa: string;
-    calca: string;
-    calcado: string;
-};
-
-interface Preferencias {
-    coisasQueAmo: string[];
-    melhorEvitar: string[];
-};
-
-interface Perfil {
-    idUsuario: number;
-    isConfirmado: boolean;
-    medidas: Medidas;
-    preferencias: Preferencias;
-    isDependente: boolean;
-    idDependente?: number;
-};
+import { Perfil } from '../types/Perfil'
 
 export const perfisMock: Perfil[] = [
     {
@@ -157,6 +139,76 @@ export const perfisMock: Perfil[] = [
         preferencias: {
             coisasQueAmo: ["Romance", "Chocolates", "Cinema"],
             melhorEvitar: ["Filmes de terror", "Café"]
+        },
+        isDependente: false
+    },
+    {
+        idUsuario: 11,
+        isConfirmado: true,
+        medidas: {
+            camisa: "G",
+            calca: "42",
+            calcado: "42"
+        },
+        preferencias: {
+            coisasQueAmo: ["Tecnologia", "Gadgets", "Café"],
+            melhorEvitar: ["Roupas coloridas", "Chás"]
+        },
+        isDependente: false
+    },
+    {
+        idUsuario: 12,
+        isConfirmado: true,
+        medidas: {
+            camisa: "P",
+            calca: "38",
+            calcado: "35"
+        },
+        preferencias: {
+            coisasQueAmo: ["Livros de fantasia", "Papelaria", "Gatos"],
+            melhorEvitar: ["Esportes radicais", "Bebidas alcoólicas"]
+        },
+        isDependente: false
+    },
+    {
+        idUsuario: 13,
+        isConfirmado: true,
+        medidas: {
+            camisa: "GG",
+            calca: "46",
+            calcado: "43"
+        },
+        preferencias: {
+            coisasQueAmo: ["Pescaria", "Ferramentas", "Rock clássico"],
+            melhorEvitar: ["Shopping centers", "Tecido sintético"]
+        },
+        isDependente: false
+    },
+    {
+        idUsuario: 14,
+        isConfirmado: true,
+        medidas: {
+            camisa: "M",
+            calca: "40",
+            calcado: "37"
+        },
+        preferencias: {
+            coisasQueAmo: ["Vinho", "Cozinha italiana", "Viagens"],
+            melhorEvitar: ["Comida picante", "Inverno"]
+        },
+        isDependente: false
+    },
+    {
+        idUsuario: 15,
+        isConfirmado: true,
+        medidas: {
+            camisa: "M",
+            calca: "40",
+            calcado: "41"
+        },
+        preferencias: {
+            coisasQueAmo: ["Animes", "Jogos de tabuleiro", "Salgadinhos"],
+            melhorEvitar: ["Roupas sociais", "Acordar cedo"]
         },
         isDependente: false
     }

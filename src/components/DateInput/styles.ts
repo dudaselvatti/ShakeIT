@@ -17,8 +17,8 @@ export const styles = StyleSheet.create({
     borderColor: theme.colors.border,
     borderRadius: theme.metrics.borderRadius,
     padding: theme.metrics.padding,
-    justifyContent: "center", // Centraliza o texto verticalmente
-    height: 54, // Mantém a mesma altura do TextInput padrão
+    justifyContent: "center",
+    height: 54,
   },
   inputText: {
     fontSize: 16,

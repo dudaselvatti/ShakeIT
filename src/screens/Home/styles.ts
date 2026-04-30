@@ -29,36 +29,6 @@ export const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 100,
   },
-  cardHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  cardTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: theme.colors.text,
-  },
-  cardInfoRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  cardInfoText: {
-    fontSize: 14,
-    color: theme.colors.textLight,
-  },
-  cardFooter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  participantCount: {
-    fontSize: 12,
-    color: theme.colors.textLight,
-    fontWeight: "600",
-  },
   fabContainer: {
     position: "absolute",
     right: 24,

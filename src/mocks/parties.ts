@@ -1,11 +1,11 @@
-import { Party } from "../@types/Party";
+import { Party } from "../types/Party";
 
-export const MOCK_PARTIES: Party[] = [
+export const partiesMock: Party[] = [
   {
     id: "1",
     name: "Amigo Secreto IFSP",
     eventDate: "20/12/2026",
-    drawDate: "15/04/2026", // aqui ta sem regra de negocio, isso tem que ser gerado automaticamente quando o sorteio for realizado, mas por enquanto é só pra teste mesmo
+    drawDate: "15/04/2026",
     minPrice: 50,
     maxPrice: 100,
     maxParticipants: 20,
@@ -16,7 +16,7 @@ export const MOCK_PARTIES: Party[] = [
     id: "2",
     name: "Firma 2026",
     eventDate: "15/12/2026",
-    drawDate: "", //sorteio ainda não realizado, então não tem data de sorteio
+    drawDate: "",
     minPrice: 80,
     maxPrice: 150,
     maxParticipants: 20,

@@ -1,12 +1,4 @@
-interface Usuario {
-    id: number;
-    email: string;
-    senha: string;
-    nome: string;
-    fotoUrl: string;
-    genero: string;
-    dataDeNascimento: string;
-};
+import { Usuario } from '../types/Usuario'
 
 export const usuariosMock: Usuario[] = [
     {
@@ -99,4 +91,49 @@ export const usuariosMock: Usuario[] = [
         genero: "Feminino",
         dataDeNascimento: "1997-02-14"
     },
+    {
+        id: 11,
+        email: "lucasoliveira@email.com",
+        senha: "12345",
+        nome: "Lucas Oliveira",
+        fotoUrl: "https://i.pravatar.cc/150?img=11",
+        genero: "Masculino",
+        dataDeNascimento: "1994-08-12"
+    },
+    {
+        id: 12,
+        email: "beatrizsantos@email.com",
+        senha: "12345",
+        nome: "Beatriz Santos",
+        fotoUrl: "https://i.pravatar.cc/150?img=12",
+        genero: "Feminino",
+        dataDeNascimento: "1998-12-05"
+    },
+    {
+        id: 13,
+        email: "ricardolima@email.com",
+        senha: "12345",
+        nome: "Ricardo Lima",
+        fotoUrl: "https://i.pravatar.cc/150?img=13",
+        genero: "Masculino",
+        dataDeNascimento: "1985-01-20"
+    },
+    {
+        id: 14,
+        email: "fernandacosta@email.com",
+        senha: "12345",
+        nome: "Fernanda Costa",
+        fotoUrl: "https://i.pravatar.cc/150?img=14",
+        genero: "Feminino",
+        dataDeNascimento: "1990-10-31"
+    },
+    {
+        id: 15,
+        email: "gabrielpereira@email.com",
+        senha: "12345",
+        nome: "Gabriel Pereira",
+        fotoUrl: "https://i.pravatar.cc/150?img=15",
+        genero: "Masculino",
+        dataDeNascimento: "2002-04-03"
+    }
 ];
