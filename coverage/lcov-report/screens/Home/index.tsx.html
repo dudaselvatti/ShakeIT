@@ -146,8 +146,8 @@
 <a name='L81'></a><a href='#L81'>81</a>
 <a name='L82'></a><a href='#L82'>82</a>
 <a name='L83'></a><a href='#L83'>83</a>
-<a name='L84'></a><a href='#L84'>84</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -198,6 +198,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -216,21 +227,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Card } from "../../components/Card";
 import { IconButton } from "../../components/IconButton";
@@ -238,7 +240,6 @@ import { Tag } from "../../components/Tag";
 import { MOCK_PARTIES } from "../../mocks/parties";
 import { styles } from "./styles";
 import { theme } from "../../styles/theme";
-import { MockButton } from "../../components/MockButton";
 &nbsp;
 export const HomeScreen = ({ navigation, route }: any) =&gt; {
   return (
@@ -258,11 +259,14 @@ export const HomeScreen = ({ navigation, route }: any) =&gt; {
           &lt;Card onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >console.log("Abrir Party", item.id)}</span>&gt;
             &lt;View style={styles.cardHeader}&gt;
               &lt;Text style={styles.cardTitle}&gt;{item.name}&lt;/Text&gt;
-              &lt;Feather
-                name={item.status === "Sorteio Realizado" ? "gift" : "clock"}
-                size={20}
-                color={theme.colors.primary}
-              /&gt;
+              &lt;View style={styles.statusRow}&gt;
+                &lt;Feather
+                  name={item.status === "Sorteio Realizado" ? "gift" : "clock"}
+                  size={20}
+                  color={theme.colors.primary}
+                /&gt;
+                {/* O texto do status foi removido daqui! */}
+              &lt;/View&gt;
             &lt;/View&gt;
 &nbsp;
             &lt;View style={styles.cardInfoRow}&gt;
@@ -275,14 +279,22 @@ export const HomeScreen = ({ navigation, route }: any) =&gt; {
             &lt;/View&gt;
 &nbsp;
             &lt;View style={styles.cardFooter}&gt;
-              &lt;Tag
-                label={item.status}
-                color={
-                  item.status === "Sorteio Realizado"
-                    ? theme.colors.success
-                    : theme.colors.primary
-                }
-              /&gt;
+              {item.status === "Sorteio Realizado" ? (
+                &lt;TouchableOpacity 
+                  activeOpacity={0.7} 
+                  onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >navigation.navigate("ShakeReveal")}</span>
+                &gt;
+                  &lt;Tag
+                    label={item.status}
+                    color={theme.colors.success}
+                  /&gt;
+                &lt;/TouchableOpacity&gt;
+              ) : (
+                &lt;Tag
+                  label={item.status}
+                  color={theme.colors.primary}
+                /&gt;
+              )}
 &nbsp;
               {item.status === "Aguardando Sorteio" &amp;&amp; (
                 &lt;Text style={styles.participantCount}&gt;
@@ -301,29 +313,16 @@ export const HomeScreen = ({ navigation, route }: any) =&gt; {
           onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >navigation.navigate("CreateParty")}</span>
         /&gt;
       &lt;/View&gt;
-&nbsp;
-      &lt;View style={styles.cardFooter}&gt;
-        {/* BOTÃO PROVISÓRIO PARA TESTAR A T08 */}
-        &lt;MockButton 
-          title="[Dev] Testar Tela de Shake (T08)" 
-          onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >navigation.navigate("ShakeReveal")} </span>
-        /&gt;
-      &lt;/View&gt;
     &lt;/View&gt;
   );
-};
-&nbsp;</pre></td></tr></table></pre>
+};</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-<<<<<<< HEAD
-                at 2026-04-29T23:16:35.456Z
-=======
-                at 2026-04-29T23:29:45.511Z
->>>>>>> 2bb4093c4d8fce9d3bd95cfc85d9f97e58004d0e
+                at 2026-04-30T01:29:10.488Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

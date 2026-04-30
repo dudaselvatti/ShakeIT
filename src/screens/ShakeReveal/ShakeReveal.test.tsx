@@ -1,55 +1,62 @@
 import React from 'react';
-import { render, fireEvent, act } from '@testing-library/react-native';
+import { render, act } from '@testing-library/react-native';
 import { ShakeRevealScreen } from './index';
-import { useShakeRevealViewModel } from './ShakeRevealViewModel';
+import { Vibration } from 'react-native';
 
-jest.mock('./ShakeRevealViewModel');
+let accelerometerListener: ((data: any) => void) | null = null;
 
-jest.mock('../../components/Button', () => {
-  const { Text } = require('react-native');
-  return {
-    Button: ({ title, onPress }: any) => (
-      <Text onPress={onPress}>{title}</Text>
-    ),
-  };
-});
+jest.mock('expo-sensors', () => ({
+  Accelerometer: {
+    setUpdateInterval: jest.fn(),
+    addListener: jest.fn((listener) => {
+      accelerometerListener = listener;
+      return { remove: jest.fn() };
+    }),
+  },
+}));
 
-describe('ShakeRevealScreen', () => {
-  const mockNavigation = { navigate: jest.fn() };
-  const mockSimularShake = jest.fn();
-  
-  const mockShakeAnimation = {
-    interpolate: jest.fn(() => 0),
-    setValue: jest.fn(),
-    _getPath: () => [], 
-  };
+jest.spyOn(Vibration, 'vibrate').mockImplementation(() => {});
 
+describe('Ecrã ShakeReveal (Tela 6)', () => {
   beforeEach(() => {
+    jest.useFakeTimers();
     jest.clearAllMocks();
-    (useShakeRevealViewModel as jest.Mock).mockReturnValue({
-      shakeAnimation: mockShakeAnimation,
-      simularShake: mockSimularShake,
-    });
+    accelerometerListener = null;
   });
 
-  it('deve renderizar os textos informativos corretamente', () => {
-    const { getByText } = render(<ShakeRevealScreen navigation={mockNavigation} />);
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  });
+
+  it('deve renderizar os textos de instrução visual e a caixa de presente', () => {
+    const { getByText } = render(<ShakeRevealScreen navigation={{}} />);
 
     expect(getByText('O Sorteio realizado!')).toBeTruthy();
     expect(getByText('Chacoalhe o celular para descobrir o seu amigo secreto...')).toBeTruthy();
-  });
-
-  it('deve renderizar o emoji de presente', () => {
-    const { getByText } = render(<ShakeRevealScreen navigation={mockNavigation} />);
     expect(getByText('🎁')).toBeTruthy();
   });
 
-  it('deve chamar a função simularShake ao pressionar o botão', () => {
+  it('deve vibrar, acionar explosao e navegar para a Tela 7 ao detetar shake real pelo sensor', () => {
+    const mockNavigation = { navigate: jest.fn() };
     const { getByText } = render(<ShakeRevealScreen navigation={mockNavigation} />);
-    
-    const button = getByText('Simular Shake (Mock T08)');
-    fireEvent.press(button);
 
-    expect(mockSimularShake).toHaveBeenCalledTimes(1);
+    expect(accelerometerListener).toBeTruthy();
+
+    act(() => {
+      if (accelerometerListener) {
+        accelerometerListener({ x: 3, y: 0, z: 0 });
+      }
+    });
+
+    expect(Vibration.vibrate).toHaveBeenCalledWith(500);
+    
+    expect(getByText('Preparando a surpresa...')).toBeTruthy();
+
+    act(() => {
+      jest.advanceTimersByTime(600);
+    });
+
+    expect(mockNavigation.navigate).toHaveBeenCalledWith('PerfilSorteado', { idUsuario: 1 });
   });
 });

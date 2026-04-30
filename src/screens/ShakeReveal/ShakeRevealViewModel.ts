@@ -9,12 +9,10 @@ export const useShakeRevealViewModel = (navigation: any) => {
   
   const [hasShaken, setHasShaken] = useState(false);
 
-  // 1. A FUNÇÃO PRECISA VIR ANTES (Declaramos antes de usar)
   const handleShakeDetected = useCallback(() => {
-    setHasShaken(true); // Bloqueia novos shakes acidentais
-    Vibration.vibrate(500); // Feedback Háptico!
+    setHasShaken(true);
+    Vibration.vibrate(500);
 
-    // Animação de "Explosão"
     Animated.parallel([
       Animated.timing(explodeScale, {
         toValue: 8,
@@ -27,11 +25,10 @@ export const useShakeRevealViewModel = (navigation: any) => {
         useNativeDriver: true,
       })
     ]).start(() => {
-      navigation.navigate("RevealResult");
+      navigation.navigate("PerfilSorteado", { idUsuario: 1 });
     });
   }, [explodeScale, explodeOpacity, navigation]);
 
-  // 2. Efeito de Tremor base
   useEffect(() => {
     if (hasShaken) return;
 
@@ -46,7 +43,6 @@ export const useShakeRevealViewModel = (navigation: any) => {
     Animated.loop(shakeSequence).start();
   }, [shakeAnimation, hasShaken]);
 
-  // 3. Monitorização do Acelerómetro
   useEffect(() => {
     let subscription: any;
 
@@ -58,7 +54,7 @@ export const useShakeRevealViewModel = (navigation: any) => {
         const acceleration = Math.sqrt(x * x + y * y + z * z);
 
         if (acceleration > 2.5 && !hasShaken) {
-          handleShakeDetected(); // Agora funciona perfeitamente pois a função já foi declarada acima!
+          handleShakeDetected();
         }
       });
     };
@@ -74,7 +70,6 @@ export const useShakeRevealViewModel = (navigation: any) => {
     };
   }, [hasShaken, handleShakeDetected]);
 
-  // Botão Mock para testes na equipa
   const simularShake = () => {
     if (!hasShaken) handleShakeDetected();
   };

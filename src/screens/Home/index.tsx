@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Card } from "../../components/Card";
 import { IconButton } from "../../components/IconButton";
@@ -7,7 +7,6 @@ import { Tag } from "../../components/Tag";
 import { MOCK_PARTIES } from "../../mocks/parties";
 import { styles } from "./styles";
 import { theme } from "../../styles/theme";
-import { MockButton } from "../../components/MockButton";
 
 export const HomeScreen = ({ navigation, route }: any) => {
   return (
@@ -44,14 +43,22 @@ export const HomeScreen = ({ navigation, route }: any) => {
             </View>
 
             <View style={styles.cardFooter}>
-              <Tag
-                label={item.status}
-                color={
-                  item.status === "Sorteio Realizado"
-                    ? theme.colors.success
-                    : theme.colors.primary
-                }
-              />
+              {item.status === "Sorteio Realizado" ? (
+                <TouchableOpacity 
+                  activeOpacity={0.7} 
+                  onPress={() => navigation.navigate("ShakeReveal")}
+                >
+                  <Tag
+                    label={item.status}
+                    color={theme.colors.success}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <Tag
+                  label={item.status}
+                  color={theme.colors.primary}
+                />
+              )}
 
               {item.status === "Aguardando Sorteio" && (
                 <Text style={styles.participantCount}>
@@ -68,14 +75,6 @@ export const HomeScreen = ({ navigation, route }: any) => {
           iconName="plus"
           variant="fab"
           onPress={() => navigation.navigate("CreateParty")}
-        />
-      </View>
-
-      <View style={styles.cardFooter}>
-        {/* BOTÃO PROVISÓRIO PARA TESTAR A T08 */}
-        <MockButton 
-          title="[Dev] Testar Tela de Shake (T08)" 
-          onPress={() => navigation.navigate("ShakeReveal")} 
         />
       </View>
     </View>

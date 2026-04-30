@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, Animated } from "react-native";
-import { MockButton } from "../../components/MockButton";
 import { styles } from "./styles";
 import { useShakeRevealViewModel } from "./ShakeRevealViewModel";
 
@@ -9,7 +8,6 @@ export const ShakeRevealScreen = ({ navigation }: any) => {
     shakeAnimation, 
     explodeScale, 
     explodeOpacity, 
-    simularShake, 
     hasShaken 
   } = useShakeRevealViewModel(navigation);
 
@@ -36,14 +34,6 @@ export const ShakeRevealScreen = ({ navigation }: any) => {
         <Text style={styles.emoji}>🎁</Text>
       </Animated.View>
 
-      <View style={styles.mockButtonContainer}>
-        {!hasShaken && (
-          <MockButton 
-            title="Simular Shake Físico" 
-            onPress={simularShake} 
-          />
-        )}
-      </View>
     </View>
   );
 };
