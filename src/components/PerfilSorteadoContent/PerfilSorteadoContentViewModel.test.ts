@@ -3,13 +3,14 @@ import { Medidas, Preferencias } from '../../types/Perfil';
 
 describe('usePerfilSorteadoContentViewModel', () => {
   const mockMedidas: Medidas = {
-    altura: 180,
-    peso: 75,
+    camisa: 'M',
+    calca: '40',
+    calcado: '42',
   };
 
   const mockPreferencias: Preferencias = {
-    estilo: 'Casual',
-    corFavorita: 'Azul',
+    coisasQueAmo: ['Tecnologia', 'Livros'],
+    melhorEvitar: ['Perfume', 'Chocolate'],
   };
 
   const mockProps: Props = {
@@ -24,10 +25,11 @@ describe('usePerfilSorteadoContentViewModel', () => {
     expect(result.preferencias).toEqual(mockPreferencias);
   });
 
-  it('deve manter a referência dos objetos ou a estrutura correta', () => {
-    const { medidas, preferencias } = usePerfilSorteadoContentViewModel(mockProps);
+  it('deve manter a estrutura correta dos objetos', () => {
+    const { medidas, preferencias } =
+      usePerfilSorteadoContentViewModel(mockProps);
 
-    expect(medidas.altura).toBe(180);
-    expect(preferencias.estilo).toBe('Casual');
+    expect(medidas.camisa).toBe('M');
+    expect(preferencias.coisasQueAmo).toContain('Tecnologia');
   });
 });

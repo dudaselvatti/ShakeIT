@@ -53,7 +53,7 @@ describe('useCurrencyInputViewModel', () => {
 
   it('deve manter a referência da função handleTextChange estável', () => {
     const { result, rerender } = renderHook(
-      (props) => useCurrencyInputViewModel(props),
+      (props: Props) => useCurrencyInputViewModel(props),
       { initialProps: defaultProps }
     );
 
@@ -62,7 +62,7 @@ describe('useCurrencyInputViewModel', () => {
     rerender({ ...defaultProps, value: '50' });
 
     expect(result.current.handleTextChange).toBe(firstReference);
-  });
+});
 
   it('deve repassar o restante das props do TextInput', () => {
     const { result } = renderHook(() => 

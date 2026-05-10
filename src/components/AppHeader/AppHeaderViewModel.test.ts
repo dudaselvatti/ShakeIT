@@ -11,17 +11,16 @@ describe('useAppHeaderViewModel', () => {
   });
 
   it('deve atualizar o título quando a prop headerTitle mudar', () => {
-    let props: Props = { headerTitle: 'Perfil' };
+    const initialProps: Props = { headerTitle: 'Perfil' };
     
     const { result, rerender } = renderHook(
-      (p) => useAppHeaderViewModel(p),
-      { initialProps: props }
+      (p: Props) => useAppHeaderViewModel(p),
+      { initialProps }
     );
 
     expect(result.current.title).toBe('Perfil');
 
     rerender({ headerTitle: 'Configurações' });
-
     expect(result.current.title).toBe('Configurações');
   });
 

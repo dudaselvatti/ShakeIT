@@ -1,23 +1,29 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { AppHeader } from './index';
-import { useAppHeaderViewModel } from './AppHeaderViewModel';
+import { useAppHeaderViewModel, Props } from './AppHeaderViewModel';
 
 jest.mock('./AppHeaderViewModel', () => ({
   useAppHeaderViewModel: jest.fn(),
 }));
 
-jest.mock('../ReturnHomeArrow', () => ({
-  ReturnHomeArrow: () => <mock-return-arrow />
-}));
+jest.mock('../ReturnHomeArrow', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+
+  return {
+    ReturnHomeArrow: () => <View testID="mock-return-arrow" />,
+  };
+});
 
 describe('AppHeader Component', () => {
-  const mockProps = {
+  const mockProps: Props = {
+    headerTitle: 'Default Title',
   };
 
   it('deve renderizar o título corretamente baseado no ViewModel', () => {
     const expectedTitle = 'Página Inicial';
-    
+
     (useAppHeaderViewModel as jest.Mock).mockReturnValue({
       title: expectedTitle,
     });
@@ -32,10 +38,9 @@ describe('AppHeader Component', () => {
       title: 'Teste',
     });
 
-    const { UNSAFE_getByType } = render(<AppHeader {...mockProps} />);
-    
-    const arrow = UNSAFE_getByType('mock-return-arrow');
-    expect(arrow).toBeTruthy();
+    const { getByTestId } = render(<AppHeader {...mockProps} />);
+
+    expect(getByTestId('mock-return-arrow')).toBeTruthy();
   });
 
   it('deve aplicar os estilos corretos ao container e ao título', () => {
@@ -46,10 +51,12 @@ describe('AppHeader Component', () => {
     const { getByText } = render(<AppHeader {...mockProps} />);
     const titleElement = getByText('Estilo');
 
-    expect(titleElement.props.style).toEqual(expect.objectContaining({
-      color: "#1A1D1E",
-      fontSize: 18,
-      textAlign: "center"
-    }));
+    expect(titleElement.props.style).toEqual(
+      expect.objectContaining({
+        color: '#1A1D1E',
+        fontSize: 18,
+        textAlign: 'center',
+      })
+    );
   });
 });

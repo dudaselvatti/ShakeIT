@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react-native";
-import { useParticipanteCardViewModel } from "./ParticipanteCardViewModel";
+import { useParticipanteCardViewModel, Props } from "./ParticipanteCardViewModel";
 import { Participante } from '../../types/Participante';
 
 describe("useParticipanteCardViewModel", () => {
@@ -68,10 +68,10 @@ describe("useParticipanteCardViewModel", () => {
   });
 
   it("deve reagir a mudanças no objeto participante", () => {
-    const { result, rerender } = renderHook(
+    const { result, rerender } = renderHook<any, Props>(
       ({ participante }) => useParticipanteCardViewModel({ participante }),
       {
-        initialProps: { participante: mockParticipanteBase as any },
+        initialProps: { participante: mockParticipanteBase },
       }
     );
 
@@ -79,8 +79,9 @@ describe("useParticipanteCardViewModel", () => {
 
     rerender({
       participante: {
-        usuario: { nome: "João Silva" },
-        perfil: { isConfirmado: true },
+        ...mockParticipanteBase,
+        usuario: { ...mockParticipanteBase.usuario, nome: "João Silva" },
+        perfil: { ...mockParticipanteBase.perfil, isConfirmado: true },
       } as any,
     });
 
