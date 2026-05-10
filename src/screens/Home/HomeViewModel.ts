@@ -3,7 +3,7 @@ import { partiesMock } from "../../mocks/parties";
 import { Party } from "../../types/Party";
 import { gerarPartyCode } from "../../utils/PartyCode/gerarPartyCode";
 
-export const useHomeViewModel = () => {
+export function useHomeViewModel() {
   const navigation = useNavigation<any>();
   const parties = partiesMock;
 

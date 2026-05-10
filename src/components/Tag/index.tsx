@@ -2,18 +2,11 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { styles } from "./styles";
-import { theme } from "../../styles/theme";
+import { useTagViewModel, Props } from "./TagViewModel";
 
-interface TagProps {
-  label: string;
-  onRemove?: () => void;
-  color?: string;
-}
-
-export const Tag = ({ label, onRemove, color }: TagProps) => {
-  const backgroundColor = color ? color + "20" : theme.colors.primary + "20";
-  const textColor = color || theme.colors.primary;
-
+export const Tag = (props: Props) => {
+  const { label, onRemove, backgroundColor, textColor } = useTagViewModel(props)
+  
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <Text style={[styles.label, { color: textColor }]}>{label}</Text>
