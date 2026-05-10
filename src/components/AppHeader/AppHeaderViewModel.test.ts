@@ -26,9 +26,9 @@ describe('useAppHeaderViewModel', () => {
 
   it('não deve alterar o título se a prop permanecer a mesma', () => {
     const props: Props = { headerTitle: 'Dashboard' };
-    
+
     const { result, rerender } = renderHook(
-      (p) => useAppHeaderViewModel(p),
+      (p: Props) => useAppHeaderViewModel(p),
       { initialProps: props }
     );
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { render } from '@testing-library/react-native';
 import { AppHeader } from './index';
 import { useAppHeaderViewModel, Props } from './AppHeaderViewModel';
@@ -7,14 +8,12 @@ jest.mock('./AppHeaderViewModel', () => ({
   useAppHeaderViewModel: jest.fn(),
 }));
 
-jest.mock('../ReturnHomeArrow', () => {
-  const React = require('react');
-  const { View } = require('react-native');
+const MockView = (props: any) => <View {...props} />;
 
-  return {
-    ReturnHomeArrow: () => <View testID="mock-return-arrow" />,
-  };
-});
+jest.mock('../ReturnHomeArrow', () => ({
+  __esModule: true,
+  ReturnHomeArrow: () => <MockView testID="mock-return-arrow" />,
+}));
 
 describe('AppHeader Component', () => {
   const mockProps: Props = {
