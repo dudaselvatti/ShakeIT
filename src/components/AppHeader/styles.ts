@@ -11,10 +11,6 @@ export const styles = StyleSheet.create({
         borderBottomColor: theme.colors.border,
         zIndex: 2,
     },
-    returnArrow: {
-        fontSize: 24,
-        color: theme.colors.primary,
-    },
     headerTitle: {
         position: 'absolute',
         left: 0,

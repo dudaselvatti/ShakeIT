@@ -7,7 +7,7 @@ type RootStackParamList = {
 
 type PerfilScreenRouteProp = RouteProp<RootStackParamList, 'PerfilSorteado'>;
 
-export const usePerfilSorteadoViewModel = () => {
+export function usePerfilSorteadoViewModel() {
     const route = useRoute<PerfilScreenRouteProp>();
     const { idUsuario } = route.params;
 

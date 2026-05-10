@@ -1,35 +1,12 @@
 import React from "react";
-import { View, Text, TextInput, TextInputProps, ViewStyle } from "react-native";
+import { View, Text, TextInput } from "react-native";
+import { useCurrencyInputViewModel, Props } from './CurrencyInputViewModel';
 import { styles } from "./styles";
 import { theme } from "../../styles/theme";
 
-interface CurrencyInputProps extends Omit<TextInputProps, 'onChangeText'> {
-  label: string;
-  containerStyle?: ViewStyle;
-  onChangeText?: (text: string) => void;
-}
-
-export const CurrencyInput = ({ 
-  label, 
-  containerStyle, 
-  onChangeText, 
-  value, 
-  ...rest 
-}: CurrencyInputProps) => {
+export const CurrencyInput = (props: Props) => {
+  const { handleTextChange, label, containerStyle, onChangeText, value, ...textInputProps} = useCurrencyInputViewModel(props);
   
-  const handleTextChange = (text: string) => {
-    if (!onChangeText) return;
-    let rawValue = text.replace(/\D/g, "");
-    if (rawValue === "") {
-      onChangeText("");
-      return;
-    }
-    let numericValue = (parseInt(rawValue, 10) / 100).toFixed(2);
-    let [intPart, decPart] = numericValue.split(".");
-    intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    onChangeText(`${intPart},${decPart}`);
-  };
-
   return (
     <View style={[styles.container, containerStyle]}>
       <Text style={styles.label}>{label}</Text>
@@ -44,7 +21,7 @@ export const CurrencyInput = ({
           value={value}
           onChangeText={handleTextChange}
           maxLength={12}
-          {...rest}
+          {...textInputProps}
         />
       </View>
     </View>

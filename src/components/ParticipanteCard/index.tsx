@@ -1,28 +1,18 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Participante } from '../../types/Participante';
 import { styles } from './styles';
+import { useParticipanteCardViewModel, Props } from "./ParticipanteCardViewModel";
 
-interface Props {
-    participante: Participante;
-}
-
-export const ParticipanteCard = ({ participante }: Props) => {
-    const isConfirmado = participante.perfil.isConfirmado;
-
+export const ParticipanteCard = (props: Props) => {
+    const { nome, statusIcon, statusText, isConfirmado } = useParticipanteCardViewModel(props);
+    
     return (
         <View style={styles.container}>
-            <Text style={styles.nome}>
-                {participante.usuario.nome}
-            </Text>
+            <Text style={styles.nome}>{nome}</Text>
             <View style={styles.statusContainer}>
-                <Text style={{ fontSize: 14 }}>
-                    {isConfirmado ? '🔒' : '🔓'}
-                </Text>
-                {!isConfirmado && (
-                    <Text style={styles.statusText}>Pendente</Text>
-                )}
+                <Text style={{ fontSize: 14 }}>{statusIcon}</Text>
+                {!isConfirmado && (<Text style={styles.statusText}>{statusText}</Text>)}
             </View>
         </View>
     );
-}
+};

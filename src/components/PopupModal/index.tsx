@@ -1,30 +1,23 @@
 import React from "react";
-import { Modal, View, Text, ModalProps } from "react-native";
+import { Modal, View, Text } from "react-native";
+import { usePopupModalViewModel, Props } from "./PopupModalViewModel";
 import { styles } from "./styles";
 import { Button } from "../Button";
 
-interface PopupModalProps extends ModalProps {
-  visible: boolean;
-  title: string;
-  message: string;
-  cancelText?: string;
-  confirmText?: string;
-  onCancel: () => void;
-  onConfirm: () => void;
-}
+export const PopupModal = (props: Props) => {
+  const { 
+    visible,
+    title,
+    message,
+    cancelText,
+    confirmText,
+    onCancel,
+    onConfirm,
+    ...modalProps 
+  } = usePopupModalViewModel(props)
 
-export const PopupModal = ({
-  visible,
-  title,
-  message,
-  cancelText = "Cancelar",
-  confirmText = "OK",
-  onCancel,
-  onConfirm,
-  ...rest
-}: PopupModalProps) => {
   return (
-    <Modal transparent visible={visible} animationType="fade" {...rest}>
+    <Modal transparent visible={visible} animationType="fade" {...modalProps}>
       <View style={styles.overlay}>
         <View style={styles.container}>
           <Text style={styles.title}>{title}</Text>

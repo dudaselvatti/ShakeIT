@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { Animated, Vibration } from "react-native";
 import { Accelerometer } from "expo-sensors";
 
-export const useShakeRevealViewModel = (navigation: any) => {
+export function useShakeRevealViewModel(navigation: any) {
   const shakeAnimation = useRef(new Animated.Value(0)).current;
   const explodeScale = useRef(new Animated.Value(1)).current;
   const explodeOpacity = useRef(new Animated.Value(1)).current;
