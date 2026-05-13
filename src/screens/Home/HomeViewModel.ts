@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { partiesMock } from "../../mocks/parties";
+import { partiesMock } from "../../mocks/partiesMock";
 import { Party } from "../../types/Party";
 import { gerarPartyCode } from "../../utils/PartyCode/gerarPartyCode";
 

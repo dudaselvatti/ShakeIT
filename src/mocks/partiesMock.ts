@@ -8,8 +8,8 @@ export const partiesMock: Party[] = [
     drawDate: "15/04/2026",
     minPrice: 50,
     maxPrice: 100,
-    maxParticipants: 20,
-    totalParticipants: 20,
+    idAdmin: 1,
+    inviteCode: "#STM32F",
     status: "Sorteio Realizado",
   },
   {
@@ -19,8 +19,8 @@ export const partiesMock: Party[] = [
     drawDate: "",
     minPrice: 80,
     maxPrice: 150,
-    maxParticipants: 20,
-    totalParticipants: 12,
+    idAdmin: 1,
+    inviteCode: "#103C8T",
     status: "Aguardando Sorteio",
   },
 ];
