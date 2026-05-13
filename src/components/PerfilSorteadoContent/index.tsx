@@ -1,14 +1,11 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Medidas, Preferencias } from '../../types/Perfil'
+import{ usePerfilSorteadoContentViewModel, Props} from './PerfilSorteadoContentViewModel'
 import { styles } from './styles';
 
-interface Props {
-    medidas: Medidas;
-    preferencias: Preferencias;
-}
-
-export const PerfilSorteadoContent = ({ medidas, preferencias }: Props) => {
+export const PerfilSorteadoContent = (props: Props) => {
+    const { medidas, preferencias } = usePerfilSorteadoContentViewModel(props);
+    
     return (
         <View style={styles.container}>
             <View style={styles.medidasContainer}>

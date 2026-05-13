@@ -2,42 +2,23 @@ import React from "react";
 import {
   TouchableOpacity,
   Text,
-  TouchableOpacityProps,
   ActivityIndicator,
 } from "react-native";
-import { styles } from "./styles";
-import { theme } from "../../styles/theme";
+import { useButtonViewModel, Props } from './ButtonViewModel'
 
-interface ButtonProps extends TouchableOpacityProps {
-  title: string;
-  variant?: "primary" | "accent" | "outline" | "text";
-  isLoading?: boolean;
-}
-
-export const Button = ({
-  title,
-  variant = "primary",
-  isLoading = false,
-  style,
-  ...rest
-}: ButtonProps) => {
+export const Button = (props: Props) => {
+  const { title, isLoading, isDisabled, loadingColor, touchableOpacityStyles, textStyles, touchableOpacityProps } = useButtonViewModel(props);
   return (
     <TouchableOpacity
-      style={[styles.base, styles[variant], style]}
+      style={touchableOpacityStyles}
       activeOpacity={0.8}
-      disabled={isLoading || rest.disabled}
-      {...rest}
+      disabled={isDisabled}
+      {...touchableOpacityProps}
     >
       {isLoading ? (
-        <ActivityIndicator
-          color={
-            variant === "outline" || variant === "text"
-              ? theme.colors.primary
-              : "#FFF"
-          }
-        />
+        <ActivityIndicator color={loadingColor}/>
       ) : (
-        <Text style={[styles.textBase, styles[`${variant}Text`]]}>{title}</Text>
+        <Text style={textStyles}>{title}</Text>
       )}
     </TouchableOpacity>
   );

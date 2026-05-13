@@ -9,7 +9,7 @@ export interface Props {
     onPress?: () => void;
 }
 
-export const usePartyCardViewModel = (props: Props) => {
+export function usePartyCardViewModel(props: Props) {
     return React.useMemo(() => {
         let config;
         

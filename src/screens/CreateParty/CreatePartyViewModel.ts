@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Party } from "../../types/Party";
 
-export const useCreatePartyViewModel = (navigation: any) => {
+export function useCreatePartyViewModel(navigation: any) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [nomeParty, setNomeParty] = useState("");
   const [dataRevelacao, setDataRevelacao] = useState<Date | undefined>(undefined);

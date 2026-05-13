@@ -1,14 +1,14 @@
 import React from 'react';
-import { TouchableOpacity, Text, TouchableOpacityProps } from 'react-native';
+import { TouchableOpacity, Text } from 'react-native';
 import { styles } from './styles';
+import { useMockButtonViewModel, Props } from './MockButtonViewModel';
 
-interface MockButtonProps extends TouchableOpacityProps {
-  title: string;
-}
 
-export const MockButton = ({ title, ...rest }: MockButtonProps) => {
+export const MockButton = (props: Props) => {
+  const { title, ...touchableOpacityProps } = useMockButtonViewModel(props)
+
   return (
-    <TouchableOpacity style={styles.container} activeOpacity={0.7} {...rest}>
+    <TouchableOpacity style={styles.container} activeOpacity={0.7} {...touchableOpacityProps}>
       <Text style={styles.text}>🛠 {title}</Text>
     </TouchableOpacity>
   );

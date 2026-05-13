@@ -1,7 +1,7 @@
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { participantesMock } from "../../mocks/participantesMock";
 
-export const usePartyAdminViewModel = () => {
+export function usePartyAdminViewModel() {
     const route = useRoute();
     const navigation = useNavigation<any>();
 

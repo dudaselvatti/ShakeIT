@@ -1,21 +1,19 @@
 import React from "react";
-import { View, Text, TextInput, TextInputProps, ViewStyle } from "react-native";
+import { View, Text, TextInput } from "react-native";
 import { styles } from "./styles";
 import { theme } from "../../styles/theme";
+import { useInputViewModel, Props } from "./InputViewModel";
 
-interface InputProps extends TextInputProps {
-  label: string;
-  containerStyle?: ViewStyle;
-}
+export const Input = (props: Props) => {
+  const { label, containerStyle, textInputStyle, ...textInputProps } = useInputViewModel(props);
 
-export const Input = ({ label, containerStyle, style, ...rest }: InputProps) => {
   return (
     <View style={[styles.container, containerStyle]}>
       <Text style={styles.label}>{label}</Text>
       <TextInput 
-        style={[styles.input, style]} 
+        style={textInputStyle} 
         placeholderTextColor={theme.colors.textLight}
-        {...rest}
+        {...textInputProps}
       />
     </View>
   );

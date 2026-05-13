@@ -2,13 +2,10 @@ import React from "react";
 import { View, Text } from "react-native";
 import { theme } from "../../styles/theme";
 import { Button } from "../../components/Button";
+import { usePartyCreatedViewModel } from "./PartyCreatedViewModel";
 
-export const PartyCreatedScreen = ({ route, navigation }: any) => {
-  const { party } = route.params;
-
-  const voltarParaHome = () => {
-    navigation.navigate("Home", { novaParty: party });
-  };
+export const PartyCreatedScreen = () => {
+  const { party, voltarParaHome } = usePartyCreatedViewModel();
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.background, padding: 24 }}>
