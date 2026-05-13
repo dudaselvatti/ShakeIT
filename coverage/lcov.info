@@ -1,9 +1,4 @@
 TN:
-<<<<<<< HEAD
-SF:src\components\AppHeader\AppHeaderViewModel.ts
-FN:7,useAppHeaderViewModel
-FN:8,(anonymous_1)
-=======
 SF:src\components\AppFooter\index.tsx
 FN:7,(anonymous_0)
 FN:15,(anonymous_1)
@@ -27,10 +22,9 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\components\AppHeader\index.tsx
-FN:10,(anonymous_0)
-FN:14,(anonymous_1)
->>>>>>> 0cae51cf83b7f33e633ac7ea23096333cafe3a2e
+SF:src\components\AppHeader\AppHeaderViewModel.ts
+FN:7,useAppHeaderViewModel
+FN:8,(anonymous_1)
 FNF:2
 FNH:2
 FNDA:5,useAppHeaderViewModel
@@ -1045,11 +1039,7 @@ TN:
 SF:src\styles\theme.ts
 FNF:0
 FNH:0
-<<<<<<< HEAD
-DA:1,24
-=======
-DA:1,22
->>>>>>> 0cae51cf83b7f33e633ac7ea23096333cafe3a2e
+DA:1,25
 LF:1
 LH:1
 BRF:0
