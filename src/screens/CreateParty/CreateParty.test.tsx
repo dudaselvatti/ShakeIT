@@ -2,6 +2,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { CreatePartyScreen } from './index';
 import { createPartyInCloud } from '../../services/cloudDb/cloudDb';
+import { Party } from '../../types/Party';
 
 jest.mock('../../services/cloudDb/cloudDb', () => ({
   createPartyInCloud: jest.fn(),
@@ -42,7 +43,8 @@ jest.mock('../../components/IconButton', () => {
   return { IconButton: MockIconButton };
 });
 
-(createPartyInCloud as jest.Mock).mockResolvedValue({
+(createPartyInCloud as jest.Mock<Promise<Party>>).mockResolvedValue({
+  id: 'mockPartyId',
   name: 'Natal 2026',
   minPrice: 10,
   maxPrice: 50,

@@ -1,6 +1,7 @@
 import { createPartyInCloud } from "../../services/cloudDb/cloudDb";
 import { db } from "../../config/firebase";
 import { addDoc, collection, doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { Party } from "../../types/Party";
 
 jest.mock("firebase/app", () => ({
   initializeApp: jest.fn(),
@@ -22,7 +23,7 @@ jest.mock("firebase/auth", () => ({
 }));
 
 describe("createPartyInCloud", () => {
-  const mockParty = {
+  const mockParty: Omit<Party, "id"> = {
     name: "Firma 2026",
     eventDate: "25/06/2026",
     minPrice: 10,
