@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.33% </span>
+                <span class="strong">75.75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>47/60</span>
+                <span class='fraction'>50/66</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">64.28% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/14</span>
+                <span class='fraction'>9/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.83% </span>
+                <span class="strong">88.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>45/49</span>
+                <span class='fraction'>47/53</span>
             </div>
         
             
@@ -165,7 +165,25 @@
 <a name='L100'></a><a href='#L100'>100</a>
 <a name='L101'></a><a href='#L101'>101</a>
 <a name='L102'></a><a href='#L102'>102</a>
-<a name='L103'></a><a href='#L103'>103</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -236,18 +254,32 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -269,6 +301,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useState } from "react";
 import { Party } from "../../types/Party";
+import { gerarPartyCode } from "../../utils/PartyCode/gerarPartyCode";
+import { createPartyInCloud } from "../../services/cloudDb/cloudDb";
 &nbsp;
 export function useCreatePartyViewModel(navigation: any) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -310,7 +344,7 @@ export function useCreatePartyViewModel(navigation: any) {
     return parseFloat(value.replace(/\./g, "").replace(",", "."));
   };
 &nbsp;
-  const handleCriarParty = () =&gt; {
+  const handleCriarParty = async () =&gt; {
     let isValid = true;
     let newErrors = { nome: "", data: "", valores: "" };
 &nbsp;
@@ -337,19 +371,33 @@ export function useCreatePartyViewModel(navigation: any) {
 &nbsp;
     setErrors(newErrors);
 &nbsp;
-    if (isValid) {
-      const novaParty: Party = {
-        id: Math.random().toString(36).substring(2, 10),
-        name: nomeParty,
-        eventDate: dataRevelacao!.toISOString(),
-        minPrice: numMin,
-        maxPrice: numMax,
-        maxParticipants: 10,
-        status: "Aguardando Sorteio",
-      };
+    if (!isValid) return;
 &nbsp;
-      console.log("SUCESSO (ViewModel)! Party Criada:", novaParty);
-      navigation.navigate("PartyCreated", { party: novaParty });
+    const novaParty: Omit&lt;Party, "id"&gt; = {
+      name: nomeParty,
+      eventDate: dataRevelacao!.toISOString(),
+      minPrice: numMin,
+      maxPrice: numMax,
+      idAdmin: 1, //Futuramente, obter o usuário logado
+      inviteCode: gerarPartyCode(),
+      status: "Aguardando Sorteio",
+    };
+&nbsp;
+    try {
+    const createdParty = await createPartyInCloud(novaParty);
+&nbsp;
+      console.log("Party criada no Firebase:", createdParty);
+&nbsp;
+      navigation.navigate("PartyCreated", {
+        party: createdParty,
+      });
+&nbsp;
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      console.error("Erro ao criar Party no Firebase:", error);</span>
+<span class="cstat-no" title="statement not covered" >      setErrors(<span class="fstat-no" title="function not covered" >(p</span>rev) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
+        ...prev,
+        nome: "Erro ao criar a Party. Tente novamente.",
+      }));
     }
   };
 &nbsp;
@@ -376,7 +424,7 @@ export function useCreatePartyViewModel(navigation: any) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-10T14:31:58.319Z
+                at 2026-05-13T18:56:31.607Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

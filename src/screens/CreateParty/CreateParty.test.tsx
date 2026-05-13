@@ -1,6 +1,22 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { CreatePartyScreen } from './index';
+import { createPartyInCloud } from '../../services/cloudDb/cloudDb';
+
+jest.mock('../../services/cloudDb/cloudDb', () => ({
+  createPartyInCloud: jest.fn(),
+}));
+
+jest.mock("firebase/app", () => ({
+  initializeApp: jest.fn(),
+  getApps: jest.fn(() => []),
+  getApp: jest.fn(),
+}));
+
+jest.mock("firebase/firestore", () => ({
+  getFirestore: jest.fn(),
+  collection: jest.fn(),
+}));
 
 jest.mock('../../components/DateInput', () => ({
   DateInput: ({ label, onChangeDate }: any) => {
@@ -26,7 +42,17 @@ jest.mock('../../components/IconButton', () => {
   return { IconButton: MockIconButton };
 });
 
-describe('Ecrã CreateParty', () => {
+(createPartyInCloud as jest.Mock).mockResolvedValue({
+  name: 'Natal 2026',
+  minPrice: 10,
+  maxPrice: 50,
+  idAdmin: 1,
+  inviteCode: '#XYZ123',
+  eventDate: '2026-12-25T00:00:00.000Z',
+  status: 'Aguardando Sorteio',
+});
+
+describe('Tela CreateParty', () => {
   it('deve validar os campos vazios, exibir erros vermelhos e não navegar', () => {
     const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
     const { getByText, getByPlaceholderText } = render(
@@ -42,7 +68,7 @@ describe('Ecrã CreateParty', () => {
     expect(mockNavigation.navigate).not.toHaveBeenCalled();
   });
 
-  it('deve instanciar o objeto Party e navegar com sucesso se tudo estiver correto', () => {
+  it('deve instanciar o objeto Party e navegar com sucesso se tudo estiver correto', async () => {
     const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
     const { getByText, getByPlaceholderText, getByTestId } = render(
       <CreatePartyScreen navigation={mockNavigation} />
@@ -55,13 +81,16 @@ describe('Ecrã CreateParty', () => {
     fireEvent.changeText(getByPlaceholderText('0,00'), '1000'); 
     fireEvent.changeText(getByPlaceholderText('50,00'), '5000');
 
-    fireEvent.press(getByText('Criar Party'));
+    await fireEvent.press(getByText('Criar Party'));
 
     expect(mockNavigation.navigate).toHaveBeenCalledWith('PartyCreated', {
       party: expect.objectContaining({
         name: 'Natal 2026',
         minPrice: 10,
         maxPrice: 50,
+        idAdmin: 1,
+        inviteCode: '#XYZ123',
+        eventDate: '2026-12-25T00:00:00.000Z',
         status: 'Aguardando Sorteio'
       })
     });

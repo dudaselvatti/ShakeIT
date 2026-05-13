@@ -10,7 +10,7 @@ export interface Party {
   drawDate?: string;
   minPrice: number;
   maxPrice: number;
-  maxParticipants: number;
-  totalParticipants?: number;
+  idAdmin: number,
+  inviteCode: string,
   status: PartyStatus;
 }

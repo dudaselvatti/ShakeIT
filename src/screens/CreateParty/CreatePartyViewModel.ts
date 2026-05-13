@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Party } from "../../types/Party";
+import { gerarPartyCode } from "../../utils/PartyCode/gerarPartyCode";
+import { createPartyInCloud } from "../../services/cloudDb/cloudDb";
 
 export function useCreatePartyViewModel(navigation: any) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -41,7 +43,7 @@ export function useCreatePartyViewModel(navigation: any) {
     return parseFloat(value.replace(/\./g, "").replace(",", "."));
   };
 
-  const handleCriarParty = () => {
+  const handleCriarParty = async () => {
     let isValid = true;
     let newErrors = { nome: "", data: "", valores: "" };
 
@@ -68,19 +70,33 @@ export function useCreatePartyViewModel(navigation: any) {
 
     setErrors(newErrors);
 
-    if (isValid) {
-      const novaParty: Party = {
-        id: Math.random().toString(36).substring(2, 10),
-        name: nomeParty,
-        eventDate: dataRevelacao!.toISOString(),
-        minPrice: numMin,
-        maxPrice: numMax,
-        maxParticipants: 10,
-        status: "Aguardando Sorteio",
-      };
+    if (!isValid) return;
 
-      console.log("SUCESSO (ViewModel)! Party Criada:", novaParty);
-      navigation.navigate("PartyCreated", { party: novaParty });
+    const novaParty: Omit<Party, "id"> = {
+      name: nomeParty,
+      eventDate: dataRevelacao!.toISOString(),
+      minPrice: numMin,
+      maxPrice: numMax,
+      idAdmin: 1, //Futuramente, obter o usuário logado
+      inviteCode: gerarPartyCode(),
+      status: "Aguardando Sorteio",
+    };
+
+    try {
+    const createdParty = await createPartyInCloud(novaParty);
+
+      console.log("Party criada no Firebase:", createdParty);
+
+      navigation.navigate("PartyCreated", {
+        party: createdParty,
+      });
+
+    } catch (error) {
+      console.error("Erro ao criar Party no Firebase:", error);
+      setErrors((prev) => ({
+        ...prev,
+        nome: "Erro ao criar a Party. Tente novamente.",
+      }));
     }
   };
 
