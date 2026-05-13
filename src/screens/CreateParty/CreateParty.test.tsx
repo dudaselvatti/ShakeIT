@@ -43,7 +43,12 @@ jest.mock('../../components/IconButton', () => {
   return { IconButton: MockIconButton };
 });
 
-(createPartyInCloud as jest.Mock<Promise<Party>>).mockResolvedValue({
+const mockCreatePartyInCloud = createPartyInCloud as jest.Mock<
+  Promise<Party>,
+  [Omit<Party, 'id'>]
+>;
+
+mockCreatePartyInCloud.mockResolvedValue({
   id: 'mockPartyId',
   name: 'Natal 2026',
   minPrice: 10,
