@@ -24,7 +24,7 @@ jest.mock("firebase/auth", () => ({
 describe("createPartyInCloud", () => {
   const mockParty = {
     name: "Firma 2026",
-    eventDate: new Date("2026-06-01T20:00:00Z"),
+    eventDate: "25/06/2026",
     minPrice: 10,
     maxPrice: 50,
     inviteCode: "#INV123",

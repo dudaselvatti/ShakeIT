@@ -15,7 +15,6 @@ describe('Tela PartyCreated', () => {
     eventDate: new Date().toISOString(),
     minPrice: 50,
     maxPrice: 100,
-    maxParticipants: 10,
     status: 'Aguardando Sorteio'
   };
 
