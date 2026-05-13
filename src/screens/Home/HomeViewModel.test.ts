@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react-native';
 import { useHomeViewModel } from './HomeViewModel';
 import { useNavigation } from '@react-navigation/native';
 import { gerarPartyCode } from '../../utils/PartyCode/gerarPartyCode';
-import { partiesMock } from '../../mocks/parties';
+import { partiesMock } from '../../mocks/partiesMock';
 
 jest.mock('@react-navigation/native', () => {
   return {
@@ -11,7 +11,7 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 jest.mock('../../utils/PartyCode/gerarPartyCode');
-jest.mock('../../mocks/parties', () => ({
+jest.mock('../../mocks/partiesMock', () => ({
   partiesMock: [
     { id: '1', name: 'Festa A', status: 'Aguardando Sorteio' },
     { id: '2', name: 'Festa B', status: 'Sorteio Realizado' },

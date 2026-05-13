@@ -15,7 +15,8 @@ describe('Tela PartyCreated', () => {
     eventDate: new Date().toISOString(),
     minPrice: 50,
     maxPrice: 100,
-    maxParticipants: 10,
+    idAdmin: 1,
+    inviteCode: "#IDKFA2",
     status: 'Aguardando Sorteio'
   };
 
