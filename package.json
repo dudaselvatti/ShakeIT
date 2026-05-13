@@ -20,6 +20,7 @@
     "expo": "~54.0.33",
     "expo-sensors": "~15.0.8",
     "expo-status-bar": "~3.0.9",
+    "firebase": "^12.13.0",
     "jest": "~29.7.0",
     "jest-expo": "~54.0.17",
     "react": "19.1.0",
