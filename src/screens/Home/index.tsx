@@ -1,15 +1,20 @@
 import React from "react";
 import { View, Text, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { AppHeader } from "../../components/AppHeader";
+import { AppFooter } from "../../components/AppFooter";
 import { PartyCard } from "../../components/PartyCard";
 import { IconButton } from "../../components/IconButton";
 import { useHomeViewModel } from "./HomeViewModel";
 import { styles } from "./styles";
 
 export const HomeScreen = () => {
-  const { parties, handleCardPress, handleCreateParty, userName } = useHomeViewModel();
+  const { parties, handleCardPress, handleCreateParty, handleScanPress, userName } = useHomeViewModel();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <AppHeader headerTitle="Início" showBackButton={false} showSettingsIcon={true} />
+
       <View style={styles.headerPlaceholder}>
         <Text style={styles.greeting}>Olá, {userName} 👋</Text>
       </View>
@@ -40,6 +45,8 @@ export const HomeScreen = () => {
           testID="fab-button"
         />
       </View>
-    </View>
+
+      <AppFooter />
+    </SafeAreaView>
   );
 };

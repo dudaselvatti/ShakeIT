@@ -18,6 +18,7 @@
     "@react-navigation/native-stack": "^7.14.11",
     "axios": "^1.15.2",
     "expo": "~54.0.33",
+    "expo-camera": "~17.0.10",
     "expo-sensors": "~15.0.8",
     "expo-status-bar": "~3.0.9",
     "firebase": "^12.13.0",

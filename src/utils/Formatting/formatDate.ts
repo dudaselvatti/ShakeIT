@@ -1,6 +1,8 @@
 export function formatDate(
-    value?: Date | null,
+    value?: Date | string | null,
     locale: string = "pt-BR"
 ): string {
-    return value ? value.toLocaleDateString(locale) : "";
+    if (!value) return "";
+    const dateObj = typeof value === "string" ? new Date(value) : value;
+    return dateObj.toLocaleDateString(locale);
 }
