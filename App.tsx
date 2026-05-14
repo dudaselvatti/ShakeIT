@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { View, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -14,6 +15,7 @@ import { Party } from "./src/types/Party";
 import { ShakeRevealScreen } from "./src/screens/ShakeReveal";
 import { PerfilSorteadoScreen } from "./src/screens/PerfilSorteado";
 import { ScanScreen } from "./src/screens/Scan";
+import { PartyPreviewScreen } from "./src/screens/PartyPreview";
 
 export type RootStackParamList = {
   Home: { novaParty?: Party } | undefined;
@@ -24,10 +26,18 @@ export type RootStackParamList = {
   RevealResult: undefined;
   PerfilSorteado: { idUsuario: number };
   Scan: undefined;
+  PartyPreview: { partyCode: string };
+  ParticipantLobby: { partyId: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-// podemos tirar isso daqui depois, só pra testar a conexão com o firebase mesmo
+
+const ParticipantLobbyPlaceholder = () => (
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Text style={{ fontSize: 18 }}>Lobby do Participante (T16) - Em breve!</Text>
+  </View>
+);
+
 export default function App() {
   useEffect(() => {
     checkFirebaseConnection();
@@ -51,6 +61,8 @@ export default function App() {
         <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
         <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
         <Stack.Screen name="Scan" component={ScanScreen} />
+        <Stack.Screen name="PartyPreview" component={PartyPreviewScreen} />
+        <Stack.Screen name="ParticipantLobby" component={ParticipantLobbyPlaceholder} />
       </Stack.Navigator>
     </NavigationContainer>
   );
