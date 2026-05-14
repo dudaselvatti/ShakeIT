@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { usePerfilSorteadoHeaderViewModel, Props } from './PerfilSorteadoHeaderViewModel'
-import { IconButton } from '../../../../components/IconButton';
 import { styles } from './styles';
 
 export const PerfilSorteadoHeader = (props: Props) => {
@@ -9,13 +8,6 @@ export const PerfilSorteadoHeader = (props: Props) => {
     
     return (
         <View style={styles.headerContainer}>
-            <View style={styles.returnArrow}>
-                <IconButton iconName="chevron-left" onPress={handleReturnHome} />
-            </View>
-            <View style={styles.logoContainer}>
-                <Text style={styles.shakeText}>SHAKE</Text>
-                <Text style={styles.itText}>IT</Text>
-            </View>
             <View style={styles.contentContainer}>
                 <Image
                     testID="profile-image"

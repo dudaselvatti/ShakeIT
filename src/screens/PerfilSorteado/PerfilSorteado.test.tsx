@@ -2,6 +2,9 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { PerfilSorteadoScreen } from './index';
 import { usePerfilSorteadoViewModel } from './PerfilSorteadoViewModel';
+import { AppHeader } from "../../components/AppHeader";
+import { AppFooter } from "../../components/AppFooter";
+
 
 jest.mock('./PerfilSorteadoViewModel');
 

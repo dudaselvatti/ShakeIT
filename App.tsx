@@ -56,16 +56,28 @@ export default function App() {
           animation: "slide_from_right",
         }}
       >
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen 
+          name="Home" 
+          component={HomeScreen} 
+          options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_left' })} 
+        />
         <Stack.Screen name="CreateParty" component={CreatePartyScreen} />
         <Stack.Screen name="PartyCreated" component={PartyCreatedScreen} />
         <Stack.Screen name="PartyAdmin" component={PartyAdminScreen} />
         <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
         <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
-        <Stack.Screen name="Scan" component={ScanScreen} />
+        <Stack.Screen 
+          name="Scan" 
+          component={ScanScreen} 
+          options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_right' })} 
+        />
         <Stack.Screen name="PartyPreview" component={PartyPreviewScreen} />
         <Stack.Screen name="ParticipantLobby" component={ParticipantLobbyScreen} />
-        <Stack.Screen name="MeuPerfil" component={MeuPerfilScreen} />
+        <Stack.Screen 
+          name="MeuPerfil" 
+          component={MeuPerfilScreen} 
+          options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_right' })} 
+        />
         <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>

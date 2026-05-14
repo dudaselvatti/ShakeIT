@@ -29,13 +29,6 @@ describe('PerfilSorteadoHeader Component', () => {
     (usePerfilSorteadoHeaderViewModel as jest.Mock).mockReturnValue(mockViewModelValues);
   });
 
-  it('deve renderizar a marca (logo) corretamente', () => {
-    const { getByText } = render(<PerfilSorteadoHeader {...mockProps} />);
-
-    expect(getByText('SHAKE')).toBeTruthy();
-    expect(getByText('IT')).toBeTruthy();
-  });
-
   it('deve exibir o título da seção de amigo secreto', () => {
     const { getByText } = render(<PerfilSorteadoHeader {...mockProps} />);
 

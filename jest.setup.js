@@ -15,6 +15,10 @@ jest.mock("@react-navigation/native", () => {
       navigate: jest.fn(),
       goBack: jest.fn(),
     }),
+    useRoute: () => ({
+      name: 'MockScreen',
+      params: {},
+    }),
   };
 });
 

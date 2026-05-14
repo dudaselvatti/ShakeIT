@@ -9,6 +9,10 @@ jest.mock('@react-navigation/native', () => ({
   useRoute: () => ({ params: { partyCode: '#NATAL55' } }),
 }));
 
+jest.mock('../../components/AppFooter', () => ({
+  AppFooter: jest.fn(() => null),
+}));
+
 describe('Tela PartyPreview', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -73,5 +77,24 @@ describe('Tela PartyPreview', () => {
     });
 
     expect(mockNavigate).toHaveBeenCalledWith('Home');
+  });
+
+  it('deve interceptar a navegação do rodapé, exibir o modal e navegar para a aba escolhida ao confirmar', () => {
+    const { getByText } = render(<PartyPreviewScreen />);
+    
+    // Disparar o onNavigateIntercept
+    const testProps = require('../../components/AppFooter').AppFooter.mock.calls[0][0];
+    act(() => {
+      testProps.onNavigateIntercept('MeuPerfil');
+    });
+
+    // Clica em Confirmar (Voltar para Home mas que agora vai pra MeuPerfil devido a navegação)
+    fireEvent.press(getByText('Voltar para Home'));
+
+    act(() => {
+      jest.advanceTimersByTime(150);
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith('MeuPerfil');
   });
 });

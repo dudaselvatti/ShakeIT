@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { CreatePartyScreen } from './index';
 import { createPartyInCloud } from '../../services/cloudDb/cloudDb';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
@@ -24,7 +24,7 @@ jest.mock("firebase/firestore", () => ({
 }));
 
 jest.mock('../../components/AppFooter', () => ({
-  AppFooter: () => null,
+  AppFooter: jest.fn(() => null),
 }));
 
 jest.mock('../../components/DateInput', () => ({
@@ -44,8 +44,8 @@ jest.mock('../../components/DateInput', () => ({
 
 jest.mock('../../components/IconButton', () => {
   const { TouchableOpacity } = jest.requireActual('react-native');
-  const MockIconButton = ({ onPress }: any) => (
-    <TouchableOpacity testID="btn-voltar" onPress={onPress} />
+  const MockIconButton = ({ onPress, iconName }: any) => (
+    <TouchableOpacity testID={`btn-${iconName}`} onPress={onPress} />
   );
   MockIconButton.displayName = 'MockIconButton';
   return { IconButton: MockIconButton };
@@ -154,13 +154,46 @@ describe('Tela CreateParty', () => {
 
   it('deve voltar à tela anterior ao confirmar a saída no modal', () => {
     const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
-    const { getByTestId, getByText } = render(
+    const { getByTestId, getByText, getByPlaceholderText } = render(
       <CreatePartyScreen navigation={mockNavigation} />
     );
 
-    fireEvent.press(getByTestId('btn-voltar'));
+    fireEvent.changeText(getByPlaceholderText('Ex: Amigo Secreto da Firma'), 'Mudança');
+    fireEvent.press(getByTestId('btn-chevron-left'));
     fireEvent.press(getByText('Sair sem salvar'));
     
     expect(mockNavigation.goBack).toHaveBeenCalled();
+  });
+
+  it('deve navegar silenciosamente se não houver alterações', () => {
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+    const { getByTestId } = render(
+      <CreatePartyScreen navigation={mockNavigation} />
+    );
+
+    fireEvent.press(getByTestId('btn-chevron-left'));
+    expect(mockNavigation.goBack).toHaveBeenCalled();
+  });
+
+  it('deve interceptar navegação do footer e exibir modal se houver alterações', () => {
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+    // Mudar mock do AppFooter para este teste específico
+    const { AppFooter } = require('../../components/AppFooter');
+    const { getByPlaceholderText, getByText } = render(
+      <CreatePartyScreen navigation={mockNavigation} />
+    );
+
+    fireEvent.changeText(getByPlaceholderText('Ex: Amigo Secreto da Firma'), 'Mudança');
+    
+    // Disparar o onNavigateIntercept
+    const calls = require('../../components/AppFooter').AppFooter.mock.calls;
+    const testProps = calls[calls.length - 1][0];
+    act(() => {
+      testProps.onNavigateIntercept('Home');
+    });
+
+    // Confirmar saída
+    fireEvent.press(getByText('Sair sem salvar'));
+    expect(mockNavigation.navigate).toHaveBeenCalledWith('Home');
   });
 });

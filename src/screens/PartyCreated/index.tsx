@@ -14,7 +14,7 @@ export const PartyCreatedScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppHeader headerTitle="Sucesso" showBackButton={false} showSettingsIcon={false} />
+      <AppHeader headerTitle="Sucesso" showBackButton={false} showSettingsIcon={true} />
       
       <View style={styles.content}>
         <Text style={styles.title}>

@@ -22,10 +22,17 @@ export function usePartyPreviewViewModel() {
   const route = useRoute<PartyPreviewRouteProp>();
   
   const [isModalVisible, setModalVisible] = useState(false);
+  const [pendingRoute, setPendingRoute] = useState<string | null>(null);
   
   const party = MOCK_PARTY;
 
   const handleBackPress = () => {
+    setPendingRoute(null);
+    setModalVisible(true);
+  };
+
+  const handleFooterNavigate = (route: string) => {
+    setPendingRoute(route);
     setModalVisible(true);
   };
 
@@ -37,7 +44,11 @@ export function usePartyPreviewViewModel() {
     setModalVisible(false);
     // Aguarda o modal nativo desmontar antes de navegar para não travar os toques na Home
     setTimeout(() => {
-      navigation.navigate("Home");
+      if (pendingRoute) {
+        navigation.navigate(pendingRoute);
+      } else {
+        navigation.navigate("Home");
+      }
     }, 100);
   };
 
@@ -49,6 +60,7 @@ export function usePartyPreviewViewModel() {
     party,
     isModalVisible,
     handleBackPress,
+    handleFooterNavigate,
     handleCancelModal,
     handleConfirmModal,
     handleReady,

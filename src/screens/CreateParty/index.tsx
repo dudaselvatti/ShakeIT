@@ -26,6 +26,7 @@ export const CreatePartyScreen = ({ navigation }: any) => {
     isModalVisible,
     cancelExit,
     handleBackPress,
+    handleFooterNavigate,
     confirmExit,
     handleCriarParty,
   } = useCreatePartyViewModel(navigation);
@@ -36,6 +37,7 @@ export const CreatePartyScreen = ({ navigation }: any) => {
         headerTitle="Nova Party" 
         showBackButton={true} 
         onBackPress={handleBackPress} 
+        showSettingsIcon={true}
       />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -83,7 +85,7 @@ export const CreatePartyScreen = ({ navigation }: any) => {
         />
       </View>
 
-      <AppFooter />
+      <AppFooter onNavigateIntercept={handleFooterNavigate} />
 
       <PopupModal
         visible={isModalVisible}

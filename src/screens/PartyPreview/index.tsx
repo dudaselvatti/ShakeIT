@@ -18,6 +18,7 @@ export const PartyPreviewScreen = () => {
     party, 
     isModalVisible,
     handleBackPress, 
+    handleFooterNavigate,
     handleCancelModal,
     handleConfirmModal,
     handleReady 
@@ -29,9 +30,10 @@ export const PartyPreviewScreen = () => {
         headerTitle="Preview da Party" 
         showBackButton={true} 
         onBackPress={handleBackPress} 
+        showSettingsIcon={true}
       />
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false} >
         <Text style={styles.title}>{party.name}</Text>
         
         <Card style={styles.card}>
@@ -74,7 +76,7 @@ export const PartyPreviewScreen = () => {
         />
       </View>
 
-      <AppFooter />
+      <AppFooter onNavigateIntercept={handleFooterNavigate} />
 
       <PopupModal 
         visible={isModalVisible}
