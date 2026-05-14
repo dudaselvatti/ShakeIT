@@ -71,5 +71,6 @@ export default function App() {
         <Stack.Screen name="MeuPerfil" component={MeuPerfilPlaceholder} />
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthProvider>
   );
 }
