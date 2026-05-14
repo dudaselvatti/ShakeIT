@@ -1,16 +1,33 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { styles } from './styles';
-import { ReturnHomeArrow } from '../ReturnHomeArrow';
 import { useAppHeaderViewModel, Props } from './AppHeaderViewModel';
+import { IconButton } from '../IconButton';
 
 export const AppHeader = (props: Props) => {
-    const { title } = useAppHeaderViewModel(props);
+    const { 
+        title, 
+        showBackButton, 
+        showSettingsIcon, 
+        handleBackPress, 
+        handleSettingsPress 
+    } = useAppHeaderViewModel(props);
     
     return (
         <View style={styles.header}>
-            <ReturnHomeArrow />
+            <View style={styles.leftContainer}>
+                {showBackButton && (
+                    <IconButton iconName="chevron-left" onPress={handleBackPress} />
+                )}
+            </View>
+
             <Text style={styles.headerTitle}>{title}</Text>
+
+            <View style={styles.rightContainer}>
+                {showSettingsIcon && (
+                    <IconButton iconName="settings" onPress={handleSettingsPress} />
+                )}
+            </View>
         </View>
     );
 }

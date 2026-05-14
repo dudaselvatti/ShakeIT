@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useIsFocused } from "@react-navigation/native";
 import { AppHeader } from "../../components/AppHeader";
+import { AppFooter } from "../../components/AppFooter";
 import { Button } from "../../components/Button";
 import { styles } from "./styles";
 
@@ -29,6 +30,7 @@ export const ScanScreen = ({ navigation }: any) => {
     return (
       <SafeAreaView style={styles.container}>
         <AppHeader headerTitle="Escanear Party" />
+        <AppFooter />
       </SafeAreaView>
     );
   }
@@ -48,6 +50,7 @@ export const ScanScreen = ({ navigation }: any) => {
             style={{ marginBottom: 16, width: "100%" }}
           />
         </View>
+        <AppFooter />
       </SafeAreaView>
     );
   }
@@ -80,6 +83,7 @@ export const ScanScreen = ({ navigation }: any) => {
           </View>
         </View>
       </View>
+      <AppFooter />
     </SafeAreaView>
   );
 };

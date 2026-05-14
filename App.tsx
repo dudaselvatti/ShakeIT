@@ -16,6 +16,7 @@ import { ShakeRevealScreen } from "./src/screens/ShakeReveal";
 import { PerfilSorteadoScreen } from "./src/screens/PerfilSorteado";
 import { ScanScreen } from "./src/screens/Scan";
 import { PartyPreviewScreen } from "./src/screens/PartyPreview";
+import { ParticipantLobbyScreen } from "./src/screens/ParticipantLobby";
 
 export type RootStackParamList = {
   Home: { novaParty?: Party } | undefined;
@@ -28,13 +29,14 @@ export type RootStackParamList = {
   Scan: undefined;
   PartyPreview: { partyCode: string };
   ParticipantLobby: { partyId: string };
+  MeuPerfil: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const ParticipantLobbyPlaceholder = () => (
+const MeuPerfilPlaceholder = () => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text style={{ fontSize: 18 }}>Lobby do Participante (T16) - Em breve!</Text>
+    <Text style={{ fontSize: 18 }}>Meu Perfil - Em breve!</Text>
   </View>
 );
 
@@ -62,7 +64,8 @@ export default function App() {
         <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
         <Stack.Screen name="Scan" component={ScanScreen} />
         <Stack.Screen name="PartyPreview" component={PartyPreviewScreen} />
-        <Stack.Screen name="ParticipantLobby" component={ParticipantLobbyPlaceholder} />
+        <Stack.Screen name="ParticipantLobby" component={ParticipantLobbyScreen} />
+        <Stack.Screen name="MeuPerfil" component={MeuPerfilPlaceholder} />
       </Stack.Navigator>
     </NavigationContainer>
   );
