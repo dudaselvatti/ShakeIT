@@ -5,8 +5,8 @@ import { usePerfilSorteadoHeaderViewModel } from './PerfilSorteadoHeaderViewMode
 
 jest.mock('./PerfilSorteadoHeaderViewModel');
 
-jest.mock('../ReturnHomeArrow', () => ({
-  ReturnHomeArrow: () => <></>
+jest.mock('../../../../components/IconButton', () => ({
+  IconButton: () => <></>
 }));
 
 describe('PerfilSorteadoHeader Component', () => {
@@ -22,6 +22,7 @@ describe('PerfilSorteadoHeader Component', () => {
     fotoUrl: 'https://example.com/foto.jpg',
     idade: '25',
     genero: 'Masculino',
+    handleReturnHome: jest.fn(),
   };
 
   beforeEach(() => {

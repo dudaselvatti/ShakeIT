@@ -1,5 +1,5 @@
 import { usePerfilSorteadoContentViewModel, Props } from './PerfilSorteadoContentViewModel';
-import { Medidas, Preferencias } from '../../types/Perfil';
+import { Medidas, Preferencias } from '../../../../types/Perfil';
 
 describe('usePerfilSorteadoContentViewModel', () => {
   const mockMedidas: Medidas = {
