@@ -5,30 +5,32 @@ import { theme } from "../../styles/theme";
 import { Button } from "../../components/Button";
 import { AppHeader } from "../../components/AppHeader";
 import { AppFooter } from "../../components/AppFooter";
+import { Card } from "../../components/Card";
+import { styles } from "./styles";
 import { usePartyCreatedViewModel } from "./PartyCreatedViewModel";
 
 export const PartyCreatedScreen = () => {
   const { party, voltarParaHome } = usePartyCreatedViewModel();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <SafeAreaView style={styles.container}>
       <AppHeader headerTitle="Sucesso" showBackButton={false} showSettingsIcon={false} />
       
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 24 }}>
-        <Text style={{ fontSize: 28, fontWeight: "bold", color: theme.colors.success, marginBottom: 16 }}>
+      <View style={styles.content}>
+        <Text style={styles.title}>
           Party Criada!
         </Text>
         
-        <View style={{ backgroundColor: theme.colors.surface, padding: 16, borderRadius: 12, width: '100%', marginBottom: 24 }}>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>ID: {party.id}</Text>
-          <Text style={{ fontSize: 16, marginTop: 8 }}>Nome: {party.name}</Text>
-          <Text style={{ fontSize: 16, marginTop: 8 }}>Status: {party.status}</Text>
-          <Text style={{ fontSize: 16, marginTop: 8 }}>
+        <Card style={styles.card}>
+          <Text style={styles.cardTitle}>ID: {party.id}</Text>
+          <Text style={styles.cardText}>Nome: {party.name}</Text>
+          <Text style={styles.cardText}>Status: {party.status}</Text>
+          <Text style={styles.cardText}>
             Valores: R$ {party.minPrice} - R$ {party.maxPrice}
           </Text>
-        </View>
+        </Card>
 
-        <Button title="Ir para a Home" onPress={voltarParaHome} style={{ width: '100%' }} />
+        <Button title="Ir para a Home" onPress={voltarParaHome} style={styles.button} />
       </View>
 
       <AppFooter />

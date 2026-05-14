@@ -17,7 +17,7 @@ export const HomeScreen = () => {
       <AppHeader headerTitle="Início" showBackButton={false} showSettingsIcon={true} />
 
       <View style={styles.headerPlaceholder}>
-        <Text style={styles.greeting}>Olá, {userName} 👋</Text>
+        <Text style={styles.greeting}>Olá, {userName}!</Text>
       </View>
 
       <Text style={styles.sectionTitle}>Suas Parties</Text>

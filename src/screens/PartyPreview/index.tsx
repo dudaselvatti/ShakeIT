@@ -6,6 +6,7 @@ import { styles } from "./styles";
 import { Button } from "../../components/Button";
 import { AppHeader } from "../../components/AppHeader";
 import { AppFooter } from "../../components/AppFooter";
+import { Card } from "../../components/Card";
 import { Tag } from "../../components/Tag";
 import { PopupModal } from "../../components/PopupModal";
 import { formatCurrency } from "../../utils/Formatting/formatCurrency";
@@ -33,7 +34,7 @@ export const PartyPreviewScreen = () => {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>{party.name}</Text>
         
-        <View style={styles.card}>
+        <Card style={styles.card}>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Revelação</Text>
             <Text style={styles.infoValue}>{formatDate(party.eventDate)}</Text>
@@ -54,7 +55,7 @@ export const PartyPreviewScreen = () => {
             <Text style={styles.statusText}>Seu Status</Text>
             <Tag label="Perfil Pendente" color={theme.colors.warning} />
           </View>
-        </View>
+        </Card>
       </ScrollView>
 
       <View style={styles.footer}>
@@ -69,7 +70,7 @@ export const PartyPreviewScreen = () => {
           title="Voltar ao Início" 
           variant="outline" 
           onPress={handleBackPress} 
-          style={{ marginTop: 12 }}
+          style={styles.backButton}
         />
       </View>
 

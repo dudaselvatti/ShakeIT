@@ -17,6 +17,8 @@ import { PerfilSorteadoScreen } from "./src/screens/PerfilSorteado";
 import { ScanScreen } from "./src/screens/Scan";
 import { PartyPreviewScreen } from "./src/screens/PartyPreview";
 import { ParticipantLobbyScreen } from "./src/screens/ParticipantLobby";
+import { MeuPerfilScreen } from "./src/screens/MeuPerfil";
+import { SettingsScreen } from "./src/screens/Settings";
 
 import { AuthProvider } from "./src/contexts/AuthContext/AuthContext";
 
@@ -32,15 +34,10 @@ export type RootStackParamList = {
   PartyPreview: { partyCode: string };
   ParticipantLobby: { partyId: string };
   MeuPerfil: undefined;
+  Settings: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-const MeuPerfilPlaceholder = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text style={{ fontSize: 18 }}>Meu Perfil - Em breve!</Text>
-  </View>
-);
 
 export default function App() {
   useEffect(() => {
@@ -68,7 +65,8 @@ export default function App() {
         <Stack.Screen name="Scan" component={ScanScreen} />
         <Stack.Screen name="PartyPreview" component={PartyPreviewScreen} />
         <Stack.Screen name="ParticipantLobby" component={ParticipantLobbyScreen} />
-        <Stack.Screen name="MeuPerfil" component={MeuPerfilPlaceholder} />
+        <Stack.Screen name="MeuPerfil" component={MeuPerfilScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     </AuthProvider>

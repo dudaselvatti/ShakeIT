@@ -27,3 +27,36 @@ jest.mock('react-native-safe-area-context', () => {
     useSafeAreaInsets: jest.fn().mockReturnValue(inset),
   };
 });
+
+jest.mock('firebase/app', () => ({
+  initializeApp: jest.fn(),
+  getApps: jest.fn(() => []),
+  getApp: jest.fn(),
+}));
+
+jest.mock('firebase/firestore', () => ({
+  getFirestore: jest.fn(),
+  collection: jest.fn(() => 'mock-collection'),
+  doc: jest.fn(() => 'mock-doc'),
+  getDocs: jest.fn(() =>
+    Promise.resolve({
+      empty: true,
+      docs: [],
+    })
+  ),
+  setDoc: jest.fn(() => Promise.resolve()),
+  addDoc: jest.fn(() =>
+    Promise.resolve({
+      id: 'mock-party-id',
+    })
+  ),
+  serverTimestamp: jest.fn(() => 'mock-timestamp'),
+}));
+
+jest.mock('firebase/auth', () => ({
+  getAuth: jest.fn(),
+  signInWithEmailAndPassword: jest.fn(),
+  createUserWithEmailAndPassword: jest.fn(),
+  signOut: jest.fn(),
+  onAuthStateChanged: jest.fn(),
+}));

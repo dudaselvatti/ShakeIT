@@ -32,12 +32,8 @@ export const styles = StyleSheet.create({
     marginBottom: 24,
   },
   card: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.metrics.borderRadius,
     padding: 20,
     marginBottom: 24,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
   },
   infoRow: {
     flexDirection: "row",
@@ -80,5 +76,8 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 16,
     lineHeight: 20,
+  },
+  backButton: {
+    marginTop: 12,
   }
 });

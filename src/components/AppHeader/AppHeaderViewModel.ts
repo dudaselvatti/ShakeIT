@@ -26,8 +26,7 @@ export function useAppHeaderViewModel({ headerTitle, showBackButton = true, show
     };
 
     const handleSettingsPress = () => {
-        // Placeholder para futuras configurações
-        // console.log("Settings");
+        navigation.navigate("Settings");
     };
 
     return {

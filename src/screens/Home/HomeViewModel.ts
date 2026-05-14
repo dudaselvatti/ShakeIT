@@ -2,9 +2,11 @@ import { useNavigation } from "@react-navigation/native";
 import { partiesMock } from "../../mocks/partiesMock";
 import { Party } from "../../types/Party";
 import { gerarPartyCode } from "../../utils/PartyCode/gerarPartyCode";
+import { useAuth } from "../../contexts/AuthContext/AuthContext";
 
 export function useHomeViewModel() {
   const navigation = useNavigation<any>();
+  const { usuarioAtual } = useAuth();
   const parties = partiesMock;
 
   const handleCardPress = (party: Party) => {
@@ -38,6 +40,6 @@ export function useHomeViewModel() {
     handleCardPress,
     handleCreateParty,
     handleScanPress,
-    userName: "Duda",
+    userName: usuarioAtual?.nome || "Visitante",
   };
 };

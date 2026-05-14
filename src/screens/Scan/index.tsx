@@ -47,7 +47,7 @@ export const ScanScreen = ({ navigation }: any) => {
           <Button 
             title="Permitir Câmera" 
             onPress={requestPermission} 
-            style={{ marginBottom: 16, width: "100%" }}
+            style={styles.permissionButton}
           />
         </View>
         <AppFooter />
@@ -58,7 +58,7 @@ export const ScanScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.container}>
       <AppHeader headerTitle="Escanear Party" />
-      <View style={{ flex: 1 }}>
+      <View style={styles.cameraContainer}>
         <CameraView
           style={StyleSheet.absoluteFillObject}
           facing="back"
