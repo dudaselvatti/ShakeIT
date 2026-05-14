@@ -13,12 +13,18 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     leftContainer: {
-        width: 40,
+        minWidth: 40,
+        marginLeft: -8,
         alignItems: 'flex-start',
+        justifyContent: 'center',
+        zIndex: 3,
     },
     rightContainer: {
-        width: 40,
+        minWidth: 40,
+        marginRight: -8,
         alignItems: 'flex-end',
+        justifyContent: 'center',
+        zIndex: 3,
     },
     headerTitle: {
         position: 'absolute',
@@ -29,5 +35,6 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: theme.colors.text,
         pointerEvents: 'none',
+        zIndex: 1,
     },
 });
