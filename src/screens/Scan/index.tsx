@@ -1,24 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CameraView, useCameraPermissions } from "expo-camera";
+import { useIsFocused } from "@react-navigation/native";
 import { AppHeader } from "../../components/AppHeader";
 import { Button } from "../../components/Button";
 import { styles } from "./styles";
 
 export const ScanScreen = ({ navigation }: any) => {
   const [permission, requestPermission] = useCameraPermissions();
+  const [scanned, setScanned] = useState(false);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    // Tenta solicitar permissão no mount apenas se não tiver sido concedida e puder perguntar
+    if (isFocused) {
+      setScanned(false);
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
     if (permission && !permission.granted && permission.canAskAgain) {
       requestPermission();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Executa apenas no mount para evitar loops
+  }, []);
 
   if (!permission) {
-    // Permissão ainda está carregando
     return (
       <SafeAreaView style={styles.container}>
         <AppHeader headerTitle="Escanear Party" />
@@ -27,7 +34,6 @@ export const ScanScreen = ({ navigation }: any) => {
   }
 
   if (!permission.granted) {
-    // Permissão negada ou aguardando ação
     return (
       <SafeAreaView style={styles.container}>
         <AppHeader headerTitle="Escanear Party" />
@@ -54,9 +60,10 @@ export const ScanScreen = ({ navigation }: any) => {
           style={StyleSheet.absoluteFillObject}
           facing="back"
           onBarcodeScanned={(result) => {
+            if (scanned) return;
+            setScanned(true);
             console.log("QR Code Lido:", result.data);
-            // TODO: Implementar lógica de entrada na party
-            // navigation.navigate("PartyAdmin", { partyCode: result.data });
+            navigation.navigate("PartyPreview", { partyCode: result.data });
           }}
           barcodeScannerSettings={{
             barcodeTypes: ["qr"],

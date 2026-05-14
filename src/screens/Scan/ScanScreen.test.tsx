@@ -5,6 +5,10 @@ import { ScanScreen } from './index';
 let mockPermission: any = null;
 const mockRequestPermission = jest.fn();
 
+jest.mock('@react-navigation/native', () => ({
+  useIsFocused: () => true,
+}));
+
 jest.mock('expo-camera', () => {
   const { View } = require('react-native');
   return {
@@ -13,7 +17,6 @@ jest.mock('expo-camera', () => {
   };
 });
 
-// Mock do AppHeader para isolar o teste
 jest.mock('../../components/AppHeader', () => ({
   AppHeader: ({ headerTitle }: any) => {
     const { Text } = require('react-native');
@@ -50,18 +53,13 @@ describe('Tela Scan', () => {
       <ScanScreen navigation={{}} />
     );
 
-    // Camera não deve renderizar
     expect(queryByTestId('camera-view')).toBeNull();
 
-    // Textos do fallback devem aparecer
     expect(getByText('Acesso à Câmera Necessário')).toBeTruthy();
     expect(getByText('Precisamos do acesso à câmera para ler o QR Code da Party.')).toBeTruthy();
-
-    // Botão de permitir
     const btnPermitir = getByText('Permitir Câmera');
     expect(btnPermitir).toBeTruthy();
 
-    // Interagir com o botão deve chamar a requestPermission
     fireEvent.press(btnPermitir);
     expect(mockRequestPermission).toHaveBeenCalledTimes(1);
   });
@@ -72,13 +70,10 @@ describe('Tela Scan', () => {
       <ScanScreen navigation={{}} />
     );
 
-    // A câmera deve renderizar
     expect(getByTestId('camera-view')).toBeTruthy();
 
-    // A máscara (overlay com as instruções) deve renderizar
     expect(getByText('Aponte a câmera para o QR Code para entrar na Party')).toBeTruthy();
-
-    // Não deve mostrar textos de permissão negada
+    
     expect(queryByText('Acesso à Câmera Necessário')).toBeNull();
   });
 });
