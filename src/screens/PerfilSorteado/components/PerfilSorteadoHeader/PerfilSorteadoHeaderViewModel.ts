@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
-import { calcularIdade } from '../../utils/Usuario/calcularIdade';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import type { RootStackParamList } from '../../../../../App';
+import { calcularIdade } from '../../../../utils/Usuario/calcularIdade';
 
 export interface Props {
     fotoUrl: string;
@@ -14,10 +16,17 @@ export function usePerfilSorteadoHeaderViewModel ({fotoUrl, nome, dataDeNascimen
         return calcularIdade(dataDeNascimento);
     }, [dataDeNascimento]);
 
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+    const handleReturnHome = () => {
+        navigation.navigate("Home");
+    };
+
     return {
         fotoUrl,
         nome,
         idade,
         genero,
+        handleReturnHome,
     };
 };

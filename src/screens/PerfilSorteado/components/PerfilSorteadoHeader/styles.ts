@@ -1,34 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { theme } from "../../styles/theme";
+import { theme } from "../../../../styles/theme";
 
 export const styles = StyleSheet.create({
     headerContainer: {
-        backgroundColor: theme.colors.surface,
         justifyContent: 'center',
         flexDirection: 'column',
+        paddingVertical: 8,
         borderBottomWidth: 1,
         borderColor: theme.colors.border,
-    },
-    returnArrow: {
-        position: 'absolute',
-        top: 16,
-        left: 16,
-        zIndex: 10,
-    },
-    logoContainer: {
-        marginTop: 25,
-        justifyContent: 'center',
-        flexDirection: 'row',
-    },
-    shakeText: {
-        fontSize: 28,
-        color: theme.colors.text,
-        fontWeight: '900',
-    },
-    itText: {
-        fontSize: 28,
-        color: theme.colors.textLight,
-        fontWeight: '900',
     },
     contentContainer: {
         justifyContent: 'center',

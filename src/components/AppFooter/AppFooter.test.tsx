@@ -8,6 +8,9 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     navigate: mockNavigate,
   }),
+  useRoute: () => ({
+    name: 'MockScreen',
+  }),
 }));
 
 jest.mock('../IconButton', () => ({
@@ -30,18 +33,18 @@ describe('Componente: AppFooter', () => {
   it('deve navegar para a Home quando clicar em Parties (home)', () => {
     const { getByTestId } = render(<AppFooter />);
     fireEvent.press(getByTestId('icon-home'));
-    expect(mockNavigate).toHaveBeenCalledWith('Home');
+    expect(mockNavigate).toHaveBeenCalledWith('Home', { animation: 'slide_from_right' });
   });
 
   it('deve navegar para Scan quando clicar no ícone correspondente', () => {
     const { getByTestId } = render(<AppFooter />);
     fireEvent.press(getByTestId('icon-maximize'));
-    expect(mockNavigate).toHaveBeenCalledWith('Scan');
+    expect(mockNavigate).toHaveBeenCalledWith('Scan', { animation: 'slide_from_right' });
   });
 
   it('deve navegar para MeuPerfil quando clicar no ícone de usuário', () => {
     const { getByTestId } = render(<AppFooter />);
     fireEvent.press(getByTestId('icon-user'));
-    expect(mockNavigate).toHaveBeenCalledWith('MeuPerfil');
+    expect(mockNavigate).toHaveBeenCalledWith('MeuPerfil', { animation: 'slide_from_right' });
   });
 });

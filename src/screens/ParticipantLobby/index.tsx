@@ -8,14 +8,15 @@ import { useParticipantLobbyViewModel } from './ParticipantLobbyViewModel';
 import { styles } from './styles';
 
 export const ParticipantLobbyScreen = () => {
-    const { participantes, confirmadosCount, participantesTotal } = useParticipantLobbyViewModel();
+    const { participantes, confirmadosCount, participantesTotal, handleBackPress } = useParticipantLobbyViewModel();
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* Header Global sem botão de voltar (para não sair da sala acidentalmente) e com configurações */}
+            {/* Header Global com botão de voltar para a Home e com configurações */}
             <AppHeader 
                 headerTitle="Sala de Espera" 
-                showBackButton={false} 
+                showBackButton={true} 
+                onBackPress={handleBackPress}
                 showSettingsIcon={true} 
             />
 

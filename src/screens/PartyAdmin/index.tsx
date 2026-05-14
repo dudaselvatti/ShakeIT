@@ -13,7 +13,7 @@ export const PartyAdminScreen = () => {
     const { partyName, partyCode, participantes, confirmadosCount, participantesTotal, headerTitle, handleSorteioPress } = usePartyAdminViewModel();
     return (
         <SafeAreaView style={styles.container}>
-            <AppHeader headerTitle={headerTitle} />
+            <AppHeader headerTitle={headerTitle} showSettingsIcon={true} />
 
             <View style={styles.contentBody}>
                 <View style={styles.eventInfo}>

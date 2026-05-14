@@ -1,16 +1,20 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { PerfilSorteadoHeader } from '../../components/PerfilSorteadoHeader';
-import { PerfilSorteadoContent } from '../../components/PerfilSorteadoContent';
+import { PerfilSorteadoHeader } from './components/PerfilSorteadoHeader';
+import { PerfilSorteadoContent } from './components/PerfilSorteadoContent';
 import { usePerfilSorteadoViewModel } from './PerfilSorteadoViewModel';
 import { styles } from './styles';
+import { AppHeader } from "../../components/AppHeader";
+import { AppFooter } from "../../components/AppFooter";
 
 export const PerfilSorteadoScreen = () => {
     const { participante } = usePerfilSorteadoViewModel();
     const { usuario, perfil } = participante;
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
+            <AppHeader headerTitle="Perfil Sorteado" showBackButton={true} showSettingsIcon={true} />
             <PerfilSorteadoHeader 
                 fotoUrl={usuario.fotoUrl} 
                 nome={usuario.nome} 
@@ -23,6 +27,7 @@ export const PerfilSorteadoScreen = () => {
                     preferencias={perfil.preferencias}
                 />
             </ScrollView>
-        </View>
+            <AppFooter />
+        </SafeAreaView>
     );
 }

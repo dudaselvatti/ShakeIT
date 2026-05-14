@@ -30,7 +30,7 @@ describe('HomeScreen', () => {
 
   it('deve renderizar a saudação com o nome do usuário corretamente', () => {
     const { getByText } = render(<HomeScreen />);
-    expect(getByText('Olá, Carlos 👋')).toBeTruthy();
+    expect(getByText('Olá, Carlos!')).toBeTruthy();
   });
 
   it('deve renderizar a lista de festas corretamente', () => {

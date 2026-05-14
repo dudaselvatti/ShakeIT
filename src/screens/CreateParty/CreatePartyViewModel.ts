@@ -11,6 +11,7 @@ export function useCreatePartyViewModel(navigation: any) {
   const [valorMinimo, setValorMinimo] = useState("");
   const [valorMaximo, setValorMaximo] = useState("");
   const [errors, setErrors] = useState({ nome: "", data: "", valores: "" });
+  const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
   const { usuarioAtual } = useAuth();
 
@@ -34,11 +35,32 @@ export function useCreatePartyViewModel(navigation: any) {
     if (errors.valores) setErrors((prev) => ({ ...prev, valores: "" }));
   };
 
-  const handleBackPress = () => setModalVisible(true);
+  const hasChanges = nomeParty !== "" || dataRevelacao !== undefined || valorMinimo !== "" || valorMaximo !== "";
+
+  const handleBackPress = () => {
+    if (hasChanges) {
+      setPendingRoute(null);
+      setModalVisible(true);
+    } else {
+      navigation.goBack();
+    }
+  };
+  const handleFooterNavigate = (route: string) => {
+    if (hasChanges) {
+      setPendingRoute(route);
+      setModalVisible(true);
+    } else {
+      navigation.navigate(route);
+    }
+  };
   const cancelExit = () => setModalVisible(false);
   const confirmExit = () => {
     setModalVisible(false);
-    navigation.goBack();
+    if (pendingRoute) {
+      navigation.navigate(pendingRoute);
+    } else {
+      navigation.goBack();
+    }
   };
 
   const parseCurrency = (value: string) => {
@@ -116,6 +138,7 @@ export function useCreatePartyViewModel(navigation: any) {
     isModalVisible,
     cancelExit,
     handleBackPress,
+    handleFooterNavigate,
     confirmExit,
     handleCriarParty,
   };

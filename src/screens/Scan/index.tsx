@@ -29,7 +29,7 @@ export const ScanScreen = ({ navigation }: any) => {
   if (!permission) {
     return (
       <SafeAreaView style={styles.container}>
-        <AppHeader headerTitle="Escanear Party" />
+        <AppHeader headerTitle="Escanear Party" showBackButton={true} showSettingsIcon={true} />
         <AppFooter />
       </SafeAreaView>
     );
@@ -38,7 +38,7 @@ export const ScanScreen = ({ navigation }: any) => {
   if (!permission.granted) {
     return (
       <SafeAreaView style={styles.container}>
-        <AppHeader headerTitle="Escanear Party" />
+        <AppHeader headerTitle="Escanear Party" showBackButton={true} showSettingsIcon={true} />
         <View style={styles.permissionContainer}>
           <Text style={styles.permissionText}>Acesso à Câmera Necessário</Text>
           <Text style={styles.permissionSubText}>
@@ -47,7 +47,7 @@ export const ScanScreen = ({ navigation }: any) => {
           <Button 
             title="Permitir Câmera" 
             onPress={requestPermission} 
-            style={{ marginBottom: 16, width: "100%" }}
+            style={styles.permissionButton}
           />
         </View>
         <AppFooter />
@@ -57,8 +57,8 @@ export const ScanScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppHeader headerTitle="Escanear Party" />
-      <View style={{ flex: 1 }}>
+      <AppHeader headerTitle="Escanear Party" showBackButton={true} showSettingsIcon={true} />
+      <View style={styles.cameraContainer}>
         <CameraView
           style={StyleSheet.absoluteFillObject}
           facing="back"

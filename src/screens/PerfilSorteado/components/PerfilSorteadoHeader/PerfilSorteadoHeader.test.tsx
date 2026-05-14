@@ -5,8 +5,8 @@ import { usePerfilSorteadoHeaderViewModel } from './PerfilSorteadoHeaderViewMode
 
 jest.mock('./PerfilSorteadoHeaderViewModel');
 
-jest.mock('../ReturnHomeArrow', () => ({
-  ReturnHomeArrow: () => <></>
+jest.mock('../../../../components/IconButton', () => ({
+  IconButton: () => <></>
 }));
 
 describe('PerfilSorteadoHeader Component', () => {
@@ -22,17 +22,11 @@ describe('PerfilSorteadoHeader Component', () => {
     fotoUrl: 'https://example.com/foto.jpg',
     idade: '25',
     genero: 'Masculino',
+    handleReturnHome: jest.fn(),
   };
 
   beforeEach(() => {
     (usePerfilSorteadoHeaderViewModel as jest.Mock).mockReturnValue(mockViewModelValues);
-  });
-
-  it('deve renderizar a marca (logo) corretamente', () => {
-    const { getByText } = render(<PerfilSorteadoHeader {...mockProps} />);
-
-    expect(getByText('SHAKE')).toBeTruthy();
-    expect(getByText('IT')).toBeTruthy();
   });
 
   it('deve exibir o título da seção de amigo secreto', () => {

@@ -1,21 +1,13 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { usePerfilSorteadoHeaderViewModel, Props } from './PerfilSorteadoHeaderViewModel'
-import { ReturnHomeArrow } from '../ReturnHomeArrow';
 import { styles } from './styles';
 
 export const PerfilSorteadoHeader = (props: Props) => {
-    const { nome, fotoUrl, idade, genero } = usePerfilSorteadoHeaderViewModel(props);
+    const { nome, fotoUrl, idade, genero, handleReturnHome } = usePerfilSorteadoHeaderViewModel(props);
     
     return (
         <View style={styles.headerContainer}>
-            <View style={styles.returnArrow}>
-                <ReturnHomeArrow />
-            </View>
-            <View style={styles.logoContainer}>
-                <Text style={styles.shakeText}>SHAKE</Text>
-                <Text style={styles.itText}>IT</Text>
-            </View>
             <View style={styles.contentContainer}>
                 <Image
                     testID="profile-image"

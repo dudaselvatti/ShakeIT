@@ -9,7 +9,9 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-
+  cameraContainer: {
+    flex: 1,
+  },
   camera: {
     flex: 1,
   },
@@ -74,4 +76,8 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 30,
   },
+  permissionButton: {
+    marginBottom: 16,
+    width: "100%",
+  }
 });

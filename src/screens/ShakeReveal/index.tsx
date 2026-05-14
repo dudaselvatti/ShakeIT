@@ -14,7 +14,6 @@ export const ShakeRevealScreen = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>O Sorteio realizado!</Text>
-      
       <Text style={styles.subtitle}>
         {hasShaken ? "Preparando a surpresa..." : "Chacoalhe o celular para descobrir o seu amigo secreto..."}
       </Text>

@@ -2,15 +2,18 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { PerfilSorteadoScreen } from './index';
 import { usePerfilSorteadoViewModel } from './PerfilSorteadoViewModel';
+import { AppHeader } from "../../components/AppHeader";
+import { AppFooter } from "../../components/AppFooter";
+
 
 jest.mock('./PerfilSorteadoViewModel');
 
-jest.mock('../../components/PerfilSorteadoHeader', () => ({
+jest.mock('./components/PerfilSorteadoHeader', () => ({
   __esModule: true,
   PerfilSorteadoHeader: jest.fn(() => null),
 }));
 
-jest.mock('../../components/PerfilSorteadoContent', () => ({
+jest.mock('./components/PerfilSorteadoContent', () => ({
   __esModule: true,
   PerfilSorteadoContent: jest.fn(() => null),
 }));
@@ -44,9 +47,9 @@ describe('Screen: PerfilSorteado', () => {
 
   it('deve renderizar corretamente e passar as props para os componentes filhos', () => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { PerfilSorteadoHeader } = require('../../components/PerfilSorteadoHeader');
+    const { PerfilSorteadoHeader } = require('./components/PerfilSorteadoHeader');
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { PerfilSorteadoContent } = require('../../components/PerfilSorteadoContent');
+    const { PerfilSorteadoContent } = require('./components/PerfilSorteadoContent');
 
     render(<PerfilSorteadoScreen />);
 

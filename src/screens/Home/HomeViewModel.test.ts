@@ -19,6 +19,11 @@ jest.mock('../../mocks/partiesMock', () => ({
     { id: '4', name: 'Festa D', status: 'Status Invalido' },
   ]
 }));
+jest.mock('../../contexts/AuthContext/AuthContext', () => ({
+  useAuth: jest.fn(() => ({
+    usuarioAtual: { nome: 'Duda' },
+  })),
+}));
 
 describe('useHomeViewModel', () => {
   const mockNavigate = jest.fn();

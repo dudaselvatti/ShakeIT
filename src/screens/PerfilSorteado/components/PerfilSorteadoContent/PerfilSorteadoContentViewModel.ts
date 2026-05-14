@@ -1,4 +1,4 @@
-import { Medidas, Preferencias } from '../../types/Perfil';
+import { Medidas, Preferencias } from '../../../../types/Perfil';
 
 export interface Props {
     medidas: Medidas;
