@@ -10,7 +10,9 @@ export const styles = StyleSheet.create({
   },
   headerPlaceholder: {
     height: 80,
-    justifyContent: "flex-end",
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
     marginBottom: 24,
   },
   greeting: {

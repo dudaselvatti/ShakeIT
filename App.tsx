@@ -13,6 +13,7 @@ import { PartyAdminScreen } from "./src/screens/PartyAdmin";
 import { Party } from "./src/types/Party";
 import { ShakeRevealScreen } from "./src/screens/ShakeReveal";
 import { PerfilSorteadoScreen } from "./src/screens/PerfilSorteado";
+import { ScanScreen } from "./src/screens/Scan";
 
 export type RootStackParamList = {
   Home: { novaParty?: Party } | undefined;
@@ -22,6 +23,7 @@ export type RootStackParamList = {
   ShakeReveal: undefined;
   RevealResult: undefined;
   PerfilSorteado: { idUsuario: number };
+  Scan: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -48,6 +50,7 @@ export default function App() {
         <Stack.Screen name="PartyAdmin" component={PartyAdminScreen} />
         <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
         <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
+        <Stack.Screen name="Scan" component={ScanScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

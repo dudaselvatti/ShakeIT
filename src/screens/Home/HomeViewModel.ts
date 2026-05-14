@@ -29,10 +29,15 @@ export function useHomeViewModel() {
     navigation.navigate("CreateParty");
   };
 
+  const handleScanPress = () => {
+    navigation.navigate("Scan");
+  };
+
   return {
     parties,
     handleCardPress,
     handleCreateParty,
+    handleScanPress,
     userName: "Duda",
   };
 };
