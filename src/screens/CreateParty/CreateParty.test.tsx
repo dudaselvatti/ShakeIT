@@ -1,11 +1,15 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { CreatePartyScreen } from './index';
 import { createPartyInCloud } from '../../services/cloudDb/cloudDb';
-import { Party } from '../../types/Party';
+import { useAuth } from '../../contexts/AuthContext/AuthContext';
 
 jest.mock('../../services/cloudDb/cloudDb', () => ({
   createPartyInCloud: jest.fn(),
+}));
+
+jest.mock('../../contexts/AuthContext/AuthContext', () => ({
+  useAuth: jest.fn(),
 }));
 
 jest.mock("firebase/app", () => ({
@@ -47,6 +51,8 @@ jest.mock('../../components/IconButton', () => {
   return { IconButton: MockIconButton };
 });
 
+const mockUseAuth = useAuth as jest.Mock;
+
 (createPartyInCloud as unknown as jest.Mock).mockResolvedValue({
   id: 'mockPartyId',
   name: 'Natal 2026',
@@ -59,6 +65,16 @@ jest.mock('../../components/IconButton', () => {
 });
 
 describe('Tela CreateParty', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    mockUseAuth.mockReturnValue({
+      usuarioAtual: {
+        id: 2,
+        nome: 'Usuário Teste',
+      },
+    });
+  });
   it('deve validar os campos vazios, exibir erros vermelhos e não navegar', () => {
     const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
     const { getByText, getByPlaceholderText } = render(
@@ -99,6 +115,40 @@ describe('Tela CreateParty', () => {
         eventDate: '2026-12-25T00:00:00.000Z',
         status: 'Aguardando Sorteio'
       })
+    });
+  });
+
+  it('não deve criar party se usuarioAtual for null', async () => {
+    mockUseAuth.mockReturnValue({
+      usuarioAtual: null,
+    });
+
+    const mockNavigation = {
+      navigate: jest.fn(),
+      goBack: jest.fn(),
+    };
+
+    const { getByText, getByPlaceholderText, getByTestId } = render(
+      <CreatePartyScreen navigation={mockNavigation} />
+    );
+
+    fireEvent.changeText(
+      getByPlaceholderText('Ex: Amigo Secreto da Firma'),
+      'Natal 2026'
+    );
+
+    fireEvent.press(getByTestId('btn-selecionar-data'));
+
+    fireEvent.changeText(getByPlaceholderText('0,00'), '1000');
+
+    fireEvent.changeText(getByPlaceholderText('50,00'), '5000');
+
+    fireEvent.press(getByText('Criar Party'));
+
+    await waitFor(() => {
+      expect(createPartyInCloud).not.toHaveBeenCalled();
+
+      expect(mockNavigation.navigate).not.toHaveBeenCalled();
     });
   });
 

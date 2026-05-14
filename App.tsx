@@ -18,6 +18,8 @@ import { ScanScreen } from "./src/screens/Scan";
 import { PartyPreviewScreen } from "./src/screens/PartyPreview";
 import { ParticipantLobbyScreen } from "./src/screens/ParticipantLobby";
 
+import { AuthProvider } from "./src/contexts/AuthContext/AuthContext";
+
 export type RootStackParamList = {
   Home: { novaParty?: Party } | undefined;
   CreateParty: undefined;
@@ -46,8 +48,9 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <StatusBar style="dark" />
+    <AuthProvider>
+      <NavigationContainer>
+        <StatusBar style="dark" />
 
       <Stack.Navigator
         initialRouteName="Home"
@@ -68,5 +71,6 @@ export default function App() {
         <Stack.Screen name="MeuPerfil" component={MeuPerfilPlaceholder} />
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthProvider>
   );
 }

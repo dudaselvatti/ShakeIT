@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Party } from "../../types/Party";
 import { gerarPartyCode } from "../../utils/PartyCode/gerarPartyCode";
 import { createPartyInCloud } from "../../services/cloudDb/cloudDb";
+import { useAuth } from "../../contexts/AuthContext/AuthContext";
 
 export function useCreatePartyViewModel(navigation: any) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -10,6 +11,8 @@ export function useCreatePartyViewModel(navigation: any) {
   const [valorMinimo, setValorMinimo] = useState("");
   const [valorMaximo, setValorMaximo] = useState("");
   const [errors, setErrors] = useState({ nome: "", data: "", valores: "" });
+
+  const { usuarioAtual } = useAuth();
 
   const updateNomeParty = (text: string) => {
     setNomeParty(text);
@@ -70,14 +73,14 @@ export function useCreatePartyViewModel(navigation: any) {
 
     setErrors(newErrors);
 
-    if (!isValid) return;
+    if (!isValid || !usuarioAtual) return;
 
     const novaParty: Omit<Party, "id"> = {
       name: nomeParty,
       eventDate: dataRevelacao!.toISOString(),
       minPrice: numMin,
       maxPrice: numMax,
-      idAdmin: 1, //Futuramente, obter o usuário logado
+      idAdmin: usuarioAtual.id,
       inviteCode: gerarPartyCode(),
       status: "Aguardando Sorteio",
     };
