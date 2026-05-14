@@ -14,6 +14,8 @@ import { Party } from "./src/types/Party";
 import { ShakeRevealScreen } from "./src/screens/ShakeReveal";
 import { PerfilSorteadoScreen } from "./src/screens/PerfilSorteado";
 
+import { AuthProvider } from "./src/contexts/AuthContext/AuthContext";
+
 export type RootStackParamList = {
   Home: { novaParty?: Party } | undefined;
   CreateParty: undefined;
@@ -32,23 +34,25 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <StatusBar style="dark" />
+    <AuthProvider>
+      <NavigationContainer>
+        <StatusBar style="dark" />
 
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerShown: false,
-          animation: "slide_from_right",
-        }}
-      >
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="CreateParty" component={CreatePartyScreen} />
-        <Stack.Screen name="PartyCreated" component={PartyCreatedScreen} />
-        <Stack.Screen name="PartyAdmin" component={PartyAdminScreen} />
-        <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
-        <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            headerShown: false,
+            animation: "slide_from_right",
+          }}
+        >
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="CreateParty" component={CreatePartyScreen} />
+          <Stack.Screen name="PartyCreated" component={PartyCreatedScreen} />
+          <Stack.Screen name="PartyAdmin" component={PartyAdminScreen} />
+          <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
+          <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
