@@ -7,6 +7,7 @@ const mockRequestPermission = jest.fn();
 
 jest.mock('@react-navigation/native', () => ({
   useIsFocused: () => true,
+  useNavigation: () => ({ navigate: jest.fn() }),
 }));
 
 jest.mock('expo-camera', () => {
@@ -21,6 +22,13 @@ jest.mock('../../components/AppHeader', () => ({
   AppHeader: ({ headerTitle }: any) => {
     const { Text } = require('react-native');
     return <Text testID="app-header">{headerTitle}</Text>;
+  }
+}));
+
+jest.mock('../../components/AppFooter', () => ({
+  AppFooter: () => {
+    const { View } = require('react-native');
+    return <View testID="app-footer" />;
   }
 }));
 

@@ -19,6 +19,10 @@ jest.mock("firebase/firestore", () => ({
   collection: jest.fn(),
 }));
 
+jest.mock('../../components/AppFooter', () => ({
+  AppFooter: () => null,
+}));
+
 jest.mock('../../components/DateInput', () => ({
   DateInput: ({ label, onChangeDate }: any) => {
     const { View, Text, TouchableOpacity } = jest.requireActual('react-native');

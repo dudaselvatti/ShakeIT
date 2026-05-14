@@ -4,7 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { usePartyPreviewViewModel } from "./PartyPreviewViewModel";
 import { styles } from "./styles";
 import { Button } from "../../components/Button";
-import { IconButton } from "../../components/IconButton";
+import { AppHeader } from "../../components/AppHeader";
+import { AppFooter } from "../../components/AppFooter";
 import { Tag } from "../../components/Tag";
 import { PopupModal } from "../../components/PopupModal";
 import { formatCurrency } from "../../utils/Formatting/formatCurrency";
@@ -23,12 +24,13 @@ export const PartyPreviewScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <IconButton iconName="chevron-left" onPress={handleBackPress} />
-      </View>
+      <AppHeader 
+        headerTitle="Preview da Party" 
+        showBackButton={true} 
+        onBackPress={handleBackPress} 
+      />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={styles.subtitle}>Entrar na Party</Text>
         <Text style={styles.title}>{party.name}</Text>
         
         <View style={styles.card}>
@@ -70,6 +72,8 @@ export const PartyPreviewScreen = () => {
           style={{ marginTop: 12 }}
         />
       </View>
+
+      <AppFooter />
 
       <PopupModal 
         visible={isModalVisible}

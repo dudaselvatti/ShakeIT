@@ -3,30 +3,31 @@ import { View, Text, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppHeader } from '../../components/AppHeader';
 import { AppFooter } from '../../components/AppFooter';
-import { PartyQRCode } from '../../components/PartyQRCode';
-import { Button } from "../../components/Button";
 import { ParticipanteCard } from '../../components/ParticipanteCard';
-import { usePartyAdminViewModel } from './PartyAdminViewModel';
+import { useParticipantLobbyViewModel } from './ParticipantLobbyViewModel';
 import { styles } from './styles';
 
-export const PartyAdminScreen = () => {
-    const { partyName, partyCode, participantes, confirmadosCount, participantesTotal, headerTitle, handleSorteioPress } = usePartyAdminViewModel();
+export const ParticipantLobbyScreen = () => {
+    const { participantes, confirmadosCount, participantesTotal } = useParticipantLobbyViewModel();
+
     return (
         <SafeAreaView style={styles.container}>
-            <AppHeader headerTitle={headerTitle} />
+            {/* Header Global sem botão de voltar (para não sair da sala acidentalmente) e com configurações */}
+            <AppHeader 
+                headerTitle="Sala de Espera" 
+                showBackButton={false} 
+                showSettingsIcon={true} 
+            />
 
             <View style={styles.contentBody}>
-                <View style={styles.eventInfo}>
-                    <Text style={styles.partyName}>{partyName}</Text>
-                    <Text style={styles.codeLabel}>
-                        Código: <Text style={styles.codeValue}>{partyCode}</Text>
+                <View style={styles.statusHighlight}>
+                    <Text style={styles.statusText}>
+                        Aguardando o organizador iniciar o sorteio...
                     </Text>
                 </View>
 
-                <PartyQRCode partyCode={partyCode} />
-
                 <Text style={styles.participantesCount}>
-                    Perfis confirmados ({confirmadosCount}/{participantesTotal})
+                    Participantes na Sala ({confirmadosCount}/{participantesTotal})
                 </Text>
 
                 <View style={styles.flatListContainer}>
@@ -37,18 +38,13 @@ export const PartyAdminScreen = () => {
                             <ParticipanteCard participante={item} />
                         )}
                         initialNumToRender={participantes.length}
+                        showsVerticalScrollIndicator={false}
                     />
                 </View>
             </View>
 
-            <View style={styles.footer}>
-                <Button 
-                    title="Realizar Sorteio" 
-                    onPress={handleSorteioPress}
-                />
-            </View>
-
+            {/* Footer Global com navegação */}
             <AppFooter />
         </SafeAreaView>
     );
-}
+};

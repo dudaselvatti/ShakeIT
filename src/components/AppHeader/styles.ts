@@ -10,6 +10,15 @@ export const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: theme.colors.border,
         zIndex: 2,
+        justifyContent: 'space-between',
+    },
+    leftContainer: {
+        width: 40,
+        alignItems: 'flex-start',
+    },
+    rightContainer: {
+        width: 40,
+        alignItems: 'flex-end',
     },
     headerTitle: {
         position: 'absolute',

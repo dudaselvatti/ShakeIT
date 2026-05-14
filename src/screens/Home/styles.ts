@@ -5,15 +5,11 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    paddingHorizontal: 24,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
   },
   headerPlaceholder: {
-    height: 80,
-    flexDirection: "row",
-    alignItems: "flex-end",
-    justifyContent: "space-between",
+    marginTop: 24,
     marginBottom: 24,
+    paddingHorizontal: 24,
   },
   greeting: {
     fontSize: 26,
@@ -25,15 +21,17 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
     color: theme.colors.textLight,
     marginBottom: 16,
+    paddingHorizontal: 24,
     textTransform: "uppercase",
     letterSpacing: 1,
   },
   listContent: {
     paddingBottom: 100,
+    paddingHorizontal: 24,
   },
   fabContainer: {
     position: "absolute",
     right: 24,
-    bottom: 40,
+    bottom: 90,
   },
 });

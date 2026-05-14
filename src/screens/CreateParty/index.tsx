@@ -6,6 +6,8 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { DateInput } from "../../components/DateInput";
 import { CurrencyInput } from "../../components/CurrencyInput";
+import { AppHeader } from "../../components/AppHeader";
+import { AppFooter } from "../../components/AppFooter";
 import { styles } from "./styles";
 
 import { useCreatePartyViewModel } from "./CreatePartyViewModel";
@@ -30,12 +32,13 @@ export const CreatePartyScreen = ({ navigation }: any) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-      <View style={styles.header}>
-        <IconButton iconName="chevron-left" onPress={handleBackPress} />
-      </View>
+      <AppHeader 
+        headerTitle="Nova Party" 
+        showBackButton={true} 
+        onBackPress={handleBackPress} 
+      />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>Nova Party</Text>
 
         <Input
           label="Nome da Party"
@@ -79,6 +82,8 @@ export const CreatePartyScreen = ({ navigation }: any) => {
           disabled={!nomeParty} 
         />
       </View>
+
+      <AppFooter />
 
       <PopupModal
         visible={isModalVisible}
