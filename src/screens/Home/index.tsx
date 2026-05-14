@@ -6,12 +6,17 @@ import { useHomeViewModel } from "./HomeViewModel";
 import { styles } from "./styles";
 
 export const HomeScreen = () => {
-  const { parties, handleCardPress, handleCreateParty, userName } = useHomeViewModel();
+  const { parties, handleCardPress, handleCreateParty, handleScanPress, userName } = useHomeViewModel();
 
   return (
     <View style={styles.container}>
       <View style={styles.headerPlaceholder}>
         <Text style={styles.greeting}>Olá, {userName} 👋</Text>
+        <IconButton
+          iconName="camera"
+          onPress={handleScanPress}
+          testID="scan-button"
+        />
       </View>
 
       <Text style={styles.sectionTitle}>Suas Parties</Text>
