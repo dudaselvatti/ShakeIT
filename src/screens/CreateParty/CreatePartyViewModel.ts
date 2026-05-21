@@ -99,12 +99,16 @@ export function useCreatePartyViewModel(navigation: any) {
 
     const novaParty: Omit<Party, "id"> = {
       name: nomeParty,
-      eventDate: dataRevelacao!.toISOString(),
-      minPrice: numMin,
-      maxPrice: numMax,
-      idAdmin: usuarioAtual.id,
-      inviteCode: gerarPartyCode(),
-      status: "Aguardando Sorteio",
+      event_date: dataRevelacao!.toISOString(),
+      min_value: numMin,
+      max_value: numMax,
+      admin_id: usuarioAtual.id,
+      invite_code: gerarPartyCode(),
+      status: "aguardando_sorteio",
+      block_dependent_draw: false,
+      allow_wishlist_changes_after_draw: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     };
 
     try {

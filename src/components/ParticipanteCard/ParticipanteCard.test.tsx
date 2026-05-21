@@ -5,18 +5,28 @@ import { Participante } from '../../types/Participante';
 
 const mockParticipante: Participante = {
     usuario: {
-        id: 101,
+        id: "550e8400-e29b-41d4-a716-446655440101",
         email: 'zeninguem@email.com',
-        senha: '12345',
         nome: 'Zé ninguém',
-        fotoUrl: "https://i.pravatar.cc/150?img=1",
+        avatar_url: "https://i.pravatar.cc/150?img=1",
         genero: "Masculino",
-        dataDeNascimento: "2003-12-01"
+        birth_date: "2003-12-01",
+        shake_enabled: true,
+        dark_mode: false,
+        notifications_enabled: true,
+        created_at: "2024-01-10T10:00:00Z",
+        updated_at: "2024-01-10T10:00:00Z"
     },
     perfil: {
-        idUsuario: 101,
-        isConfirmado: false,
-        medidas: {
+        id: "550e8400-e29b-41d4-a716-556655440101",
+        user_id: "550e8400-e29b-41d4-a716-446655440101",
+        party_id: "party-001",
+        participant_type: "user",
+        participant_name: "Zé ninguém",
+        participant_avatar: "https://i.pravatar.cc/150?img=1",
+        status: "pendente",
+        has_revealed_draw: false,
+        sizes: {
             camisa: "M",
             calca: "42",
             calcado: "43"
@@ -25,7 +35,8 @@ const mockParticipante: Participante = {
             coisasQueAmo: ["Nada"],
             melhorEvitar: ["Tudo"]
         },
-        isDependente: false
+        created_at: "2024-01-10T10:00:00Z",
+        updated_at: "2024-01-10T10:00:00Z"
     },
 };
 
@@ -39,12 +50,12 @@ describe('ParticipanteCard Component', () => {
         expect(getByText('Zé ninguém')).toBeTruthy();
     });
 
-    it('deve exibir o status "Pendente" e o cadeado aberto quando não estiver confirmado', () => {
+    it('deve exibir o status "pendente" e o cadeado aberto quando não estiver confirmado', () => {
         const { getByText, queryByText } = render(
             <ParticipanteCard participante={mockParticipante} />
         );
 
-        expect(getByText('Pendente')).toBeTruthy();
+        expect(getByText('pendente')).toBeTruthy();
         expect(getByText('🔓')).toBeTruthy();
         expect(queryByText('🔒')).toBeNull();
     });
@@ -54,7 +65,7 @@ describe('ParticipanteCard Component', () => {
             ...mockParticipante,
             perfil: {
                 ...mockParticipante.perfil,
-                isConfirmado: true,
+                status: "confirmado",
             },
         };
 
@@ -63,7 +74,7 @@ describe('ParticipanteCard Component', () => {
         );
 
         expect(getByText('🔒')).toBeTruthy();
-        expect(queryByText('Pendente')).toBeNull();
+        expect(queryByText('pendente')).toBeNull();
         expect(queryByText('🔓')).toBeNull();
     });
 });

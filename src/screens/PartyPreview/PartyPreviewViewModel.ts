@@ -7,12 +7,16 @@ import { Party } from "../../types/Party";
 const MOCK_PARTY: Party = {
   id: "mock1",
   name: "Firma 2026",
-  minPrice: 50,
-  maxPrice: 100,
-  idAdmin: 1,
-  inviteCode: "#NATAL55",
-  eventDate: "2026-12-20T00:00:00.000Z",
-  status: "Aguardando Sorteio",
+  min_value: 50,
+  max_value: 100,
+  admin_id: "550e8400-e29b-41d4-a716-446655440001",
+  invite_code: "#NATAL55",
+  event_date: "2026-12-20T00:00:00.000Z",
+  status: "aguardando_sorteio",
+  block_dependent_draw: false,
+  allow_wishlist_changes_after_draw: true,
+  created_at: "2024-01-10T10:00:00Z",
+  updated_at: "2024-01-10T10:00:00Z"
 };
 
 type PartyPreviewRouteProp = RouteProp<RootStackParamList, 'PartyPreview'>;

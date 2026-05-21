@@ -29,7 +29,7 @@ export type RootStackParamList = {
   PartyAdmin: { partyName: string; partyCode: string };
   ShakeReveal: undefined;
   RevealResult: undefined;
-  PerfilSorteado: { idUsuario: number };
+  PerfilSorteado: { idUsuario: string };
   Scan: undefined;
   PartyPreview: { partyCode: string };
   ParticipantLobby: { partyId: string };

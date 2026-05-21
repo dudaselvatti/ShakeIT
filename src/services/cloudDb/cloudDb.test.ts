@@ -44,12 +44,16 @@ jest.mock("firebase/auth", () => ({
 describe("cloudDb", () => {
   const mockParty: Omit<Party, "id"> = {
     name: "Firma 2026",
-    eventDate: "25/06/2026",
-    minPrice: 10,
-    maxPrice: 50,
-    inviteCode: "#INV123",
-    idAdmin: 1,
-    status: "Aguardando Sorteio",
+    event_date: "25/06/2026",
+    min_value: 10,
+    max_value: 50,
+    invite_code: "#INV123",
+    admin_id: "1",
+    status: "aguardando_sorteio",
+    block_dependent_draw: false,
+    allow_wishlist_changes_after_draw: false,
+    created_at: "mockTimestamp",
+    updated_at: "mockTimestamp"
   };
 
   const mockDocRef = { id: "mockDocId" };
@@ -72,13 +76,16 @@ describe("cloudDb", () => {
       expect(collection).toHaveBeenCalledWith(db, "parties");
       expect(addDoc).toHaveBeenCalledWith("mockCollectionRef", {
         name: mockParty.name,
-        eventDate: mockParty.eventDate,
-        minPrice: mockParty.minPrice,
-        maxPrice: mockParty.maxPrice,
-        inviteCode: mockParty.inviteCode,
-        adminId: mockParty.idAdmin,
+        event_date: mockParty.event_date,
+        min_value: mockParty.min_value,
+        max_value: mockParty.max_value,
+        invite_code: mockParty.invite_code,
+        admin_id: mockParty.admin_id,
         status: mockParty.status,
-        createdAt: "mockTimestamp",
+        block_dependent_draw: mockParty.block_dependent_draw,
+        allow_wishlist_changes_after_draw: mockParty.allow_wishlist_changes_after_draw,
+        created_at: mockParty.created_at,
+        updated_at: mockParty.updated_at
       });
 
       expect(doc).toHaveBeenCalledWith(db, "parties", mockDocRef.id);
@@ -87,13 +94,16 @@ describe("cloudDb", () => {
       expect(result).toEqual({
         id: mockDocRef.id,
         name: mockParty.name,
-        eventDate: mockParty.eventDate,
-        minPrice: mockParty.minPrice,
-        maxPrice: mockParty.maxPrice,
-        inviteCode: mockParty.inviteCode,
-        adminId: mockParty.idAdmin,
+        event_date: mockParty.event_date,
+        min_value: mockParty.min_value,
+        max_value: mockParty.max_value,
+        invite_code: mockParty.invite_code,
+        admin_id: mockParty.admin_id,
         status: mockParty.status,
-        createdAt: "mockTimestamp",
+        block_dependent_draw: mockParty.block_dependent_draw,
+        allow_wishlist_changes_after_draw: mockParty.allow_wishlist_changes_after_draw,
+        created_at: mockParty.created_at,
+        updated_at: mockParty.updated_at
       });
     });
   });

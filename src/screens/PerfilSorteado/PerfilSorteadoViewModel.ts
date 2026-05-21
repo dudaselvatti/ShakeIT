@@ -2,7 +2,7 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 import { participantesMock } from '../../mocks/participantesMock';
 
 type RootStackParamList = {
-    PerfilSorteado: { idUsuario: number };
+    PerfilSorteado: { idUsuario: string };
 };
 
 type PerfilScreenRouteProp = RouteProp<RootStackParamList, 'PerfilSorteado'>;
@@ -12,7 +12,7 @@ export function usePerfilSorteadoViewModel() {
     const { idUsuario } = route.params;
 
     const participante = participantesMock.find(
-        p => p.usuario.id === Number(idUsuario)
+        p => p.usuario.id === idUsuario
     );
 
     if(!participante) {

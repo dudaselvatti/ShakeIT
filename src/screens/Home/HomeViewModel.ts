@@ -11,16 +11,15 @@ export function useHomeViewModel() {
 
   const handleCardPress = (party: Party) => {
     switch (party.status) {
-      case "Aguardando Sorteio":
-        const partyCodeGerado = gerarPartyCode(); 
+      case "aguardando_sorteio":
+        const partyCodeGerado = gerarPartyCode();
         navigation.navigate("PartyAdmin", {
           partyName: party.name,
           partyCode: partyCodeGerado,
         });
         break;
-      case "Sorteio Realizado":
-      case "Fim do evento":
-          navigation.navigate("PerfilSorteado", { idUsuario: 10, }); 
+      case "sorteado":
+          navigation.navigate("PerfilSorteado", { idUsuario: 1, });
         break;
       default:
         break;

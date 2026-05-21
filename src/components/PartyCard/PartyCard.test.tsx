@@ -9,13 +9,13 @@ const mockProps = {
   id: '1',
   name: 'Natal 1959',
   eventDate: '1959-05-20',
-  status: 'Aguardando Sorteio' as const,
+  status: 'aguardando_sorteio' as const,
   onPress: jest.fn(),
 };
 
 const mockViewModelValues = {
   title: 'Firma 2026',
-  statusLabel: 'Sorteio Realizado',
+  statusLabel: 'sorteado',
   eventDate: '2026-04-29',
   statusIcon: 'check-circle' as any,
   tagColor: '#00FF00',
@@ -32,7 +32,7 @@ describe('PartyCard Component', () => {
 
     expect(getByText('Firma 2026')).toBeTruthy();
     expect(getByText('2026-04-29')).toBeTruthy();
-    expect(getByText('Sorteio Realizado')).toBeTruthy();
+    expect(getByText('sorteado')).toBeTruthy();
   });
 
   it('deve chamar a função onPress quando o card for pressionado', () => {

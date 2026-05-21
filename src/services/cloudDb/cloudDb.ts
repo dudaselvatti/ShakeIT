@@ -17,11 +17,11 @@ const USERS_COLLECTION = "usuarios";
 
 export async function seedUsuarios() {
     const querySnapshot = await getDocs(collection(db, USERS_COLLECTION));
-    
+
     if (querySnapshot.empty) {
         console.log("Populando banco com usuários mock...");
         for (const user of usuariosMock) {
-        await setDoc(doc(db, USERS_COLLECTION, user.id.toString()), user);
+        await setDoc(doc(db, USERS_COLLECTION, user.id), user);
         }
     }
 }
@@ -52,14 +52,16 @@ export async function createPartyInCloud(party: Omit<Party, "id">) {
 
     const payload = {
         name: party.name,
-        eventDate: party.eventDate,
-        minPrice: party.minPrice,
-        maxPrice: party.maxPrice,
-        inviteCode: party.inviteCode,
-        adminId: party.idAdmin,
+        event_date: party.event_date,
+        min_value: party.min_value,
+        max_value: party.max_value,
+        invite_code: party.invite_code,
+        admin_id: party.admin_id,
         status: party.status,
-
-        createdAt: serverTimestamp(),
+        block_dependent_draw: party.block_dependent_draw,
+        allow_wishlist_changes_after_draw: party.allow_wishlist_changes_after_draw,
+        created_at: serverTimestamp(),
+        updated_at: serverTimestamp(),
     };
 
     const docRef = await addDoc(partiesRef, payload);

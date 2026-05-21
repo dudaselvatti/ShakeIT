@@ -26,7 +26,7 @@ export const PartyCreatedScreen = () => {
           <Text style={styles.cardText}>Nome: {party.name}</Text>
           <Text style={styles.cardText}>Status: {party.status}</Text>
           <Text style={styles.cardText}>
-            Valores: R$ {party.minPrice} - R$ {party.maxPrice}
+            Valores: R$ {party.min_value} - R$ {party.max_value}
           </Text>
         </Card>
 
