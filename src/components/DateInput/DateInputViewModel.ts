@@ -10,9 +10,11 @@ export interface Props {
     onChangeDate: (date: Date) => void;
     placeholder?: string;
     containerStyle?: ViewStyle;
+    minimumDate?: Date;
+    maximumDate?: Date;
 }
 
-export function useDateInputViewModel({ label, value, onChangeDate, placeholder = "DD/MM/AAAA", containerStyle }: Props) {
+export function useDateInputViewModel({ label, value, onChangeDate, placeholder = "DD/MM/AAAA", containerStyle, minimumDate, maximumDate}: Props) {
     const [showPicker, setShowPicker] = useState(false);
 
     const formattedDate = formatDate(value);
@@ -50,6 +52,8 @@ export function useDateInputViewModel({ label, value, onChangeDate, placeholder 
         value,
         dateText,
         containerStyle,
+        minimumDate,
+        maximumDate,
         touchableOpacityTextStyles,
         showPicker,
         openPicker,
