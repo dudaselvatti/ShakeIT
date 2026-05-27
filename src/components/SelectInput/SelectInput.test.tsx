@@ -10,23 +10,25 @@ jest.mock("./SelectInputViewModel", () => ({
 
 jest.mock("@react-native-picker/picker", () => {
   const ReactInline = require("react");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { View } = require("react-native");
 
   const MockPicker = ({ children, selectedValue, onValueChange, ...props }: any) => {
     return (
-      <mockView testID="mock-picker" {...props}>
+      <View testID="mock-picker" {...props}>
         {ReactInline.Children.map(children, (child: any) =>
-          ReactInline.cloneElement(child, {
+          child ? ReactInline.cloneElement(child, {
             onValueChange,
             isSelected: child.props.value === selectedValue,
-          })
+          }) : null
         )}
-      </mockView>
+      </View>
     );
   };
 
   const MockPickerItem = ({ label, value, onValueChange }: any) => {
     return (
-      <mockView
+      <View
         testID={`picker-item-${value}`}
         onClick={() => onValueChange && onValueChange(value)}
         accessibilityLabel={label}

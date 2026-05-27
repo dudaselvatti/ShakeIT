@@ -50,7 +50,7 @@ export default function App() {
         <StatusBar style="dark" />
 
       <Stack.Navigator
-        initialRouteName="Registration"
+        initialRouteName="Home"
         screenOptions={{
           headerShown: false,
           animation: "slide_from_right",

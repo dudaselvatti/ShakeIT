@@ -5,60 +5,87 @@ import { useRegistrationViewModel } from "./RegistrationViewModel";
 
 jest.mock("./RegistrationViewModel");
 
-jest.mock("../../components/AppHeader", () => ({
-  AppHeader: ({ onBackPress, headerTitle }: any) => (
-    <mock-AppHeader testID="app-header" title={headerTitle} onPress={onBackPress} />
-  ),
-}));
+jest.mock("../../components/AppHeader", () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { View } = require("react-native");
+  return {
+    AppHeader: ({ onBackPress, headerTitle }: any) => (
+      <View testID="app-header" title={headerTitle} onPress={onBackPress} />
+    ),
+  };
+});
 
-jest.mock("../../components/AppFooter", () => ({
-  AppFooter: ({ onNavigateIntercept }: any) => (
-    <mock-AppFooter testID="app-footer" onNavigate={onNavigateIntercept} />
-  ),
-}));
+jest.mock("../../components/AppFooter", () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { View } = require("react-native");
+  return {
+    AppFooter: ({ onNavigateIntercept }: any) => (
+      <View testID="app-footer" onNavigate={onNavigateIntercept} />
+    ),
+  };
+});
 
 jest.mock("../../components/Button", () => {
-  const { Text } = require("react-native");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { View, Text } = require("react-native");
   return {
     Button: ({ title, disabled, onPress }: any) => (
-      <mock-Button
+      <View
         testID="custom-button"
         accessibilityState={{ disabled }}
         onPress={onPress}
       >
         <Text>{title}</Text>
-      </mock-Button>
+      </View>
     ),
   };
 });
 
-jest.mock("../../components/Input", () => ({
-  Input: ({ label, value, onChangeText, placeholder }: any) => (
-    <mock-Input
-      testID={`input-${label}`}
-      value={value}
-      placeholder={placeholder}
-      onChangeText={onChangeText}
-    />
-  ),
-}));
+jest.mock("../../components/Input", () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { View } = require("react-native");
+  return {
+    Input: ({ label, value, onChangeText, placeholder }: any) => (
+      <View
+        testID={`input-${label}`}
+        value={value}
+        placeholder={placeholder}
+        onChangeText={onChangeText}
+      />
+    ),
+  };
+});
 
-jest.mock("../../components/SelectInput", () => ({
-  SelectInput: ({ label, selectedValue, onValueChange }: any) => (
-    <mock-SelectInput
-      testID={`select-${label}`}
-      value={selectedValue}
-      onChange={onValueChange}
-    />
-  ),
-}));
+jest.mock("../../components/SelectInput", () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { View } = require("react-native");
 
-jest.mock("../../components/PopupModal", () => ({
-  PopupModal: ({ visible, onCancel, onConfirm }: any) =>
-    visible ? (
-      <mock-PopupModal testID="popup-modal" onCancel={onCancel} onConfirm={onConfirm} />
-    ) : null,
-}));
+  return {
+    SelectInput: ({ label, selectedValue, onValueChange }: any) => (
+      <View
+        testID={`select-${label}`}
+        value={selectedValue}
+        onChange={onValueChange}
+      />
+    ),
+  };
+});
+
+jest.mock("../../components/PopupModal", () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { View } = require("react-native");
+
+  return {
+    PopupModal: ({ visible, onCancel, onConfirm }: any) =>
+      visible ? (
+        <View
+          testID="popup-modal"
+          onCancel={onCancel}
+          onConfirm={onConfirm}
+        />
+      ) : null,
+  };
+});
 
 describe("RegistrationScreen", () => {
   const mockNavigation = { navigate: jest.fn() };
@@ -105,28 +132,28 @@ describe("RegistrationScreen", () => {
   });
 
   it("deve desabilitar o botão 'Criar Conta' se os campos obrigatórios estiverem vazios", () => {
-  const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
+    const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
   
-  const button = getByTestId("custom-button");
+    const button = getByTestId("custom-button");
 
-  expect(button.props.accessibilityState?.disabled).toBe(true);
-});
+    expect(button.props.accessibilityState?.disabled).toBe(true);
+  });
 
   it("deve habilitar o botão 'Criar Conta' quando todos os campos obrigatórios estiverem preenchidos", () => {
-		(useRegistrationViewModel as jest.Mock).mockReturnValue({
-			...defaultViewModelMock,
-			nomeUsuario: "John Doe",
-			email: "john@example.com",
-			senha: "Password123",
-			dataNascimento: new Date("2000-01-01"),
-		});
+    (useRegistrationViewModel as jest.Mock).mockReturnValue({
+      ...defaultViewModelMock,
+      nomeUsuario: "John Doe",
+      email: "john@example.com",
+      senha: "Password123",
+      dataNascimento: new Date("2000-01-01"),
+    });
 
-		const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
-		
-		const button = getByTestId("custom-button");
+    const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
+    
+    const button = getByTestId("custom-button");
 
-		expect(button.props.accessibilityState?.disabled).toBeFalsy();
-	});
+    expect(button.props.accessibilityState?.disabled).toBeFalsy();
+  });
 
   it("deve chamar updateNomeUsuario ao digitar no campo correspondente", () => {
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
@@ -152,21 +179,21 @@ describe("RegistrationScreen", () => {
   });
 
   it("deve chamar handleCadastrarUsuario ao clicar no botão Criar Conta", () => {
-		(useRegistrationViewModel as jest.Mock).mockReturnValue({
-			...defaultViewModelMock,
-			nomeUsuario: "John Doe",
-			email: "john@example.com",
-			senha: "Password123",
-			dataNascimento: new Date("2000-01-01"),
-		});
+    (useRegistrationViewModel as jest.Mock).mockReturnValue({
+      ...defaultViewModelMock,
+      nomeUsuario: "John Doe",
+      email: "john@example.com",
+      senha: "Password123",
+      dataNascimento: new Date("2000-01-01"),
+    });
 
-		const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
-		
-		const button = getByTestId("custom-button");
+    const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
+    
+    const button = getByTestId("custom-button");
 
-		fireEvent.press(button);
-		expect(defaultViewModelMock.handleCadastrarUsuario).toHaveBeenCalled();
-	});
+    fireEvent.press(button);
+    expect(defaultViewModelMock.handleCadastrarUsuario).toHaveBeenCalled();
+  });
 
   it("deve exibir e interagir com o PopupModal quando isModalVisible for true", () => {
     (useRegistrationViewModel as jest.Mock).mockReturnValue({

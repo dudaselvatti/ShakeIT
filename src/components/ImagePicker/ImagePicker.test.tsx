@@ -1,4 +1,5 @@
 import React from 'react';
+import { Image } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 import { ImagePicker } from './index';
 import { useImagePickerViewModel } from './ImagePickerViewModel';
@@ -9,8 +10,11 @@ jest.mock('./ImagePickerViewModel', () => ({
 
 describe('Componente ImagePicker', () => {
   const mockHandlePickImage = jest.fn();
+  const mockOnChangeImage = jest.fn();
+
   const defaultProps = {
-    someProp: 'test', 
+    label: 'Profile Photo',
+    onChangeImage: mockOnChangeImage,
   };
 
   beforeEach(() => {
@@ -48,7 +52,7 @@ describe('Componente ImagePicker', () => {
     expect(getByText('Profile Photo')).toBeTruthy();
     expect(queryByText('Selecionar Foto')).toBeNull();
 
-    const imageComponent = UNSAFE_getByType('Image');
+    const imageComponent = UNSAFE_getByType(Image);
     expect(imageComponent.props.source).toEqual({ uri: mockUri });
   });
 
