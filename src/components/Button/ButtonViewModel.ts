@@ -4,8 +4,9 @@ import { styles } from "./styles";
 
 export interface Props extends TouchableOpacityProps {
     title: string;
-    variant?: "primary" | "accent" | "outline" | "text";
+    variant?: "primary" | "accent" | "outline" | "text" | "danger" |"redNoOutline";
     isLoading?: boolean;
+    textStyles?: string;
 }
 export function useButtonViewModel({ title, variant = "primary", isLoading = false, style, disabled = false, ...touchableOpacityProps }: Props) {
     const isDisabled = isLoading || disabled;

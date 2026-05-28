@@ -5,7 +5,6 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { DateInput } from "../../components/DateInput";
 import { AppHeader } from "../../components/AppHeader";
-import { AppFooter } from "../../components/AppFooter";
 import { styles } from "./styles";
 
 import { useRegistrationViewModel } from "./RegistrationViewModel";
@@ -32,7 +31,6 @@ export const RegistrationScreen = ({ navigation }: any) => {
     isModalVisible,
     cancelExit,
     handleBackPress,
-    handleFooterNavigate,
     confirmExit,
     handleCadastrarUsuario,
   } = useRegistrationViewModel(navigation);
@@ -128,8 +126,6 @@ export const RegistrationScreen = ({ navigation }: any) => {
           disabled={!nomeUsuario || !email || !senha || !dataNascimento}
         />
       </View>
-
-      <AppFooter onNavigateIntercept={handleFooterNavigate} />
 
       <PopupModal
         visible={isModalVisible}

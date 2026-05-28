@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { isValidEmail } from "../../utils/Formatting/isValidEmail";
 
 export function useRegistrationViewModel(navigation: any) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -59,14 +60,6 @@ export function useRegistrationViewModel(navigation: any) {
       navigation.goBack();
     }
   };
-  const handleFooterNavigate = (route: string) => {
-    if (hasChanges) {
-      setPendingRoute(route);
-      setModalVisible(true);
-    } else {
-      navigation.navigate(route);
-    }
-  };
   const cancelExit = () => setModalVisible(false);
   const confirmExit = () => {
     setModalVisible(false);
@@ -89,6 +82,9 @@ export function useRegistrationViewModel(navigation: any) {
     if (!email) {
       newErrors.email = "O email é obrigatório.";
       isValid = false;
+    } else if (!isValidEmail(email)) {
+      newErrors.email = "Email inválido.";
+      isValid = false;
     }
 
     if (!senha) {
@@ -100,8 +96,6 @@ export function useRegistrationViewModel(navigation: any) {
       newErrors.data = "A data de nascimento é obrigatória.";
       isValid = false;
     }
-
-
 
     if (!bio) {
       newErrors.bio = "A bio é obrigatória.";
@@ -151,7 +145,6 @@ export function useRegistrationViewModel(navigation: any) {
     isModalVisible,
     cancelExit,
     handleBackPress,
-    handleFooterNavigate,
     confirmExit,
     handleCadastrarUsuario,
   };

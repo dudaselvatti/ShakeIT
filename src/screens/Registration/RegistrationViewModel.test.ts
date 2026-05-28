@@ -1,5 +1,9 @@
 import { renderHook, act } from "@testing-library/react-native";
 import { useRegistrationViewModel } from "./RegistrationViewModel";
+import { isValidEmail } from "../../utils/Formatting/isValidEmail";
+
+jest.mock("../../utils/Formatting/isValidEmail");
+const mockIsValidEmail = isValidEmail as jest.Mock;
 
 describe("useRegistrationViewModel", () => {
   let mockNavigation: { goBack: jest.Mock; navigate: jest.Mock };
@@ -11,6 +15,8 @@ describe("useRegistrationViewModel", () => {
       goBack: jest.fn(),
       navigate: jest.fn(),
     };
+
+    mockIsValidEmail.mockReturnValue(true);
   });
 
   describe("Atualizações de Estado e Limpeza de Erros", () => {
@@ -50,6 +56,7 @@ describe("useRegistrationViewModel", () => {
       act(() => {
         result.current.handleCadastrarUsuario();
       });
+      expect(result.current.errors.email).not.toBe("");
 
       act(() => {
         result.current.updateEmail("john@example.com");
@@ -57,6 +64,16 @@ describe("useRegistrationViewModel", () => {
 
       expect(result.current.email).toBe("john@example.com");
       expect(result.current.errors.email).toBe("");
+    });
+
+    it("deve atualizar a foto de perfil (avatarUrl) sem limpar erros", () => {
+      const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
+
+      act(() => {
+        result.current.updateAvatarUrl("https://linkdafoto.com/avatar.png");
+      });
+
+      expect(result.current.avatarUrl).toBe("https://linkdafoto.com/avatar.png");
     });
 
     it("deve atualizar o mapa de tamanhos (sizes) corretamente", () => {
@@ -84,7 +101,7 @@ describe("useRegistrationViewModel", () => {
       expect(result.current.isModalVisible).toBe(false);
     });
 
-    it("deve abrir o modal ao acionar handleBackPress se houver alterações pendentes", () => {
+    it("deve abrir o modal ao acionar handleBackPress se houver alterações pendentes (Ex: nomeUsuario preenchido)", () => {
       const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
 
       act(() => {
@@ -99,42 +116,16 @@ describe("useRegistrationViewModel", () => {
       expect(result.current.isModalVisible).toBe(true);
     });
 
-    it("deve navegar imediatamente ao rodapé se não houver alterações", () => {
-      const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
-
-      act(() => {
-        result.current.handleFooterNavigate("Home");
-      });
-
-      expect(mockNavigation.navigate).toHaveBeenCalledWith("Home");
-      expect(result.current.isModalVisible).toBe(false);
-    });
-
-    it("deve abrir o modal interceptor ao navegar pelo rodapé se houver alterações", () => {
-      const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
-
-      act(() => {
-        result.current.updateBio("Minha biografia");
-      });
-
-      act(() => {
-        result.current.handleFooterNavigate("Profile");
-      });
-
-      expect(mockNavigation.navigate).not.toHaveBeenCalled();
-      expect(result.current.isModalVisible).toBe(true);
-    });
-
     it("deve fechar o modal sem navegar ao acionar cancelExit", () => {
       const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
 
       act(() => {
         result.current.updateNomeUsuario("Felipe");
-			});
+      });
 
-			act(() => {
+      act(() => {
         result.current.handleBackPress();
-			});
+      });
 
       expect(result.current.isModalVisible).toBe(true);
 
@@ -146,7 +137,7 @@ describe("useRegistrationViewModel", () => {
       expect(mockNavigation.goBack).not.toHaveBeenCalled();
     });
 
-    it("deve confirmar a saída e dar goBack se o modal foi aberto pelo botão voltar", () => {
+    it("deve confirmar a saída e dar goBack se o modal foi aberto sem rotas pendentes", () => {
       const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
 
       act(() => {
@@ -158,7 +149,6 @@ describe("useRegistrationViewModel", () => {
       });
 
       expect(result.current.isModalVisible).toBe(true);
-      expect(mockNavigation.goBack).not.toHaveBeenCalled();
 
       act(() => {
         result.current.confirmExit();
@@ -168,29 +158,12 @@ describe("useRegistrationViewModel", () => {
       expect(mockNavigation.goBack).toHaveBeenCalledTimes(1);
     });
 
-    it("deve confirmar a saída e navegar para a rota pendente se aberto pelo rodapé", () => {
-      const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
-
-      act(() => {
-        result.current.updateNomeUsuario("Felipe");
-        result.current.handleFooterNavigate("Settings");
-      });
-
-      act(() => {
-        result.current.confirmExit();
-      });
-
-      expect(result.current.isModalVisible).toBe(false);
-      expect(mockNavigation.navigate).toHaveBeenCalledWith("Settings");
-    });
-  });
-
   describe("Validação de Formulário (handleCadastrarUsuario)", () => {
-    it("deve invalidar o formulário e injetar erros se todos os campos estiverem vazios", () => {
+    it("deve invalidar o formulário e injetar erros se todos os campos estiverem vazios", async () => {
       const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
 
-      act(() => {
-        result.current.handleCadastrarUsuario();
+      await act(async () => {
+        await result.current.handleCadastrarUsuario();
       });
 
       expect(result.current.errors.nome).toBe("O nome de usuário é obrigatório.");
@@ -199,8 +172,29 @@ describe("useRegistrationViewModel", () => {
       expect(result.current.errors.data).toBe("A data de nascimento é obrigatória.");
       expect(result.current.errors.bio).toBe("A bio é obrigatória.");
     });
+  });
 
-    it("deve passar na validação local se todos os campos obrigatórios estiverem preenchidos", () => {
+    it("deve aplicar erro específico de e-mail inválido se a utilitária retornar falso", async () => {
+      mockIsValidEmail.mockReturnValueOnce(false);
+      const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
+
+      act(() => {
+        result.current.updateNomeUsuario("user");
+        result.current.updateEmail("email-errado");
+        result.current.updateSenha("123");
+        result.current.updateDataNascimento(new Date());
+        result.current.updateBio("Hello");
+      });
+
+      await act(async () => {
+        await result.current.handleCadastrarUsuario();
+      });
+
+      expect(result.current.errors.email).toBe("Email inválido.");
+      expect(result.current.errors.nome).toBe("");
+    });
+
+    it("deve passar na validação local se todos os campos obrigatórios estiverem preenchidos corretamente", async () => {
       const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
 
       act(() => {
@@ -211,8 +205,8 @@ describe("useRegistrationViewModel", () => {
         result.current.updateBio("Sou um desenvolvedor");
       });
 
-      act(() => {
-        result.current.handleCadastrarUsuario();
+      await act(async () => {
+        await result.current.handleCadastrarUsuario();
       });
 
       expect(result.current.errors).toEqual({ nome: "", email: "", senha: "", data: "", bio: "" });

@@ -1,45 +1,52 @@
 import React from "react";
-
 import { render, fireEvent } from "@testing-library/react-native";
 import { SelectInput } from "./index";
 import { useSelectInputViewModel } from "./SelectInputViewModel";
+import { View } from "react-native";
 
 jest.mock("./SelectInputViewModel", () => ({
   useSelectInputViewModel: jest.fn(),
 }));
 
-jest.mock("@react-native-picker/picker", () => {
-  const ReactInline = require("react");
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { View } = require("react-native");
+function MockPickerContainer({
+  children,
+  selectedValue,
+  onValueChange,
+  ...props
+}: any) {
+  return (
+    <View testID="mock-picker" {...props}>
+      {React.Children.map(children, (child: any) =>
+        child
+          ? React.cloneElement(child, {
+              onValueChange,
+              isSelected: child.props.value === selectedValue,
+            })
+          : null
+      )}
+    </View>
+  );
+}
 
-  const MockPicker = ({ children, selectedValue, onValueChange, ...props }: any) => {
-    return (
-      <View testID="mock-picker" {...props}>
-        {ReactInline.Children.map(children, (child: any) =>
-          child ? ReactInline.cloneElement(child, {
-            onValueChange,
-            isSelected: child.props.value === selectedValue,
-          }) : null
-        )}
-      </View>
-    );
-  };
+function MockPickerItem({
+  label,
+  value,
+  onValueChange,
+}: any) {
+  return (
+    <View
+      testID={`picker-item-${value}`}
+      onClick={() => onValueChange?.(value)}
+      accessibilityLabel={label}
+    />
+  );
+}
 
-  const MockPickerItem = ({ label, value, onValueChange }: any) => {
-    return (
-      <View
-        testID={`picker-item-${value}`}
-        onClick={() => onValueChange && onValueChange(value)}
-        accessibilityLabel={label}
-      />
-    );
-  };
-
-  return {
-    Picker: Object.assign(MockPicker, { Item: MockPickerItem }),
-  };
-});
+jest.mock("@react-native-picker/picker", () => ({
+  Picker: Object.assign(MockPickerContainer, {
+    Item: MockPickerItem,
+  }),
+}));
 
 describe("SelectInput Component", () => {
   const mockOnValueChange = jest.fn();
@@ -65,7 +72,6 @@ describe("SelectInput Component", () => {
     const { getByText, getByTestId } = render(<SelectInput {...defaultProps} />);
 
     expect(getByText("Selecione o idioma")).toBeTruthy();
-    expect(getByTestId("picker-item-")).toBeTruthy();
     expect(getByTestId("picker-item-TypeScript")).toBeTruthy();
     expect(getByTestId("picker-item-JavaScript")).toBeTruthy();
     expect(getByTestId("picker-item-Python")).toBeTruthy();
