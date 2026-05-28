@@ -29,7 +29,6 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     buttonsView: {
-        flex: 1, //Talvez fique um pouco estranho, mas é para os botões não ficarem nem muito perto, nem muito longe dos inputs
         padding: 24,
         backgroundColor: theme.colors.background,
     },

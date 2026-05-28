@@ -36,7 +36,7 @@ function MockPickerItem({
   return (
     <View
       testID={`picker-item-${value}`}
-      onClick={() => onValueChange?.(value)}
+      onTouchEnd={() => onValueChange?.(value)}
       accessibilityLabel={label}
     />
   );
