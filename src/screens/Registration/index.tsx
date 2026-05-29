@@ -1,0 +1,145 @@
+import React from "react";
+import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { PopupModal } from "../../components/PopupModal";
+import { Button } from "../../components/Button";
+import { Input } from "../../components/Input";
+import { DateInput } from "../../components/DateInput";
+import { AppHeader } from "../../components/AppHeader";
+import { AppFooter } from "../../components/AppFooter";
+import { styles } from "./styles";
+
+import { useRegistrationViewModel } from "./RegistrationViewModel";
+import { ImagePicker } from "../../components/ImagePicker";
+import { SelectInput } from "../../components/SelectInput";
+
+export const RegistrationScreen = ({ navigation }: any) => {
+  const {
+    nomeUsuario,
+    updateNomeUsuario,
+    email,
+    updateEmail,
+    senha,
+    updateSenha,
+    dataNascimento,
+    updateDataNascimento,
+    avatarUrl,
+    updateAvatarUrl,
+    bio,
+    updateBio,
+    sizes,
+    updateSizes,
+    errors,
+    isModalVisible,
+    cancelExit,
+    handleBackPress,
+    handleFooterNavigate,
+    confirmExit,
+    handleCadastrarUsuario,
+  } = useRegistrationViewModel(navigation);
+
+  return (
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+      <AppHeader 
+        headerTitle="Cadastre-se" 
+        showBackButton={true} 
+        onBackPress={handleBackPress}
+        showSettingsIcon={true}
+      />
+
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+
+        <Input
+          label="Nome de usuário"
+          placeholder="Nome de usuário"
+          value={nomeUsuario}
+          onChangeText={updateNomeUsuario}
+          maxLength={50}
+        />
+        {errors.nome ? <Text style={styles.errorText}>{errors.nome}</Text> : null}
+
+        <Input
+          label="Email"
+          placeholder="Email"
+          value={email}
+          onChangeText={updateEmail}
+          maxLength={60}
+        />
+        {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+
+        <Input
+          label="Senha"
+          placeholder="Senha"
+          value={senha}
+          onChangeText={updateSenha}
+          maxLength={50}
+        />
+        {errors.senha ? <Text style={styles.errorText}>{errors.senha}</Text> : null}
+
+        <DateInput
+          label="Data de Nascimento"
+          value={dataNascimento}
+          onChangeDate={updateDataNascimento}
+          maximumDate={new Date()}
+        />
+        {errors.data ? <Text style={styles.errorText}>{errors.data}</Text> : null}
+
+        <ImagePicker
+          label="Foto de Perfil"
+          value={avatarUrl}
+          onChangeImage={updateAvatarUrl}
+        />
+
+        <Input
+          label="Bio"
+          placeholder="Bio"
+          value={bio}
+          onChangeText={updateBio}
+          maxLength={1000}
+          multiline
+          numberOfLines={4}
+        />
+        {errors.bio ? <Text style={styles.errorText}>{errors.bio}</Text> : null}
+
+        <SelectInput
+          label="Tamanho da Camiseta"
+          selectedValue={sizes.get("camiseta") || ""}
+          onValueChange={(value) => updateSizes("camiseta", value)}
+          options={["PP", "P", "M", "G", "GG"]}
+        />
+        <SelectInput
+          label="Tamanho da Calça"
+          selectedValue={sizes.get("calca") || ""}
+          onValueChange={(value) => updateSizes("calca", value)}
+          options={["36", "38", "40", "42", "44", "46"]}
+        />
+        <SelectInput
+          label="Tamanho do Calçado"
+          selectedValue={sizes.get("calcado") || ""}
+          onValueChange={(value) => updateSizes("calcado", value)}
+          options={["34", "35", "36", "37", "38", "39", "40", "41", "42", "43"]}
+        />
+
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <Button
+          title="Criar Conta"
+          onPress={handleCadastrarUsuario}
+          disabled={!nomeUsuario || !email || !senha || !dataNascimento}
+        />
+      </View>
+
+      <AppFooter onNavigateIntercept={handleFooterNavigate} />
+
+      <PopupModal
+        visible={isModalVisible}
+        title="Atenção!"
+        message="Se você voltar agora, os dados do seu cadastro serão perdidos. Deseja sair?"
+        cancelText="Cancelar"
+        confirmText="Sair sem salvar"
+        onCancel={cancelExit}
+        onConfirm={confirmExit}
+      />
+    </KeyboardAvoidingView>
+  );
+};

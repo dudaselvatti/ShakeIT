@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
-import { IconButton } from "../../components/IconButton";
 import { PopupModal } from "../../components/PopupModal";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
@@ -55,6 +54,7 @@ export const CreatePartyScreen = ({ navigation }: any) => {
           label="Data da Revelação"
           value={dataRevelacao}
           onChangeDate={updateDataRevelacao}
+          minimumDate={new Date()}
         />
         {errors.data ? <Text style={styles.errorText}>{errors.data}</Text> : null}
 
