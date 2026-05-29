@@ -6,47 +6,42 @@ import { useRegistrationViewModel } from "./RegistrationViewModel";
 jest.mock("./RegistrationViewModel");
 
 jest.mock("../../components/AppHeader", () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { View } = require("react-native");
+  const ReactNative = jest.requireActual("react-native");
+
   return {
     AppHeader: ({ onBackPress, headerTitle }: any) => (
-      <View testID="app-header" title={headerTitle} onPress={onBackPress} />
-    ),
-  };
-});
-
-jest.mock("../../components/AppFooter", () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { View } = require("react-native");
-  return {
-    AppFooter: ({ onNavigateIntercept }: any) => (
-      <View testID="app-footer" onNavigate={onNavigateIntercept} />
+      <ReactNative.View
+        testID="app-header"
+        title={headerTitle}
+        onPress={onBackPress}
+      />
     ),
   };
 });
 
 jest.mock("../../components/Button", () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { View, Text } = require("react-native");
+  const ReactNative = jest.requireActual("react-native");
+
   return {
     Button: ({ title, disabled, onPress }: any) => (
-      <View
+      <ReactNative.TouchableOpacity
         testID="custom-button"
+        disabled={disabled}
         accessibilityState={{ disabled }}
         onPress={onPress}
       >
-        <Text>{title}</Text>
-      </View>
+        <ReactNative.Text>{title}</ReactNative.Text>
+      </ReactNative.TouchableOpacity>
     ),
   };
 });
 
 jest.mock("../../components/Input", () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { View } = require("react-native");
+  const ReactNative = jest.requireActual("react-native");
+
   return {
     Input: ({ label, value, onChangeText, placeholder }: any) => (
-      <View
+      <ReactNative.View
         testID={`input-${label}`}
         value={value}
         placeholder={placeholder}
@@ -56,13 +51,40 @@ jest.mock("../../components/Input", () => {
   };
 });
 
+jest.mock("../../components/DateInput", () => {
+  const ReactNative = jest.requireActual("react-native");
+
+  return {
+    DateInput: ({ label, value, onChangeDate }: any) => (
+      <ReactNative.View
+        testID={`date-input-${label}`}
+        value={value}
+        onChangeDate={onChangeDate}
+      />
+    ),
+  };
+});
+
+jest.mock("../../components/ImagePicker", () => {
+  const ReactNative = jest.requireActual("react-native");
+
+  return {
+    ImagePicker: ({ label, value, onChangeImage }: any) => (
+      <ReactNative.View
+        testID={`image-picker-${label}`}
+        value={value}
+        onChangeImage={onChangeImage}
+      />
+    ),
+  };
+});
+
 jest.mock("../../components/SelectInput", () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { View } = require("react-native");
+  const ReactNative = jest.requireActual("react-native");
 
   return {
     SelectInput: ({ label, selectedValue, onValueChange }: any) => (
-      <View
+      <ReactNative.View
         testID={`select-${label}`}
         value={selectedValue}
         onChange={onValueChange}
@@ -72,13 +94,12 @@ jest.mock("../../components/SelectInput", () => {
 });
 
 jest.mock("../../components/PopupModal", () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { View } = require("react-native");
+  const ReactNative = jest.requireActual("react-native");
 
   return {
     PopupModal: ({ visible, onCancel, onConfirm }: any) =>
       visible ? (
-        <View
+        <ReactNative.View
           testID="popup-modal"
           onCancel={onCancel}
           onConfirm={onConfirm}
@@ -109,7 +130,6 @@ describe("RegistrationScreen", () => {
     isModalVisible: false,
     cancelExit: jest.fn(),
     handleBackPress: jest.fn(),
-    handleFooterNavigate: jest.fn(),
     confirmExit: jest.fn(),
     handleCadastrarUsuario: jest.fn(),
   };
@@ -133,10 +153,10 @@ describe("RegistrationScreen", () => {
 
   it("deve desabilitar o botão 'Criar Conta' se os campos obrigatórios estiverem vazios", () => {
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
-  
-    const button = getByTestId("custom-button");
 
-    expect(button.props.accessibilityState?.disabled).toBe(true);
+    const button = getByTestId("custom-button");
+    
+    expect(button).toBeDisabled(); 
   });
 
   it("deve habilitar o botão 'Criar Conta' quando todos os campos obrigatórios estiverem preenchidos", () => {
@@ -149,10 +169,9 @@ describe("RegistrationScreen", () => {
     });
 
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
-    
     const button = getByTestId("custom-button");
 
-    expect(button.props.accessibilityState?.disabled).toBeFalsy();
+    expect(button.props.disabled).toBeFalsy();
   });
 
   it("deve chamar updateNomeUsuario ao digitar no campo correspondente", () => {
@@ -188,7 +207,6 @@ describe("RegistrationScreen", () => {
     });
 
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
-    
     const button = getByTestId("custom-button");
 
     fireEvent.press(button);

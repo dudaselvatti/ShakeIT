@@ -20,6 +20,8 @@ import { SettingsScreen } from "./src/screens/Settings";
 
 import { AuthProvider } from "./src/contexts/AuthContext/AuthContext";
 import { RegistrationScreen } from "./src/screens/Registration";
+import { LoginScreen } from "./src/screens/Login";
+import { ForgotMyPasswordScreen } from "./src/screens/ForgotMyPassword";
 
 export type RootStackParamList = {
   Home: { novaParty?: Party } | undefined;
@@ -30,6 +32,8 @@ export type RootStackParamList = {
   RevealResult: undefined;
   PerfilSorteado: { idUsuario: number };
   Registration: undefined;
+  Login: undefined;
+  ForgotMyPassword: undefined;
   Scan: undefined;
   PartyPreview: { partyCode: string };
   ParticipantLobby: { partyId: string };
@@ -67,6 +71,8 @@ export default function App() {
         <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
         <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="ForgotMyPassword" component={ForgotMyPasswordScreen} />
         <Stack.Screen 
           name="Scan" 
           component={ScanScreen} 
