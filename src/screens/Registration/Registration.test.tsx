@@ -118,6 +118,8 @@ describe("RegistrationScreen", () => {
     updateEmail: jest.fn(),
     senha: "",
     updateSenha: jest.fn(),
+    genero: "",
+    updateGenero: jest.fn(),
     dataNascimento: null,
     updateDataNascimento: jest.fn(),
     avatarUrl: "",
@@ -148,31 +150,33 @@ describe("RegistrationScreen", () => {
     expect(getByTestId("input-Nome de usuário")).toBeTruthy();
     expect(getByTestId("input-Email")).toBeTruthy();
     expect(getByTestId("input-Senha")).toBeTruthy();
+    expect(getByTestId("input-Gênero")).toBeTruthy();
     expect(getByText("Criar Conta")).toBeTruthy();
   });
 
-  it("deve desabilitar o botão 'Criar Conta' se os campos obrigatórios estiverem vazios", () => {
-    const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
+it("deve desabilitar o botão 'Criar Conta' se os campos obrigatórios estiverem vazios", () => {
+  const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
 
-    const button = getByTestId("custom-button");
-    
-    expect(button).toBeDisabled(); 
+  const button = getByTestId("custom-button");
+  
+  expect(button).toBeDisabled(); 
+});
+
+it("deve habilitar o botão 'Criar Conta' quando todos os campos obrigatórios estiverem preenchidos", () => {
+  (useRegistrationViewModel as jest.Mock).mockReturnValue({
+    ...defaultViewModelMock,
+    nomeUsuario: "John Doe",
+    email: "john@example.com",
+    senha: "Password123",
+    genero: "Masculino",
+    dataNascimento: new Date("2000-01-01"),
   });
 
-  it("deve habilitar o botão 'Criar Conta' quando todos os campos obrigatórios estiverem preenchidos", () => {
-    (useRegistrationViewModel as jest.Mock).mockReturnValue({
-      ...defaultViewModelMock,
-      nomeUsuario: "John Doe",
-      email: "john@example.com",
-      senha: "Password123",
-      dataNascimento: new Date("2000-01-01"),
-    });
+  const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
+  const button = getByTestId("custom-button");
 
-    const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
-    const button = getByTestId("custom-button");
-
-    expect(button.props.disabled).toBeFalsy();
-  });
+  expect(button).toBeEnabled();
+});
 
   it("deve chamar updateNomeUsuario ao digitar no campo correspondente", () => {
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
@@ -182,12 +186,21 @@ describe("RegistrationScreen", () => {
     expect(defaultViewModelMock.updateNomeUsuario).toHaveBeenCalledWith("Novo Nome");
   });
 
+  it("deve chamar updateGenero ao digitar no campo de Gênero", () => {
+    const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
+    const inputGenero = getByTestId("input-Gênero");
+
+    fireEvent(inputGenero, "onChangeText", "Masculino");
+    expect(defaultViewModelMock.updateGenero).toHaveBeenCalledWith("Masculino");
+  });
+
   it("deve exibir mensagens de erro quando passadas pelo ViewModel", () => {
     (useRegistrationViewModel as jest.Mock).mockReturnValue({
       ...defaultViewModelMock,
       errors: {
         nome: "Nome inválido",
         email: "Email já cadastrado",
+        genero: "Gênero inválido",
       },
     });
 
@@ -195,6 +208,7 @@ describe("RegistrationScreen", () => {
 
     expect(getByText("Nome inválido")).toBeTruthy();
     expect(getByText("Email já cadastrado")).toBeTruthy();
+    expect(getByText("Gênero inválido")).toBeTruthy();
   });
 
   it("deve chamar handleCadastrarUsuario ao clicar no botão Criar Conta", () => {
@@ -203,6 +217,7 @@ describe("RegistrationScreen", () => {
       nomeUsuario: "John Doe",
       email: "john@example.com",
       senha: "Password123",
+      genero: "Masculino",
       dataNascimento: new Date("2000-01-01"),
     });
 

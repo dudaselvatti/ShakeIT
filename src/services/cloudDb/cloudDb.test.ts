@@ -2,7 +2,8 @@ import {
   createPartyInCloud, 
   seedUsuarios, 
   getUsuarioById, 
-  getUsuariosFromCloud 
+  getUsuariosFromCloud,
+  storeUserInCloud
 } from "./cloudDb";
 import { db } from "../../config/firebase";
 import {
@@ -14,6 +15,7 @@ import {
   getDocs,
   setDoc,
   getDoc,
+  Timestamp,
 } from "firebase/firestore";
 
 import { Party } from "../../types/Party";
@@ -35,6 +37,9 @@ jest.mock("firebase/firestore", () => ({
   getDocs: jest.fn(),
   setDoc: jest.fn(),
   getDoc: jest.fn(),
+  Timestamp: {
+    fromDate: jest.fn((date) => ({ toDate: () => date, mockType: "Timestamp" })),
+  },
 }));
 
 jest.mock("firebase/auth", () => ({
@@ -57,6 +62,7 @@ describe("cloudDb", () => {
   };
 
   const mockDocRef = { id: "mockDocId" };
+  const USERS_COLLECTION = "users";
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -117,12 +123,12 @@ describe("cloudDb", () => {
 
       await seedUsuarios();
 
-      expect(collection).toHaveBeenCalledWith(db, "usuarios");
+      expect(collection).toHaveBeenCalledWith(db, USERS_COLLECTION);
       expect(getDocs).toHaveBeenCalledWith("mockCollectionRef");
       expect(setDoc).toHaveBeenCalledTimes(usuariosMock.length);
 
       usuariosMock.forEach((usuario) => {
-        expect(doc).toHaveBeenCalledWith(db, "usuarios", usuario.id.toString());
+        expect(doc).toHaveBeenCalledWith(db, USERS_COLLECTION, usuario.id);
         expect(setDoc).toHaveBeenCalledWith("mockDocRefForUpdate", usuario);
       });
     });
@@ -150,7 +156,7 @@ describe("cloudDb", () => {
 
       const result = await getUsuarioById("1");
 
-      expect(doc).toHaveBeenCalledWith(db, "usuarios", "1");
+      expect(doc).toHaveBeenCalledWith(db, USERS_COLLECTION, "1");
       expect(getDoc).toHaveBeenCalledWith("mockDocRefForUpdate");
       expect(result).toEqual(mockUser);
     });
@@ -178,10 +184,70 @@ describe("cloudDb", () => {
 
       const result = await getUsuariosFromCloud();
 
-      expect(collection).toHaveBeenCalledWith(db, "usuarios");
+      expect(collection).toHaveBeenCalledWith(db, USERS_COLLECTION);
       expect(getDocs).toHaveBeenCalledWith("mockCollectionRef");
       expect(result).toEqual(usuariosMock);
       expect(result.length).toBe(usuariosMock.length);
+    });
+  });
+
+  describe("storeUserInCloud", () => {
+    it("deve salvar os dados estruturados do usuário no Firestore com timestamps", async () => {
+      const mockUid = "user_123";
+      const mockBirthDate = new Date("2000-01-01");
+      const mockDados = {
+        email: "test@example.com",
+        nome: "Dev Test",
+        genero: "Masculino",
+        birth_date: mockBirthDate,
+        avatar_url: "https://avatar.url",
+        bio: "Minha bio",
+        sizes: { camisa: "G", calca: "44", calcado: "42" }
+      };
+
+      await storeUserInCloud(mockUid, mockDados);
+
+      expect(doc).toHaveBeenCalledWith(db, USERS_COLLECTION, mockUid);
+      expect(Timestamp.fromDate).toHaveBeenCalledWith(mockBirthDate);
+      expect(setDoc).toHaveBeenCalledWith(
+        "mockDocRefForUpdate",
+        expect.objectContaining({
+          id: mockUid,
+          email: mockDados.email,
+          nome: mockDados.nome,
+          genero: mockDados.genero,
+          avatar_url: mockDados.avatar_url,
+          bio: mockDados.bio,
+          sizes: mockDados.sizes,
+          shake_enabled: true,
+          dark_mode: false,
+          notifications_enabled: true,
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+        })
+      );
+    });
+
+    it("deve tratar campos opcionais vazios usando fallbacks padrão", async () => {
+      const mockUid = "user_456";
+      const mockDadosMinimos = {
+        email: "minimal@example.com",
+        nome: "User Minimo",
+        genero: "Outro",
+        birth_date: null,
+        sizes: {}
+      };
+
+      await storeUserInCloud(mockUid, mockDadosMinimos);
+
+      expect(setDoc).toHaveBeenCalledWith(
+        "mockDocRefForUpdate",
+        expect.objectContaining({
+          birth_date: null,
+          avatar_url: "",
+          bio: "",
+        })
+      );
     });
   });
 });
