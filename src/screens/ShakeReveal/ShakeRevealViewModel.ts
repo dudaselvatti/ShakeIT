@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Animated, Vibration } from "react-native";
 import { Accelerometer } from "expo-sensors";
+import { participantesMock } from "../../mocks/participantesMock";
 
 export function useShakeRevealViewModel(navigation: any) {
   const shakeAnimation = useRef(new Animated.Value(0)).current;
@@ -25,7 +26,8 @@ export function useShakeRevealViewModel(navigation: any) {
         useNativeDriver: true,
       })
     ]).start(() => {
-      navigation.navigate("PerfilSorteado", { idUsuario: 1 });
+      const firstParticipantId = participantesMock[0]?.usuario.id || "550e8400-e29b-41d4-a716-446655440001";
+      navigation.navigate("PerfilSorteado", { idUsuario: firstParticipantId });
     });
   }, [explodeScale, explodeOpacity, navigation]);
 

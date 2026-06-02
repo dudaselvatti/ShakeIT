@@ -14,10 +14,10 @@ export function usePartyCardViewModel(props: Props) {
         let config;
         
         switch (props.status) {
-            case "Sorteio Realizado":
+            case "sorteio_realizado":
                 config = { icon: "gift" as const, color: theme.colors.success };
                 break;
-            case "Fim do evento":
+            case "aguardando_sorteio":
                 config = { icon: "check-circle" as const, color: theme.colors.textLight };
                 break;
             default:

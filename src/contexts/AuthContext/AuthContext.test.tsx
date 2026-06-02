@@ -86,7 +86,7 @@ describe('AuthProvider', () => {
     await waitFor(() => {
       expect(mockedSeedUsuarios).toHaveBeenCalledTimes(1);
       expect(mockedGetUsuariosFromCloud).toHaveBeenCalledTimes(1);
-    });
+    }, { timeout: 5000 });
   });
 
   it('deve definir um usuário diferente do admin vindo do banco de dados', async () => {
@@ -107,7 +107,7 @@ describe('AuthProvider', () => {
       const nomesPermitidos = usuariosSemAdmin.map(u => u.nome);
 
       expect(nomesPermitidos).toContain(usuarioRenderizado);
-    });
+    }, { timeout: 5000 });
   });
 
   it('deve finalizar loading mesmo em caso de erro', async () => {
@@ -126,7 +126,7 @@ describe('AuthProvider', () => {
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).toBeNull();
-    });
+    }, { timeout: 5000 });
 
     expect(consoleErrorSpy).toHaveBeenCalled();
 

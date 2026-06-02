@@ -1,8 +1,7 @@
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { participantesMock } from "../../mocks/participantesMock";
 
 export function useParticipantLobbyViewModel() {
-    const route = useRoute<any>();
     const navigation = useNavigation<any>();
 
     const handleBackPress = () => {
@@ -13,7 +12,7 @@ export function useParticipantLobbyViewModel() {
     // const { partyId } = route.params;
 
     const participantes = participantesMock;
-    const confirmadosCount = participantes.filter(p => p.perfil.isConfirmado).length;
+    const confirmadosCount = participantes.filter(p => p.perfil.status === 'confirmado').length;
     const participantesTotal = participantes.length;
 
     return {

@@ -2,25 +2,31 @@ import { Party } from "../types/Party";
 
 export const partiesMock: Party[] = [
   {
-    id: "1",
+    id: "party-001",
+    admin_id: "550e8400-e29b-41d4-a716-446655440001",
     name: "Amigo Secreto IFSP",
-    eventDate: "20/12/2026",
-    drawDate: "15/04/2026",
-    minPrice: 50,
-    maxPrice: 100,
-    idAdmin: 1,
-    inviteCode: "#STM32F",
-    status: "Sorteio Realizado",
+    event_date: "2026-12-20",
+    min_value: 50,
+    max_value: 100,
+    invite_code: "#STM32F",
+    status: "sorteio_realizado",
+    block_dependent_draw: false,
+    allow_wishlist_changes_after_draw: false,
+    created_at: "2024-01-10T10:00:00Z",
+    updated_at: "2024-01-15T14:30:00Z"
   },
   {
-    id: "2",
+    id: "party-002",
+    admin_id: "550e8400-e29b-41d4-a716-446655440001",
     name: "Firma 2026",
-    eventDate: "15/12/2026",
-    drawDate: "",
-    minPrice: 80,
-    maxPrice: 150,
-    idAdmin: 1,
-    inviteCode: "#103C8T",
-    status: "Aguardando Sorteio",
-  },
+    event_date: "2026-12-15",
+    min_value: 80,
+    max_value: 150,
+    invite_code: "#103C8T",
+    status: "aguardando_sorteio",
+    block_dependent_draw: false,
+    allow_wishlist_changes_after_draw: true,
+    created_at: "2024-01-10T10:00:00Z",
+    updated_at: "2024-01-10T10:00:00Z"
+  }
 ];

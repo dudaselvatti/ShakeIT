@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
 import { PartyPreviewScreen } from './index';
+import { AppFooter } from '../../components/AppFooter';
 
 const mockNavigate = jest.fn();
 
@@ -9,9 +10,13 @@ jest.mock('@react-navigation/native', () => ({
   useRoute: () => ({ params: { partyCode: '#NATAL55' } }),
 }));
 
+
+
 jest.mock('../../components/AppFooter', () => ({
   AppFooter: jest.fn(() => null),
 }));
+
+const mockAppFooter = AppFooter as unknown as jest.Mock;
 
 describe('Tela PartyPreview', () => {
   beforeEach(() => {
@@ -41,7 +46,7 @@ describe('Tela PartyPreview', () => {
   });
 
   it('deve abrir o modal de atenção ao clicar em "Voltar ao Início"', () => {
-    const { getByText, queryByText } = render(<PartyPreviewScreen />);
+    const { getByText } = render(<PartyPreviewScreen />);
 
     // Garante que o texto do modal existe
     fireEvent.press(getByText('Voltar ao Início'));
@@ -50,7 +55,7 @@ describe('Tela PartyPreview', () => {
   });
 
   it('deve fechar o modal ao clicar em "Cancelar"', () => {
-    const { getByText, queryByText } = render(<PartyPreviewScreen />);
+    const { getByText } = render(<PartyPreviewScreen />);
 
     // Abre o modal
     fireEvent.press(getByText('Voltar ao Início'));
@@ -83,7 +88,7 @@ describe('Tela PartyPreview', () => {
     const { getByText } = render(<PartyPreviewScreen />);
     
     // Disparar o onNavigateIntercept
-    const testProps = require('../../components/AppFooter').AppFooter.mock.calls[0][0];
+    const testProps = mockAppFooter.mock.calls[0][0];
     act(() => {
       testProps.onNavigateIntercept('MeuPerfil');
     });

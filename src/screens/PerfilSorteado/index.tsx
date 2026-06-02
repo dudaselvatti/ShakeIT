@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PerfilSorteadoHeader } from './components/PerfilSorteadoHeader';
@@ -15,16 +15,16 @@ export const PerfilSorteadoScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <AppHeader headerTitle="Perfil Sorteado" showBackButton={true} showSettingsIcon={true} />
-            <PerfilSorteadoHeader 
-                fotoUrl={usuario.fotoUrl} 
-                nome={usuario.nome} 
-                dataDeNascimento={usuario.dataDeNascimento} 
+            <PerfilSorteadoHeader
+                fotoUrl={usuario.avatar_url}
+                nome={usuario.nome}
+                dataDeNascimento={usuario.birth_date}
                 genero={usuario.genero}
             />
             <ScrollView>
-                <PerfilSorteadoContent 
-                    medidas={perfil.medidas} 
-                    preferencias={perfil.preferencias}
+                <PerfilSorteadoContent
+                    medidas={perfil.sizes || {}}
+                    preferencias={perfil.preferencias || {}}
                 />
             </ScrollView>
             <AppFooter />

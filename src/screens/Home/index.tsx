@@ -9,7 +9,7 @@ import { useHomeViewModel } from "./HomeViewModel";
 import { styles } from "./styles";
 
 export const HomeScreen = () => {
-  const { parties, handleCardPress, handleCreateParty, handleScanPress, userName } = useHomeViewModel();
+  const { parties, handleCardPress, handleCreateParty, userName } = useHomeViewModel();
   const insets = useSafeAreaInsets();
 
   return (
@@ -28,11 +28,11 @@ export const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[styles.listContent, { paddingBottom: insets.bottom + 100 }]}
         renderItem={({ item }) => (
-          <PartyCard 
+          <PartyCard
             name={item.name}
             status={item.status}
-            eventDate={item.eventDate}
-            onPress={() => handleCardPress(item)} 
+            eventDate={item.event_date}
+            onPress={() => handleCardPress(item)}
           />
         )}
       />

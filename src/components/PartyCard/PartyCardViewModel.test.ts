@@ -5,7 +5,7 @@ import { theme } from "../../styles/theme";
 describe('usePartyCardViewModel', () => {
   const defaultProps: Props = {
     name: 'Festa de Natal',
-    status: 'Aguardando Sorteio',
+    status: 'aguardando_sorteio',
     eventDate: '2024-12-02',
     onPress: jest.fn(),
   };
@@ -19,24 +19,24 @@ describe('usePartyCardViewModel', () => {
     expect(result.current.onPress).toBe(defaultProps.onPress);
   });
 
-  it('deve retornar a configuração correta para o status "Sorteio Realizado"', () => {
-    const props: Props = { ...defaultProps, status: 'Sorteio Realizado' };
+  it('deve retornar a configuração correta para o status "sorteio_realizado"', () => {
+    const props: Props = { ...defaultProps, status: 'sorteio_realizado' };
     const { result } = renderHook(() => usePartyCardViewModel(props));
 
     expect(result.current.statusIcon).toBe('gift');
     expect(result.current.tagColor).toBe(theme.colors.success);
   });
 
-  it('deve retornar a configuração correta para o status "Fim do evento"', () => {
-    const props: Props = { ...defaultProps, status: 'Fim do evento' };
+  it('deve retornar a configuração correta para o status "aguardando_sorteio"', () => {
+    const props: Props = { ...defaultProps, status: 'aguardando_sorteio' };
     const { result } = renderHook(() => usePartyCardViewModel(props));
 
     expect(result.current.statusIcon).toBe('check-circle');
     expect(result.current.tagColor).toBe(theme.colors.textLight);
   });
 
-  it('deve retornar a configuração padrão (default) para outros status', () => {
-    const props: Props = { ...defaultProps, status: 'Em aberto' as any };
+  it('deve retornar a configuração padrão (default) para outro status', () => {
+    const props: Props = { ...defaultProps, status: 'aguardando_pessoas' };
     const { result } = renderHook(() => usePartyCardViewModel(props));
 
     expect(result.current.statusIcon).toBe('clock');
@@ -52,10 +52,10 @@ describe('usePartyCardViewModel', () => {
     const firstValue = result.current;
 
     rerender(defaultProps);
-    expect(result.current).toBe(firstValue); 
+    expect(result.current).toBe(firstValue);
 
-    rerender({ ...defaultProps, status: 'Fim do evento' });
+    rerender({ ...defaultProps, status: 'sorteio_realizado' });
     expect(result.current).not.toBe(firstValue);
-    expect(result.current.statusIcon).toBe('check-circle');
+    expect(result.current.statusIcon).toBe('gift');
   });
 });

@@ -11,7 +11,7 @@ jest.mock('@react-navigation/native', () => ({
 }));
 
 jest.mock('expo-camera', () => {
-  const { View } = require('react-native');
+  const { View } = jest.requireActual('react-native');
   return {
     useCameraPermissions: () => [mockPermission, mockRequestPermission],
     CameraView: (props: any) => <View testID="camera-view" {...props} />
@@ -20,14 +20,14 @@ jest.mock('expo-camera', () => {
 
 jest.mock('../../components/AppHeader', () => ({
   AppHeader: ({ headerTitle }: any) => {
-    const { Text } = require('react-native');
+    const { Text } = jest.requireActual('react-native');
     return <Text testID="app-header">{headerTitle}</Text>;
   }
 }));
 
 jest.mock('../../components/AppFooter', () => ({
   AppFooter: () => {
-    const { View } = require('react-native');
+    const { View } = jest.requireActual('react-native');
     return <View testID="app-footer" />;
   }
 }));

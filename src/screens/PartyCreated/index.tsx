@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { theme } from "../../styles/theme";
 import { Button } from "../../components/Button";
 import { AppHeader } from "../../components/AppHeader";
 import { AppFooter } from "../../components/AppFooter";
@@ -26,7 +25,7 @@ export const PartyCreatedScreen = () => {
           <Text style={styles.cardText}>Nome: {party.name}</Text>
           <Text style={styles.cardText}>Status: {party.status}</Text>
           <Text style={styles.cardText}>
-            Valores: R$ {party.minPrice} - R$ {party.maxPrice}
+            Valores: R$ {party.min_value} - R$ {party.max_value}
           </Text>
         </Card>
 

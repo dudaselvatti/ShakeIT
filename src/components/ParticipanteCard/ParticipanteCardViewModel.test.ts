@@ -5,18 +5,28 @@ import { Participante } from '../../types/Participante';
 describe("useParticipanteCardViewModel", () => {
   const mockParticipanteBase: Participante = {
       usuario: {
-          id: 101,
+          id: "550e8400-e29b-41d4-a716-446655440101",
           email: 'zeninguem@email.com',
-          senha: '12345',
           nome: 'Zé ninguém',
-          fotoUrl: "https://i.pravatar.cc/150?img=1",
+          avatar_url: "https://i.pravatar.cc/150?img=1",
           genero: "Masculino",
-          dataDeNascimento: "2003-12-01"
+          birth_date: "2003-12-01",
+          shake_enabled: true,
+          dark_mode: false,
+          notifications_enabled: true,
+          created_at: "2024-01-10T10:00:00Z",
+          updated_at: "2024-01-10T10:00:00Z"
       },
       perfil: {
-          idUsuario: 101,
-          isConfirmado: false,
-          medidas: {
+          id: "550e8400-e29b-41d4-a716-556655440101",
+          user_id: "550e8400-e29b-41d4-a716-446655440101",
+          party_id: "party-001",
+          participant_type: "user",
+          participant_name: "Zé ninguém",
+          participant_avatar: "https://i.pravatar.cc/150?img=1",
+          status: "pendente",
+          has_revealed_draw: false,
+          sizes: {
               camisa: "M",
               calca: "42",
               calcado: "43"
@@ -25,7 +35,8 @@ describe("useParticipanteCardViewModel", () => {
               coisasQueAmo: ["Nada"],
               melhorEvitar: ["Tudo"]
           },
-          isDependente: false
+          created_at: "2024-01-10T10:00:00Z",
+          updated_at: "2024-01-10T10:00:00Z"
       },
   };
 
@@ -40,7 +51,7 @@ describe("useParticipanteCardViewModel", () => {
   it("deve retornar o estado correto para um participante PENDENTE", () => {
     const participantePendente = {
       ...mockParticipanteBase,
-      perfil: { isConfirmado: false },
+      perfil: { ...mockParticipanteBase.perfil, status: "pendente" },
     };
 
     const { result } = renderHook(() =>
@@ -49,13 +60,13 @@ describe("useParticipanteCardViewModel", () => {
 
     expect(result.current.isConfirmado).toBe(false);
     expect(result.current.statusIcon).toBe("🔓");
-    expect(result.current.statusText).toBe("Pendente");
+    expect(result.current.statusText).toBe("pendente");
   });
 
   it("deve retornar o estado correto para um participante CONFIRMADO", () => {
     const participanteConfirmado = {
       ...mockParticipanteBase,
-      perfil: { isConfirmado: true },
+      perfil: { ...mockParticipanteBase.perfil, status: "confirmado" },
     };
 
     const { result } = renderHook(() =>
@@ -81,7 +92,7 @@ describe("useParticipanteCardViewModel", () => {
       participante: {
         ...mockParticipanteBase,
         usuario: { ...mockParticipanteBase.usuario, nome: "João Silva" },
-        perfil: { ...mockParticipanteBase.perfil, isConfirmado: true },
+        perfil: { ...mockParticipanteBase.perfil, status: "confirmado" },
       } as any,
     });
 

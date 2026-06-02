@@ -11,7 +11,7 @@ export function usePartyAdminViewModel() {
     };
 
     const participantes = participantesMock;
-    const confirmadosCount = participantes.filter(p => p.perfil.isConfirmado).length;
+    const confirmadosCount = participantes.filter(p => p.perfil.status === 'confirmado').length;
     const participantesTotal = participantes.length;
     const headerTitle = "Painel do Evento";
 

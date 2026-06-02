@@ -13,10 +13,14 @@ jest.mock('@react-navigation/native', () => {
 jest.mock('../../utils/PartyCode/gerarPartyCode');
 jest.mock('../../mocks/partiesMock', () => ({
   partiesMock: [
-    { id: '1', name: 'Festa A', status: 'Aguardando Sorteio' },
-    { id: '2', name: 'Festa B', status: 'Sorteio Realizado' },
-    { id: '3', name: 'Festa C', status: 'Fim do evento' },
+    { id: '1', name: 'Festa A', status: 'aguardando_sorteio' },
+    { id: '2', name: 'Festa B', status: 'sorteio_realizado' },
     { id: '4', name: 'Festa D', status: 'Status Invalido' },
+  ]
+}));
+jest.mock('../../mocks/participantesMock', () => ({
+  participantesMock: [
+    { usuario: { id: 'mock-user-uuid-1', nome: 'Duda' } }
   ]
 }));
 jest.mock('../../contexts/AuthContext/AuthContext', () => ({
@@ -51,7 +55,7 @@ describe('useHomeViewModel', () => {
     expect(mockNavigate).toHaveBeenCalledWith('CreateParty');
   });
 
-  it('deve gerar código e navegar para PartyAdmin quando status for "Aguardando Sorteio"', () => {
+  it('deve gerar código e navegar para PartyAdmin quando status for "aguardando_sorteio"', () => {
     const { result } = renderHook(() => useHomeViewModel());
     const party = partiesMock[0];
 
@@ -66,7 +70,7 @@ describe('useHomeViewModel', () => {
     });
   });
 
-  it('deve navegar para PerfilSorteado quando status for "Sorteio Realizado"', () => {
+  it('deve navegar para PerfilSorteado quando status for "sorteio_realizado"', () => {
     const { result } = renderHook(() => useHomeViewModel());
     const party = partiesMock[1];
 
@@ -74,23 +78,12 @@ describe('useHomeViewModel', () => {
       result.current.handleCardPress(party);
     });
 
-    expect(mockNavigate).toHaveBeenCalledWith('PerfilSorteado', { idUsuario: 10 });
-  });
-
-  it('deve navegar para PerfilSorteado quando status for "Fim do evento"', () => {
-    const { result } = renderHook(() => useHomeViewModel());
-    const party = partiesMock[2];
-
-    act(() => {
-      result.current.handleCardPress(party);
-    });
-
-    expect(mockNavigate).toHaveBeenCalledWith('PerfilSorteado', { idUsuario: 10 });
+    expect(mockNavigate).toHaveBeenCalledWith('PerfilSorteado', { idUsuario: 'mock-user-uuid-1' });
   });
 
   it('não deve navegar se o status for desconhecido (default)', () => {
     const { result } = renderHook(() => useHomeViewModel());
-    const party = partiesMock[3];
+    const party = partiesMock[2];
 
     act(() => {
       result.current.handleCardPress(party);

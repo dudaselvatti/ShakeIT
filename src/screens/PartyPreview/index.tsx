@@ -39,15 +39,15 @@ export const PartyPreviewScreen = () => {
         <Card style={styles.card}>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Revelação</Text>
-            <Text style={styles.infoValue}>{formatDate(party.eventDate)}</Text>
+            <Text style={styles.infoValue}>{formatDate(party.event_date)}</Text>
           </View>
-          
+
           <View style={styles.divider} />
-          
+
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Valor</Text>
             <Text style={styles.infoValue}>
-              R$ {formatCurrency(party.minPrice)} a R$ {formatCurrency(party.maxPrice)}
+              R$ {formatCurrency(party.min_value)} a R$ {formatCurrency(party.max_value)}
             </Text>
           </View>
           

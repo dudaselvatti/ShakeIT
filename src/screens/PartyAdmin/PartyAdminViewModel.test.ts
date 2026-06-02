@@ -12,9 +12,9 @@ jest.mock('@react-navigation/native', () => {
 
 jest.mock('../../mocks/participantesMock', () => ({
   participantesMock: [
-    { usuario: { id: 1, nome: 'User 1' }, perfil: { isConfirmado: true } },
-    { usuario: { id: 2, nome: 'User 2' }, perfil: { isConfirmado: true } },
-    { usuario: { id: 3, nome: 'User 3' }, perfil: { isConfirmado: false } },
+    { usuario: { id: '550e8400-e29b-41d4-a716-446655440001', nome: 'User 1' }, perfil: { status: 'confirmado' } },
+    { usuario: { id: '550e8400-e29b-41d4-a716-446655440002', nome: 'User 2' }, perfil: { status: 'confirmado' } },
+    { usuario: { id: '550e8400-e29b-41d4-a716-446655440003', nome: 'User 3' }, perfil: { status: 'pendente' } },
   ]
 }));
 

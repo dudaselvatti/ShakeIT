@@ -12,12 +12,16 @@ describe('Tela PartyCreated', () => {
   const mockParty: Party = {
     id: 'teste123',
     name: 'Festa da Empresa',
-    eventDate: new Date().toISOString(),
-    minPrice: 50,
-    maxPrice: 100,
-    idAdmin: 1,
-    inviteCode: "#IDKFA2",
-    status: 'Aguardando Sorteio'
+    event_date: new Date().toISOString(),
+    min_value: 50,
+    max_value: 100,
+    admin_id: '550e8400-e29b-41d4-a716-446655440001',
+    invite_code: "#IDKFA2",
+    status: 'aguardando_sorteio',
+    block_dependent_draw: false,
+    allow_wishlist_changes_after_draw: false,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
   };
 
   beforeEach(() => {
@@ -33,13 +37,13 @@ describe('Tela PartyCreated', () => {
     expect(getByText('Party Criada!')).toBeTruthy();
     expect(getByText('ID: teste123')).toBeTruthy();
     expect(getByText('Nome: Festa da Empresa')).toBeTruthy();
-    expect(getByText('Status: Aguardando Sorteio')).toBeTruthy();
+    expect(getByText('Status: aguardando_sorteio')).toBeTruthy();
     expect(getByText('Valores: R$ 50 - R$ 100')).toBeTruthy();
   });
 
   it('deve chamar a função voltarParaHome ao pressionar o botão', () => {
     const { getByText } = render(<PartyCreatedScreen />);
-    
+
     const botaoHome = getByText('Ir para a Home');
     fireEvent.press(botaoHome);
 

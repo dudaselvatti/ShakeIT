@@ -4,7 +4,7 @@ import { usePerfilSorteadoHeaderViewModel, Props } from './PerfilSorteadoHeaderV
 import { styles } from './styles';
 
 export const PerfilSorteadoHeader = (props: Props) => {
-    const { nome, fotoUrl, idade, genero, handleReturnHome } = usePerfilSorteadoHeaderViewModel(props);
+    const { nome, fotoUrl, idade, genero } = usePerfilSorteadoHeaderViewModel(props);
     
     return (
         <View style={styles.headerContainer}>

@@ -2,8 +2,6 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { PerfilSorteadoScreen } from './index';
 import { usePerfilSorteadoViewModel } from './PerfilSorteadoViewModel';
-import { AppHeader } from "../../components/AppHeader";
-import { AppFooter } from "../../components/AppFooter";
 
 
 jest.mock('./PerfilSorteadoViewModel');
@@ -21,13 +19,13 @@ jest.mock('./components/PerfilSorteadoContent', () => ({
 describe('Screen: PerfilSorteado', () => {
   const mockParticipante = {
     usuario: {
-      fotoUrl: 'https://github.com/usuario.png',
+      avatar_url: 'https://github.com/usuario.png',
       nome: 'Amigo Secreto',
-      dataDeNascimento: '1995-05-15',
+      birth_date: '1995-05-15',
       genero: 'Feminino',
     },
     perfil: {
-      medidas: {
+      sizes: {
         camisa: 'P',
         calca: '38',
         calcado: '36',
@@ -56,8 +54,8 @@ describe('Screen: PerfilSorteado', () => {
     expect(PerfilSorteadoHeader).toHaveBeenCalledWith(
       expect.objectContaining({
         nome: mockParticipante.usuario.nome,
-        fotoUrl: mockParticipante.usuario.fotoUrl,
-        dataDeNascimento: mockParticipante.usuario.dataDeNascimento,
+        fotoUrl: mockParticipante.usuario.avatar_url,
+        dataDeNascimento: mockParticipante.usuario.birth_date,
         genero: mockParticipante.usuario.genero,
       }),
       undefined
@@ -65,7 +63,7 @@ describe('Screen: PerfilSorteado', () => {
 
     expect(PerfilSorteadoContent).toHaveBeenCalledWith(
       expect.objectContaining({
-        medidas: mockParticipante.perfil.medidas,
+        medidas: mockParticipante.perfil.sizes,
         preferencias: mockParticipante.perfil.preferencias,
       }),
       undefined
