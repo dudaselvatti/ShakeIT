@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { partiesMock } from "../../mocks/partiesMock";
+import { participantesMock } from "../../mocks/participantesMock";
 import { Party } from "../../types/Party";
 import { gerarPartyCode } from "../../utils/PartyCode/gerarPartyCode";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
@@ -18,8 +19,8 @@ export function useHomeViewModel() {
           partyCode: partyCodeGerado,
         });
         break;
-      case "sorteado":
-          navigation.navigate("PerfilSorteado", { idUsuario: 1, });
+      case "sorteio_realizado":
+        navigation.navigate("PerfilSorteado", { idUsuario: participantesMock[0].usuario.id });
         break;
       default:
         break;

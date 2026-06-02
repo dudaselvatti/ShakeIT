@@ -2,6 +2,7 @@ import React from 'react';
 import { render, act } from '@testing-library/react-native';
 import { ShakeRevealScreen } from './index';
 import { Vibration } from 'react-native';
+import { participantesMock } from '../../mocks/participantesMock';
 
 let accelerometerListener: ((data: any) => void) | null = null;
 
@@ -57,6 +58,7 @@ describe('Ecrã ShakeReveal (Tela 6)', () => {
       jest.advanceTimersByTime(600);
     });
 
-    expect(mockNavigation.navigate).toHaveBeenCalledWith('PerfilSorteado', { idUsuario: 1 });
+    const expectedId = participantesMock[0]?.usuario.id || "550e8400-e29b-41d4-a716-446655440001";
+    expect(mockNavigation.navigate).toHaveBeenCalledWith('PerfilSorteado', { idUsuario: expectedId });
   });
 });

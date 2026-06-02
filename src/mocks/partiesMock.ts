@@ -9,7 +9,7 @@ export const partiesMock: Party[] = [
     min_value: 50,
     max_value: 100,
     invite_code: "#STM32F",
-    status: "sorteado",
+    status: "sorteio_realizado",
     block_dependent_draw: false,
     allow_wishlist_changes_after_draw: false,
     created_at: "2024-01-10T10:00:00Z",

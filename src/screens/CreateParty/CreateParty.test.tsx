@@ -3,6 +3,7 @@ import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { CreatePartyScreen } from './index';
 import { createPartyInCloud } from '../../services/cloudDb/cloudDb';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
+import { AppFooter } from '../../components/AppFooter';
 
 jest.mock('../../services/cloudDb/cloudDb', () => ({
   createPartyInCloud: jest.fn(),
@@ -23,9 +24,13 @@ jest.mock("firebase/firestore", () => ({
   collection: jest.fn(),
 }));
 
+
+
 jest.mock('../../components/AppFooter', () => ({
   AppFooter: jest.fn(() => null),
 }));
+
+const mockAppFooter = AppFooter as unknown as jest.Mock;
 
 jest.mock('../../components/DateInput', () => ({
   DateInput: ({ label, onChangeDate }: any) => {
@@ -177,8 +182,6 @@ describe('Tela CreateParty', () => {
 
   it('deve interceptar navegação do footer e exibir modal se houver alterações', () => {
     const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
-    // Mudar mock do AppFooter para este teste específico
-    const { AppFooter } = require('../../components/AppFooter');
     const { getByPlaceholderText, getByText } = render(
       <CreatePartyScreen navigation={mockNavigation} />
     );
@@ -186,7 +189,7 @@ describe('Tela CreateParty', () => {
     fireEvent.changeText(getByPlaceholderText('Ex: Amigo Secreto da Firma'), 'Mudança');
     
     // Disparar o onNavigateIntercept
-    const calls = require('../../components/AppFooter').AppFooter.mock.calls;
+    const calls = mockAppFooter.mock.calls;
     const testProps = calls[calls.length - 1][0];
     act(() => {
       testProps.onNavigateIntercept('Home');

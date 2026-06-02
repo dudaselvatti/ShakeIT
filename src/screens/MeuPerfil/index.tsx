@@ -7,7 +7,7 @@ import { styles } from './styles';
 import { useMeuPerfilViewModel } from './MeuPerfilViewModel';
 
 export const MeuPerfilScreen = () => {
-    const {} = useMeuPerfilViewModel();
+    useMeuPerfilViewModel();
 
     return (
         <SafeAreaView style={styles.container}>

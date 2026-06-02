@@ -1,6 +1,5 @@
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { RootStackParamList } from "../../../App";
 import { Party } from "../../types/Party";
 
 // Mock data to simulate the party fetched via code
@@ -19,11 +18,8 @@ const MOCK_PARTY: Party = {
   updated_at: "2024-01-10T10:00:00Z"
 };
 
-type PartyPreviewRouteProp = RouteProp<RootStackParamList, 'PartyPreview'>;
-
 export function usePartyPreviewViewModel() {
   const navigation = useNavigation<any>();
-  const route = useRoute<PartyPreviewRouteProp>();
   
   const [isModalVisible, setModalVisible] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);

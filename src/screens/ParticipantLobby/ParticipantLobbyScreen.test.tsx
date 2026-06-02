@@ -12,12 +12,12 @@ jest.mock('@react-navigation/native', () => ({
 jest.mock('../../mocks/participantesMock', () => ({
     participantesMock: [
         {
-            usuario: { id: 1, nome: "João" },
-            perfil: { id: 1, isConfirmado: true }
+            usuario: { id: '550e8400-e29b-41d4-a716-446655440001', nome: "João" },
+            perfil: { id: '550e8400-e29b-41d4-a716-556655440001', status: 'confirmado' }
         },
         {
-            usuario: { id: 2, nome: "Maria" },
-            perfil: { id: 2, isConfirmado: false }
+            usuario: { id: '550e8400-e29b-41d4-a716-446655440002', nome: "Maria" },
+            perfil: { id: '550e8400-e29b-41d4-a716-556655440002', status: 'pendente' }
         }
     ]
 }));
@@ -38,7 +38,7 @@ describe('Tela ParticipantLobby', () => {
   });
 
   it('garante segurança de UI não renderizando botão de Sorteio ou QR Code do Admin', () => {
-    const { queryByText, queryByTestId } = render(<ParticipantLobbyScreen />);
+    const { queryByText } = render(<ParticipantLobbyScreen />);
 
     // Não deve existir botões ou convites do PartyAdmin
     expect(queryByText('Realizar Sorteio')).toBeNull();

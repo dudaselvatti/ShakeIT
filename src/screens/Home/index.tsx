@@ -9,7 +9,7 @@ import { useHomeViewModel } from "./HomeViewModel";
 import { styles } from "./styles";
 
 export const HomeScreen = () => {
-  const { parties, handleCardPress, handleCreateParty, handleScanPress, userName } = useHomeViewModel();
+  const { parties, handleCardPress, handleCreateParty, userName } = useHomeViewModel();
   const insets = useSafeAreaInsets();
 
   return (

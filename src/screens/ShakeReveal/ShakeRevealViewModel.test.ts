@@ -40,7 +40,7 @@ describe('usePerfilSorteadoViewModel', () => {
         jest.spyOn(console, 'error').mockImplementation(() => {});
 
         mockedUseRoute.mockReturnValue({
-            params: { idUsuario: 999999 },
+            params: { idUsuario: 'non-existent-uuid' },
         });
 
         expect(() => {

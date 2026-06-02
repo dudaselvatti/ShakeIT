@@ -1,8 +1,7 @@
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { participantesMock } from "../../mocks/participantesMock";
 
 export function useParticipantLobbyViewModel() {
-    const route = useRoute<any>();
     const navigation = useNavigation<any>();
 
     const handleBackPress = () => {

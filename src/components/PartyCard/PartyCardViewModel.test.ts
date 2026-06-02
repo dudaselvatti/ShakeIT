@@ -19,8 +19,8 @@ describe('usePartyCardViewModel', () => {
     expect(result.current.onPress).toBe(defaultProps.onPress);
   });
 
-  it('deve retornar a configuração correta para o status "sorteado"', () => {
-    const props: Props = { ...defaultProps, status: 'sorteado' };
+  it('deve retornar a configuração correta para o status "sorteio_realizado"', () => {
+    const props: Props = { ...defaultProps, status: 'sorteio_realizado' };
     const { result } = renderHook(() => usePartyCardViewModel(props));
 
     expect(result.current.statusIcon).toBe('gift');
@@ -31,12 +31,12 @@ describe('usePartyCardViewModel', () => {
     const props: Props = { ...defaultProps, status: 'aguardando_sorteio' };
     const { result } = renderHook(() => usePartyCardViewModel(props));
 
-    expect(result.current.statusIcon).toBe('clock');
-    expect(result.current.tagColor).toBe(theme.colors.primary);
+    expect(result.current.statusIcon).toBe('check-circle');
+    expect(result.current.tagColor).toBe(theme.colors.textLight);
   });
 
   it('deve retornar a configuração padrão (default) para outro status', () => {
-    const props: Props = { ...defaultProps, status: 'aguardando_pessoas' as any };
+    const props: Props = { ...defaultProps, status: 'aguardando_pessoas' };
     const { result } = renderHook(() => usePartyCardViewModel(props));
 
     expect(result.current.statusIcon).toBe('clock');
@@ -54,7 +54,7 @@ describe('usePartyCardViewModel', () => {
     rerender(defaultProps);
     expect(result.current).toBe(firstValue);
 
-    rerender({ ...defaultProps, status: 'sorteado' });
+    rerender({ ...defaultProps, status: 'sorteio_realizado' });
     expect(result.current).not.toBe(firstValue);
     expect(result.current.statusIcon).toBe('gift');
   });

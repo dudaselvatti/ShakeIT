@@ -14,7 +14,7 @@ export function usePartyCardViewModel(props: Props) {
         let config;
         
         switch (props.status) {
-            case "sorteado":
+            case "sorteio_realizado":
                 config = { icon: "gift" as const, color: theme.colors.success };
                 break;
             case "aguardando_sorteio":
