@@ -1,10 +1,8 @@
 import React, { useEffect } from "react";
-import { View, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { Medidas, Preferencias } from "./src/types/Perfil";
 import { checkFirebaseConnection } from "./src/services/testFirebase";
 
 import { HomeScreen } from "./src/screens/Home";
@@ -21,6 +19,9 @@ import { MeuPerfilScreen } from "./src/screens/MeuPerfil";
 import { SettingsScreen } from "./src/screens/Settings";
 
 import { AuthProvider } from "./src/contexts/AuthContext/AuthContext";
+import { RegistrationScreen } from "./src/screens/Registration";
+import { LoginScreen } from "./src/screens/Login";
+import { ForgotMyPasswordScreen } from "./src/screens/ForgotMyPassword";
 
 export type RootStackParamList = {
   Home: { novaParty?: Party } | undefined;
@@ -30,6 +31,9 @@ export type RootStackParamList = {
   ShakeReveal: undefined;
   RevealResult: undefined;
   PerfilSorteado: { idUsuario: string };
+  Registration: undefined;
+  Login: undefined;
+  ForgotMyPassword: undefined;
   Scan: undefined;
   PartyPreview: { partyCode: string };
   ParticipantLobby: { partyId: string };
@@ -66,6 +70,9 @@ export default function App() {
         <Stack.Screen name="PartyAdmin" component={PartyAdminScreen} />
         <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
         <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
+        <Stack.Screen name="Registration" component={RegistrationScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="ForgotMyPassword" component={ForgotMyPasswordScreen} />
         <Stack.Screen 
           name="Scan" 
           component={ScanScreen} 

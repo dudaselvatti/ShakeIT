@@ -24,6 +24,14 @@ export const styles = StyleSheet.create({
   text: {
     backgroundColor: "transparent",
   },
+  danger: {
+    backgroundColor: "#FFDCDC",
+    borderWidth: 1,
+    borderColor: theme.colors.danger,
+  },
+  redNoOutline: {
+    backgroundColor: "transparent",
+  },
   textBase: {
     fontSize: 16,
     fontWeight: "bold",
@@ -39,5 +47,11 @@ export const styles = StyleSheet.create({
   },
   textText: {
     color: theme.colors.textLight,
+  },
+  dangerText: {
+    color: theme.colors.danger,
+  },
+  redNoOutlineText: {
+    color: theme.colors.primary,
   },
 });

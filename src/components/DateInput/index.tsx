@@ -10,6 +10,8 @@ export const DateInput = (props: Props) => {
     value,
     dateText,
     containerStyle,
+    minimumDate,
+    maximumDate,
     touchableOpacityTextStyles,
     showPicker,
     openPicker,
@@ -35,7 +37,8 @@ export const DateInput = (props: Props) => {
           mode="date"
           display="default"
           onChange={handleChange}
-          minimumDate={new Date()}
+          minimumDate={minimumDate}
+          maximumDate={maximumDate}
         />
       )}
     </View>

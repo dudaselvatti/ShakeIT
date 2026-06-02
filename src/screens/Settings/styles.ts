@@ -8,11 +8,37 @@ export const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: theme.metrics.padding,
     },
-    text: {
-        fontSize: 18,
+    heading: {
+        marginTop: 20,
+        fontSize: 22,
+        fontWeight: '700',
         color: theme.colors.text,
-    }
+        marginBottom: 8,
+        textTransform: "uppercase",
+    },
+    optionsList: {
+        width: '100%',
+        backgroundColor: theme.colors.surface,
+        borderRadius: theme.metrics.borderRadius,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        paddingHorizontal: 16,
+    },
+    option: {
+        fontSize: 16,
+        color: theme.colors.text,
+        paddingVertical: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: theme.colors.border,
+    },
+    buttonContainer: {
+        paddingHorizontal: 24,
+        paddingBottom: 24,
+    },
+    footer: {
+        padding: 24,
+        backgroundColor: theme.colors.background,
+    },
 });

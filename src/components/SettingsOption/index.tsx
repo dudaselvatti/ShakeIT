@@ -1,0 +1,24 @@
+import React from 'react';
+import { TouchableOpacity, Text } from 'react-native';
+import { Feather } from "@expo/vector-icons";
+import { styles } from './styles';
+import { useSettingsOptionViewModel, Props } from './SettingsOptionViewModel';
+
+export const SettingsOption = (props: Props) => {
+    const { title, iconName, iconSize, iconColor,  ...touchableOpacityProps } = useSettingsOptionViewModel(props)
+
+    return (
+        <TouchableOpacity
+            style={styles.container}
+            activeOpacity={0.7}
+            {...touchableOpacityProps}
+        >
+            <Text style={styles.title}>{title}</Text>
+            <Feather
+                name={iconName}
+                size={iconSize}
+                color={iconColor}
+            />
+        </TouchableOpacity>
+    );
+};
