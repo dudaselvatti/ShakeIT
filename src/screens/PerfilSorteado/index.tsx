@@ -10,7 +10,10 @@ import { AppHeader } from "../../components/AppHeader";
 import { AppFooter } from "../../components/AppFooter";
 
 export const PerfilSorteadoScreen = () => {
-    const { participante } = usePerfilSorteadoViewModel();
+    const { participante, isLoading } = usePerfilSorteadoViewModel();
+    if (isLoading || !participante) {
+        return null;
+    }
     const { usuario, perfil } = participante;
     return (
         <SafeAreaView style={styles.container}>

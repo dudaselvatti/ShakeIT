@@ -12,6 +12,7 @@ import {
 import { Usuario } from "../../types/Usuario";
 import { Party } from "../../types/Party";
 import { usuariosMock } from "../../mocks/usuariosMock";
+import { participantesMock } from "../../mocks/participantesMock";
 import { db } from '../../config/firebase';
 
 const USERS_COLLECTION = "users";
@@ -99,4 +100,12 @@ export async function createPartyInCloud(party: Omit<Party, "id">) {
         id: docRef.id,
         ...payload,
     };
+}
+
+export async function getAmigoSecreto(idUsuario: string): Promise<any> {
+    const participante = participantesMock.find(p => p.usuario.id === idUsuario);
+    if (!participante) {
+        throw new Error("Participante não foi encontrado!");
+    }
+    return participante;
 }
