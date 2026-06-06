@@ -7,13 +7,14 @@ import {
   setDoc,
   getDoc,
   getDocs,
+  Timestamp,
 } from "firebase/firestore";
 import { Usuario } from "../../types/Usuario";
 import { Party } from "../../types/Party";
 import { usuariosMock } from "../../mocks/usuariosMock";
 import { db } from '../../config/firebase';
 
-const USERS_COLLECTION = "usuarios";
+const USERS_COLLECTION = "users";
 
 export async function seedUsuarios() {
     const querySnapshot = await getDocs(collection(db, USERS_COLLECTION));
@@ -45,6 +46,30 @@ export async function getUsuariosFromCloud(): Promise<Usuario[]> {
     });
     
     return usuarios;
+}
+
+export async function storeUserInCloud(uid: string, dados: any) {
+    const userRef = doc(db, USERS_COLLECTION, uid);
+  
+    await setDoc(userRef, {
+        id: uid,
+        email: dados.email,
+        nome: dados.nome,
+        genero: dados.genero,
+        birth_date: dados.birth_date ? Timestamp.fromDate(dados.birth_date) : null,
+        //height: dados.height,
+        avatar_url: dados.avatar_url || "",
+        bio: dados.bio || "",
+        sizes: dados.sizes,
+
+        //Não parece ser uma boa ideia colocar as opções padrão do usuário aqui, será bom revisar isto quando mais opções forem implementadas
+        shake_enabled: true,
+        dark_mode: false,
+        notifications_enabled: true,
+
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+    });
 }
 
 export async function createPartyInCloud(party: Omit<Party, "id">) {
