@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { isValidEmail } from "../../utils/Formatting/isValidEmail";
+import { userLogin } from "../../services/cloud/User/UserDb";
+import { UserLoginDTO } from "../../dto/User/UserLoginDTO";
 
 export function useLoginViewModel(navigation: any) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [errors, setErrors] = useState({ email: "", senha: "" });
+  const [errors, setErrors] = useState({ email: "", senha: "", firebase: "" });
 
   const updateEmail = (text: string) => {
     setEmail(text);
@@ -28,7 +30,7 @@ export function useLoginViewModel(navigation: any) {
 
   const handleAutenticarUsuario = async () => {
     let isValid = true;
-    let newErrors = { email: "", senha: "" };
+    let newErrors = { email: "", senha: "", firebase: "" };
 
     if (!email) {
       newErrors.email = "Insira seu email.";
@@ -47,7 +49,32 @@ export function useLoginViewModel(navigation: any) {
 
     if (!isValid) return;
 
-    /*Código referente a Login da T24 irá aqui*/
+    try {
+      const userLoginDTO: UserLoginDTO = {
+        email: email,
+        senha: senha,
+      }
+      const loggedUser = await userLogin(userLoginDTO);
+      if (loggedUser) {
+        navigation.replace("Home"); 
+      }
+    } catch (error: any) {
+      console.error("Erro ao autenticar no Firebase:", error);
+      
+      switch (error.code) {
+        case "auth/invalid-credential":
+        case "auth/wrong-password":
+        case "auth/user-not-found":
+          newErrors.firebase = "E-mail ou senha incorretos.";
+          break;
+        case "auth/too-many-requests":
+          newErrors.firebase = "Acesso bloqueado temporariamente por excesso de tentativas.";
+          break;
+        default:
+          newErrors.firebase = "Ocorreu um erro ao fazer login. Tente novamente."
+      }
+      setErrors(newErrors);
+    } 
   };
 
   return {

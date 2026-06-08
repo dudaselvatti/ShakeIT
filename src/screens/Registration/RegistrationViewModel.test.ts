@@ -1,39 +1,18 @@
 import { renderHook, act } from "@testing-library/react-native";
 import { useRegistrationViewModel } from "./RegistrationViewModel";
 import { isValidEmail } from "../../utils/Formatting/isValidEmail";
+import { storeUserInCloud } from "../../services/cloud/User/UserDb";
 
 jest.mock("../../utils/Formatting/isValidEmail");
 const mockIsValidEmail = isValidEmail as jest.Mock;
 
-jest.mock("firebase/auth", () => ({
-  createUserWithEmailAndPassword: jest.fn(() =>
-    Promise.resolve({ user: { uid: "mock_uid" } })
-  ),
+jest.mock("../../services/cloud/User/UserDb", () => ({
+  storeUserInCloud: jest.fn(),
 }));
-
-jest.mock("firebase/storage", () => ({
-  ref: jest.fn(),
-  uploadBytes: jest.fn(() => Promise.resolve()),
-  getDownloadURL: jest.fn(() => Promise.resolve("https://mockurl.com/avatar.jpg")),
-}));
-
-jest.mock("../../config/firebase", () => ({
-  auth: {},
-  storage: {},
-}));
-
-jest.mock("../../services/cloudDb/cloudDb", () => ({
-  storeUserInCloud: jest.fn(() => Promise.resolve()),
-}));
-
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    blob: () => Promise.resolve(new Blob()),
-  } as Response)
-);
+const mockStoreUserInCloud = storeUserInCloud as jest.Mock;
 
 describe("useRegistrationViewModel", () => {
-  let mockNavigation: { goBack: jest.Mock; navigate: jest.Mock };
+  let mockNavigation: { goBack: jest.Mock; navigate: jest.Mock; replace: jest.Mock };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -41,9 +20,11 @@ describe("useRegistrationViewModel", () => {
     mockNavigation = {
       goBack: jest.fn(),
       navigate: jest.fn(),
+      replace: jest.fn(),
     };
 
     mockIsValidEmail.mockReturnValue(true);
+    mockStoreUserInCloud.mockResolvedValue({ id: "mock-user-id" });
   });
 
   describe("Atualizações de Estado e Limpeza de Erros", () => {
@@ -239,7 +220,7 @@ describe("useRegistrationViewModel", () => {
       expect(result.current.errors.nome).toBe("");
     });
 
-    it("deve passar na validação local e navegar para Home se todos os campos obrigatórios estiverem preenchidos", async () => {
+    it("deve passar na validação local, salvar na nuvem e dar um replace para Home", async () => {
       const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
 
       act(() => {
@@ -256,7 +237,29 @@ describe("useRegistrationViewModel", () => {
       });
 
       expect(result.current.errors).toEqual({ nome: "", email: "", senha: "", genero: "", data: "" });
-      expect(mockNavigation.navigate).toHaveBeenCalledWith("Home");
+      expect(mockStoreUserInCloud).toHaveBeenCalled();
+      expect(mockNavigation.replace).toHaveBeenCalledWith("Home");
+    });
+
+    it("deve mapear erros do Firebase (email já em uso) se a promessa do Cloud falhar", async () => {
+      const firebaseError = { code: "auth/email-already-in-use" };
+      mockStoreUserInCloud.mockRejectedValueOnce(firebaseError);
+
+      const { result } = renderHook(() => useRegistrationViewModel(mockNavigation));
+
+      act(() => {
+        result.current.updateNomeUsuario("valid_user");
+        result.current.updateEmail("test@test.com");
+        result.current.updateSenha("123456");
+        result.current.updateGenero("Outro");
+        result.current.updateDataNascimento(new Date("2000-01-01"));
+      });
+
+      await act(async () => {
+        await result.current.handleCadastrarUsuario();
+      });
+
+      expect(result.current.errors.email).toBe("Este e-mail já está em uso por outra conta.");
     });
   });
 });

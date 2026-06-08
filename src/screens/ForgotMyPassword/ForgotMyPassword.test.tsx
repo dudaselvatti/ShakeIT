@@ -59,7 +59,8 @@ describe('ForgotMyPasswordScreen', () => {
   const mockViewModelBase = {
     email: '',
     updateEmail: mockUpdateEmail,
-    errors: {},
+    errors: { email: '' },
+    success: '',
     handleBackPress: mockHandleBackPress,
     handleVerificarEmail: mockHandleVerificarEmail,
   };
@@ -109,6 +110,21 @@ describe('ForgotMyPasswordScreen', () => {
     expect(
       getByText('E-mail inválido ou obrigatório')
     ).toBeTruthy();
+  });
+
+  it('deve exibir a mensagem de sucesso quando o e-mail for enviado com sucesso', () => {
+    const mensagemSucesso = 'O link de redefinição de senha foi enviado para o seu e-mail.';
+    
+    (useForgotMyPasswordViewModel as jest.Mock).mockReturnValue({
+      ...mockViewModelBase,
+      success: mensagemSucesso,
+    });
+
+    const { getByText } = render(
+      <ForgotMyPasswordScreen navigation={mockNavigation} />
+    );
+
+    expect(getByText(mensagemSucesso)).toBeTruthy();
   });
 
   it('deve disparar handleVerificarEmail ao clicar no botão Enviar', () => {

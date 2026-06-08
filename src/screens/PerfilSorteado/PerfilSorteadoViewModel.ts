@@ -1,6 +1,6 @@
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { getAmigoSecreto } from '../../services/cloudDb/cloudDb';
+import { getAmigoSecreto } from '../../services/cloud/Participant/PartcicipantDb';
 import { storageService } from '../../services/storageService';
 import { Participante } from '../../types/Participante';
 

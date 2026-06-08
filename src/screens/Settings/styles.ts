@@ -41,4 +41,14 @@ export const styles = StyleSheet.create({
         padding: 24,
         backgroundColor: theme.colors.background,
     },
+    errorText: {
+        color: theme.colors.danger,
+        fontSize: 14,
+        marginLeft: 4,
+    },
+    successText: {
+        color: theme.colors.success,
+        fontSize: 14,
+        marginLeft: 4,
+    }
 });

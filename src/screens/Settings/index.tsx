@@ -12,6 +12,9 @@ import { SettingsOption } from '../../components/SettingsOption';
 export const SettingsScreen = ({ navigation }: any) => {
     const {
         isModalVisible,
+        errors,
+        success,
+        //isLoading, //Não utilizado ainda
         handleAlterarSenha,
         handleLogout,
         cancelLogout,
@@ -27,7 +30,10 @@ export const SettingsScreen = ({ navigation }: any) => {
                         <SettingsOption
                             title="Alterar Senha"
                             onPress={handleAlterarSenha}
-                        />
+                        >
+                            {errors.passwordReset ? <Text style={styles.errorText}>{errors.passwordReset}</Text> : null}
+                            {success.passwordReset ? <Text style={styles.successText}>{success.passwordReset}</Text> : null}
+                        </SettingsOption>
                     </View>
                 </View>
                 <View style={styles.footer}>
