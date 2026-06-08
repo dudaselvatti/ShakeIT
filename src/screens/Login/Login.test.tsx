@@ -27,7 +27,7 @@ describe("LoginScreen", () => {
       updateEmail: mockUpdateEmail,
       senha: "",
       updateSenha: mockUpdateSenha,
-      errors: {},
+      errors: { email: "", senha: "", firebase: "" },
       handleBackPress: mockHandleBackPress,
       handleRegistrationNavigate: mockHandleRegistrationNavigate,
       handleForgotMyPasswordNavigate: mockHandleForgotMyPasswordNavigate,
@@ -63,7 +63,7 @@ describe("LoginScreen", () => {
     expect(mockUpdateSenha).toHaveBeenCalledWith("123456");
   });
 
-  it("deve exibir mensagens de erro quando existirem no ViewModel", () => {
+  it("deve exibir mensagens de erro locais quando existirem no ViewModel", () => {
     mockUseLoginViewModel.mockReturnValueOnce({
       email: "user@teste.com",
       updateEmail: mockUpdateEmail,
@@ -72,6 +72,7 @@ describe("LoginScreen", () => {
       errors: {
         email: "E-mail inválido",
         senha: "Senha muito curta",
+        firebase: "",
       },
       handleBackPress: mockHandleBackPress,
       handleRegistrationNavigate: mockHandleRegistrationNavigate,
@@ -83,6 +84,28 @@ describe("LoginScreen", () => {
 
     expect(getByText("E-mail inválido")).toBeTruthy();
     expect(getByText("Senha muito curta")).toBeTruthy();
+  });
+
+  it("deve exibir mensagem de erro do Firebase quando retornar da autenticação", () => {
+    mockUseLoginViewModel.mockReturnValueOnce({
+      email: "correto@teste.com",
+      updateEmail: mockUpdateEmail,
+      senha: "senha-errada",
+      updateSenha: mockUpdateSenha,
+      errors: {
+        email: "",
+        senha: "",
+        firebase: "E-mail ou senha incorretos.",
+      },
+      handleBackPress: mockHandleBackPress,
+      handleRegistrationNavigate: mockHandleRegistrationNavigate,
+      handleForgotMyPasswordNavigate: mockHandleForgotMyPasswordNavigate,
+      handleAutenticarUsuario: mockHandleAutenticarUsuario,
+    });
+
+    const { getByText } = render(<LoginScreen navigation={mockNavigation} />);
+
+    expect(getByText("E-mail ou senha incorretos.")).toBeTruthy();
   });
 
   it("deve chamar handleAutenticarUsuario ao clicar em Entrar", () => {

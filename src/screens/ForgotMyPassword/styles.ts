@@ -3,7 +3,7 @@ import { theme } from "../../styles/theme";
 
 export const styles = StyleSheet.create({
     container: {
-        //flex: 1, //Comentado por enquanto, para deixar o botão perto do input
+        flex: 1,
         backgroundColor: theme.colors.background,
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
     },
@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
         paddingVertical: 12,
     },
     content: {
-        flex: 1,
+        //flex: 1, //Comentado por enquanto, para deixar o botão perto do input
         paddingHorizontal: 24,
         paddingTop: 16,
     },
@@ -44,6 +44,13 @@ export const styles = StyleSheet.create({
     },
     errorText: {
         color: theme.colors.danger,
+        fontSize: 14,
+        marginTop: -16,
+        marginBottom: 16,
+        marginLeft: 4,
+    },
+    successText: {
+        color: theme.colors.success,
         fontSize: 14,
         marginTop: -16,
         marginBottom: 16,

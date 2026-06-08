@@ -63,6 +63,8 @@ export const RegistrationScreen = ({ navigation }: any) => {
           value={email}
           onChangeText={updateEmail}
           maxLength={60}
+          autoCapitalize="none"
+          keyboardType="email-address"
         />
         {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
 
@@ -72,6 +74,8 @@ export const RegistrationScreen = ({ navigation }: any) => {
           value={senha}
           onChangeText={updateSenha}
           maxLength={50}
+          autoCapitalize="none"
+          secureTextEntry={true}
         />
         {errors.senha ? <Text style={styles.errorText}>{errors.senha}</Text> : null}
         
@@ -85,6 +89,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
         {errors.genero ? <Text style={styles.errorText}>{errors.genero}</Text> : null}
 
         <DateInput
+          display="spinner"
           label="Data de Nascimento"
           value={dataNascimento}
           onChangeDate={updateDataNascimento}

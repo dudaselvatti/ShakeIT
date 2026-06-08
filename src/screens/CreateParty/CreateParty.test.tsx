@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { CreatePartyScreen } from './index';
-import { createPartyInCloud } from '../../services/cloudDb/cloudDb';
+import { createPartyInCloud } from '../../services/cloud/Party/PartyDb';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 import { AppFooter } from '../../components/AppFooter';
 
-jest.mock('../../services/cloudDb/cloudDb', () => ({
+jest.mock('../../services/cloud/Party/PartyDb', () => ({
   createPartyInCloud: jest.fn(),
 }));
 

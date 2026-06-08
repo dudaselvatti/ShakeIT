@@ -1,46 +1,29 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react-native';
-import { View, Text } from "react-native";
+import { render, screen, waitFor, fireEvent } from '@testing-library/react-native';
+import { View, Text, Button } from "react-native";
 import { AuthProvider, useAuth } from './AuthContext';
-import { usuariosMock } from '../../mocks/usuariosMock';
-import { seedUsuarios, getUsuariosFromCloud } from '../../services/cloudDb/cloudDb';
+import { getUserById, userLogout } from '../../services/cloud/User/UserDb';
+import { onAuthStateChanged } from 'firebase/auth';
 
-jest.mock('../../services/cloudDb/cloudDb', () => ({
-  seedUsuarios: jest.fn(),
-  getUsuariosFromCloud: jest.fn(),
+jest.mock('../../services/cloud/User/UserDb', () => ({
+  getUserById: jest.fn(),
+  userLogout: jest.fn(),
 }));
 
-jest.mock('firebase/app', () => ({
-  initializeApp: jest.fn(),
-  getApps: jest.fn(() => []),
-  getApp: jest.fn(),
+jest.mock('firebase/auth', () => ({
+  onAuthStateChanged: jest.fn(),
 }));
 
-jest.mock('firebase/firestore', () => ({
-  getFirestore: jest.fn(),
-  collection: jest.fn(() => 'mock-collection'),
-  doc: jest.fn(() => 'mock-doc'),
-  getDocs: jest.fn(() =>
-    Promise.resolve({
-      empty: true,
-      docs: [],
-    })
-  ),
-  setDoc: jest.fn(() => Promise.resolve()),
-  addDoc: jest.fn(() =>
-    Promise.resolve({
-      id: 'mock-party-id',
-    })
-  ),
-  updateDoc: jest.fn(() => Promise.resolve()),
-  serverTimestamp: jest.fn(() => 'mock-timestamp'),
+jest.mock('../../config/firebase', () => ({
+  auth: { mockAuthInstance: true },
 }));
 
-const mockedSeedUsuarios = seedUsuarios as jest.Mock;
-const mockedGetUsuariosFromCloud = getUsuariosFromCloud as jest.Mock;
+const mockedGetUserById = getUserById as jest.Mock;
+const mockedUserLogout = userLogout as jest.Mock;
+const mockedOnAuthStateChanged = onAuthStateChanged as jest.Mock;
 
 const TestComponent = () => {
-  const { usuarioAtual, isLoading } = useAuth();
+  const { usuarioAtual, isLoading, logoutContext } = useAuth();
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -51,19 +34,24 @@ const TestComponent = () => {
       <Text testID="usuario">
         {usuarioAtual ? usuarioAtual.nome : 'Nenhum usuário'}
       </Text>
+      <Button title="Sair" onPress={logoutContext} testID="btn-logout" />
     </View>
   );
 };
 
 describe('AuthProvider', () => {
+  let authCallback: (user: any) => void;
+
   beforeEach(() => {
     jest.clearAllMocks();
+
+    mockedOnAuthStateChanged.mockImplementation((authInstance, callback) => {
+      authCallback = callback;
+      return jest.fn();
+    });
   });
 
-  it('deve iniciar carregando', () => {
-    mockedSeedUsuarios.mockReturnValue(new Promise(() => {}));
-    mockedGetUsuariosFromCloud.mockReturnValue(new Promise(() => {}));
-
+  it('deve iniciar no estado de carregamento (isLoading = true)', () => {
     render(
       <AuthProvider>
         <TestComponent />
@@ -73,9 +61,11 @@ describe('AuthProvider', () => {
     expect(screen.getByText('Loading...')).toBeTruthy();
   });
 
-  it('deve chamar seedUsuarios e getUsuariosFromCloud ao inicializar', async () => {
-    mockedSeedUsuarios.mockResolvedValue(undefined);
-    mockedGetUsuariosFromCloud.mockResolvedValue(usuariosMock);
+  it('deve carregar os dados do usuário com sucesso se autenticado no Firebase', async () => {
+    const mockFirebaseUser = { uid: '123_abc' };
+    const mockUserData = { id: '123_abc', nome: 'João Silva', email: 'joao@teste.com' };
+
+    mockedGetUserById.mockResolvedValue(mockUserData);
 
     render(
       <AuthProvider>
@@ -83,53 +73,96 @@ describe('AuthProvider', () => {
       </AuthProvider>
     );
 
-    await waitFor(() => {
-      expect(mockedSeedUsuarios).toHaveBeenCalledTimes(1);
-      expect(mockedGetUsuariosFromCloud).toHaveBeenCalledTimes(1);
-    }, { timeout: 5000 });
-  });
-
-  it('deve definir um usuário diferente do admin vindo do banco de dados', async () => {
-    mockedSeedUsuarios.mockResolvedValue(undefined);
-    
-    mockedGetUsuariosFromCloud.mockResolvedValue(usuariosMock);
-
-    render(
-      <AuthProvider>
-        <TestComponent />
-      </AuthProvider>
-    );
-
-    await waitFor(() => {
-      const usuarioRenderizado = screen.getByTestId('usuario').props.children;
-
-      const usuariosSemAdmin = usuariosMock.filter(u => String(u.id) !== '1');
-      const nomesPermitidos = usuariosSemAdmin.map(u => u.nome);
-
-      expect(nomesPermitidos).toContain(usuarioRenderizado);
-    }, { timeout: 5000 });
-  });
-
-  it('deve finalizar loading mesmo em caso de erro', async () => {
-    mockedSeedUsuarios.mockResolvedValue(undefined);
-    mockedGetUsuariosFromCloud.mockRejectedValue(new Error('Erro ao buscar do Firestore'));
-
-    const consoleErrorSpy = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
-    render(
-      <AuthProvider>
-        <TestComponent />
-      </AuthProvider>
-    );
+    authCallback(mockFirebaseUser);
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).toBeNull();
-    }, { timeout: 5000 });
+      expect(screen.getByTestId('usuario').props.children).toBe('João Silva');
+    });
+
+    expect(mockedGetUserById).toHaveBeenCalledWith('123_abc');
+  });
+
+  it('deve definir usuarioAtual como null se não houver usuário autenticado no Firebase', async () => {
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    authCallback(null);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).toBeNull();
+      expect(screen.getByTestId('usuario').props.children).toBe('Nenhum usuário');
+    });
+  });
+
+  it('deve tratar o caso onde o usuário existe no Auth mas não no Firestore', async () => {
+    const mockFirebaseUser = { uid: 'nao_existe_no_banco' };
+    
+    mockedGetUserById.mockResolvedValue(null);
+
+    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    authCallback(mockFirebaseUser);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).toBeNull();
+      expect(screen.getByTestId('usuario').props.children).toBe('Nenhum usuário');
+    });
+
+    expect(consoleWarnSpy).toHaveBeenCalled();
+    consoleWarnSpy.mockRestore();
+  });
+
+  it('deve finalizar o loading e definir usuário como null em caso de erro na requisição', async () => {
+    const mockFirebaseUser = { uid: 'uid_com_erro' };
+    mockedGetUserById.mockRejectedValue(new Error('Erro de conexão ao banco'));
+
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    authCallback(mockFirebaseUser);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).toBeNull();
+      expect(screen.getByTestId('usuario').props.children).toBe('Nenhum usuário');
+    });
 
     expect(consoleErrorSpy).toHaveBeenCalled();
-
     consoleErrorSpy.mockRestore();
+  });
+
+  it('deve chamar a função userLogout do serviço ao executar o logoutContext', async () => {
+    mockedUserLogout.mockResolvedValue(undefined);
+
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    authCallback(null);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).toBeNull();
+    });
+
+    const botaoLogout = screen.getByTestId('btn-logout');
+    fireEvent.press(botaoLogout);
+
+    expect(mockedUserLogout).toHaveBeenCalledTimes(1);
   });
 });

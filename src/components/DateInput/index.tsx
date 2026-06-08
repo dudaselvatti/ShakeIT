@@ -7,6 +7,7 @@ import { useDateInputViewModel, Props } from "./DateInputViewModel";
 export const DateInput = (props: Props) => {
   const { 
     label,
+    display,
     value,
     dateText,
     containerStyle,
@@ -35,7 +36,7 @@ export const DateInput = (props: Props) => {
         <DateTimePicker
           value={value || new Date()}
           mode="date"
-          display="default"
+          display={display}
           onChange={handleChange}
           minimumDate={minimumDate}
           maximumDate={maximumDate}

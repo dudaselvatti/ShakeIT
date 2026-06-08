@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { isValidEmail } from "../../utils/Formatting/isValidEmail";
-
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { auth, storage } from "../../config/firebase";
-import { storeUserInCloud } from "../../services/cloudDb/cloudDb";
+import { UserRegistrationDTO } from "../../dto/User/UserRegistrationDTO";
+import { storeUserInCloud } from "../../services/cloud/User/UserDb";
 
 export function useRegistrationViewModel(navigation: any) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -116,56 +113,36 @@ export function useRegistrationViewModel(navigation: any) {
 
     if (!isValid) return;
 
-    try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email.trim(), senha);
-    const uid = userCredential.user.uid;
-
-    const FOTO_PADRAO_URL = "https://i.pravatar.cc/150?img=10"; //placeholder
-    let finalAvatarUrl = FOTO_PADRAO_URL;
-
-    if (avatarUrl) {
-      try {
-        const response = await fetch(avatarUrl);
-        const blob = await response.blob();
-
-        const storageRef = ref(storage, `avatars/${uid}_avatar.jpg`);
-        await uploadBytes(storageRef, blob);
-        
-        finalAvatarUrl = await getDownloadURL(storageRef);
-      } catch (error: any) {
-        console.log("Erro ao subir a imagem para o Storage, usando foto padrão:", error);
-      }
+  try {
+    const userRegistrationDTO: UserRegistrationDTO = {
+      email: email,
+      senha: senha,
+      nome: nomeUsuario,
+      genero: genero,
+      birth_date: dataNascimento!,
+      //height: height,
+      avatar_url: avatarUrl,
+      bio: bio,
+      sizes: {
+        camisa: sizes.get("camiseta"),
+        calca: sizes.get("calca"),
+        calcado: sizes.get("calcado"),
+      },
+    };
+    const loggedUser = await storeUserInCloud(userRegistrationDTO);
+    if (loggedUser) {
+      navigation.replace("Home"); 
     }
 
-    const sizesObj = {
-      camisa: sizes.get("camiseta") || "",
-      calca: sizes.get("calca") || "",
-      calcado: sizes.get("calcado") || "",
-    };
-
-    await storeUserInCloud(uid, {
-      email: email.trim(),
-      nome: nomeUsuario.trim(),
-      genero: genero.trim(),
-      birth_date: dataNascimento,
-      //height: height,
-      avatar_url: finalAvatarUrl,
-      bio: bio.trim(),
-      sizes: sizesObj,
-    });
-
-    navigation.navigate("Home"); 
-
   } catch (error: any) {
-    console.log("Erro no processo de cadastro:", error);
+    console.error("Erro no processo de cadastro:", error);
     if (error.code === "auth/email-already-in-use") {
       newErrors.email = "Este e-mail já está em uso por outra conta.";
     } else if (error.code === "auth/weak-password") {
       newErrors.senha = "A senha fornecida é muito fraca.";
     }
+    setErrors(newErrors);
   }
-
-  setErrors(newErrors); //Por algum motivo não funciona consistentemente, mas é o que temos para o momento
 };
 
   return {
