@@ -7,7 +7,7 @@ import {
     resetUserPassword,
     userLogout
 } from "./UserDb";
-import { collection, doc, setDoc, getDoc, getDocs, Timestamp } from "firebase/firestore";
+import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
 import { uploadBytes, getDownloadURL } from "firebase/storage";
 import { usuariosMock } from "../../../mocks/usuariosMock";
@@ -51,7 +51,7 @@ jest.mock("../../../mocks/usuariosMock", () => ({
 
 global.fetch = jest.fn();
 
-describe("UserService - Testes Unitários", () => {
+describe("UserDb - Testes Unitários", () => {
     
     beforeEach(() => {
         jest.clearAllMocks();
