@@ -5,6 +5,7 @@ import {
     getDoc,
     getDocs,
     Timestamp,
+    updateDoc,
 } from "firebase/firestore";
 import { 
     signInWithEmailAndPassword,
@@ -108,4 +109,12 @@ export async function resetUserPassword(dto: UserForgotMyPasswordDTO): Promise<v
 
 export async function userLogout(): Promise<void> {
     await signOut(auth);
+}
+
+export async function updateUsuario(id: string, data: Partial<Usuario>): Promise<void> {
+    const docRef = doc(db, USERS_COLLECTION, id);
+    await updateDoc(docRef, {
+        ...data,
+        updated_at: new Date().toISOString(),
+    });
 }

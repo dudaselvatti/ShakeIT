@@ -7,6 +7,7 @@ import { auth } from '../../config/firebase';
 interface AuthContextData {
   usuarioAtual: Usuario | null;
   isLoading: boolean;
+  updateUsuarioAtual: (data: Partial<Usuario>) => void;
   logoutContext: () => Promise<void>;
 }
 
@@ -15,6 +16,10 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [usuarioAtual, setUsuarioAtual] = useState<Usuario | null>(null);
     const [isLoading, setLoading] = useState(true);
+
+    const updateUsuarioAtual = (data: Partial<Usuario>) => {
+        setUsuarioAtual((prev) => (prev ? { ...prev, ...data } : null));
+    };
 
     useEffect(() => {
     const limparListener = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -48,7 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ usuarioAtual, isLoading, logoutContext }}>
+        <AuthContext.Provider value={{ usuarioAtual, isLoading, updateUsuarioAtual, logoutContext }}>
             {children}
         </AuthContext.Provider>
     );

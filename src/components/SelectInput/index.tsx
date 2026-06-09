@@ -5,16 +5,16 @@ import { styles } from "./styles";
 import { useSelectInputViewModel, Props } from "./SelectInputViewModel";
 
 export const SelectInput = (props: Props) => {
-  const { label, selectedValue, onValueChange, options } = useSelectInputViewModel(props)
+  const { label, selectedValue, onValueChange, options, style, containerStyle } = useSelectInputViewModel(props)
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <Text style={styles.label}>{label}</Text>
 
       <Picker
         selectedValue={selectedValue}
         onValueChange={onValueChange}
-        style={styles.picker}
+        style={[styles.picker, style]}
       >
         <Picker.Item label="Selecione..." value="" />
 
