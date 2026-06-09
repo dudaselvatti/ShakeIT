@@ -17,7 +17,8 @@ export const styles = StyleSheet.create({
     },
     footer: {
         position: 'relative',
-        padding: 24,
+        paddingVertical: 12,
+        paddingHorizontal: 24,
         backgroundColor: theme.colors.background,
     },
     backdrop: {

@@ -79,11 +79,16 @@ export const MeuPerfilScreen = () => {
         setCalca,
         calcado,
         setCalcado,
-        interesses,
-        novoInteresse,
-        setNovoInteresse,
-        handleAddInteresse,
-        handleRemoveInteresse,
+        gostos,
+        novoGosto,
+        setNovoGosto,
+        handleAddGosto,
+        handleRemoveGosto,
+        evitar,
+        novoEvitar,
+        setNovoEvitar,
+        handleAddEvitar,
+        handleRemoveEvitar,
         isSaving,
         successMessage,
         errorMessage,
@@ -119,7 +124,7 @@ export const MeuPerfilScreen = () => {
             <AppHeader headerTitle="Meu Perfil" showBackButton={false} showSettingsIcon={true} />
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 64}
             >
                 <ScrollView style={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
@@ -195,33 +200,55 @@ export const MeuPerfilScreen = () => {
                         />
                     </View>
 
-                    <Text style={styles.sectionTitle}>Adicione seus interesses:</Text>
+                    <Text style={styles.sectionTitle}>Coisas que você gosta:</Text>
                     <Card style={styles.interestsCard}>
                         <View style={styles.interestsContainer}>
-                            {interesses.map((item) => (
+                            {gostos.map((item) => (
                                 <Tag
                                     key={item}
                                     label={item}
-                                    onRemove={() => handleRemoveInteresse(item)}
+                                    onRemove={() => handleRemoveGosto(item)}
                                 />
                             ))}
                         </View>
                         <View style={styles.addInterestRow}>
                             <Input
                                 label=""
-                                placeholder="Adicionar interesse..."
+                                placeholder="Gosto de... (pressione Enter)"
                                 placeholderTextColor={theme.colors.textLight}
-                                value={novoInteresse}
-                                onChangeText={setNovoInteresse}
-                                onSubmitEditing={handleAddInteresse}
+                                value={novoGosto}
+                                onChangeText={setNovoGosto}
+                                onSubmitEditing={handleAddGosto}
                                 style={{ borderWidth: 0, backgroundColor: 'transparent', padding: 0 }}
                                 containerStyle={{ flex: 1, marginBottom: 0 }}
-                                testID="interest-input"
+                                testID="gostos-input"
                             />
-                            <Pressable onPress={handleAddInteresse} style={styles.addChipButton} testID="add-chip-btn">
-                                <Text style={styles.addChipText}>Adicionar</Text>
-                                <Feather name="plus" size={14} color={theme.colors.text} />
-                            </Pressable>
+                        </View>
+                    </Card>
+
+                    <Text style={styles.sectionTitle}>Coisas para evitar:</Text>
+                    <Card style={styles.interestsCard}>
+                        <View style={styles.interestsContainer}>
+                            {evitar.map((item) => (
+                                <Tag
+                                    key={item}
+                                    label={item}
+                                    onRemove={() => handleRemoveEvitar(item)}
+                                />
+                            ))}
+                        </View>
+                        <View style={styles.addInterestRow}>
+                            <Input
+                                label=""
+                                placeholder="Evitar... (pressione Enter)"
+                                placeholderTextColor={theme.colors.textLight}
+                                value={novoEvitar}
+                                onChangeText={setNovoEvitar}
+                                onSubmitEditing={handleAddEvitar}
+                                style={{ borderWidth: 0, backgroundColor: 'transparent', padding: 0 }}
+                                containerStyle={{ flex: 1, marginBottom: 0 }}
+                                testID="evitar-input"
+                            />
                         </View>
                     </Card>
                 </ScrollView>

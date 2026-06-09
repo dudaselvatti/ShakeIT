@@ -15,6 +15,8 @@ export interface Usuario {
     sizes?: Sizes;
     bio?: string;
     interesses?: string[];
+    gostos?: string[];
+    evitar?: string[];
     shake_enabled: boolean;
     dark_mode: boolean;
     notifications_enabled: boolean;

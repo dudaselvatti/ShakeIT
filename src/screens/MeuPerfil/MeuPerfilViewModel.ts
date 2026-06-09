@@ -10,6 +10,10 @@ export const useMeuPerfilViewModel = () => {
     const [calcado, setCalcado] = useState('');
     const [interesses, setInteresses] = useState<string[]>([]);
     const [novoInteresse, setNovoInteresse] = useState('');
+    const [gostos, setGostos] = useState<string[]>([]);
+    const [evitar, setEvitar] = useState<string[]>([]);
+    const [novoGosto, setNovoGosto] = useState('');
+    const [novoEvitar, setNovoEvitar] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -22,6 +26,8 @@ export const useMeuPerfilViewModel = () => {
             setCalca(usuarioAtual.sizes?.calca || '');
             setCalcado(usuarioAtual.sizes?.calcado || '');
             setInteresses(usuarioAtual.interesses || []);
+            setGostos(usuarioAtual.gostos || []);
+            setEvitar(usuarioAtual.evitar || []);
         }
     }, [usuarioAtual]);
 
@@ -54,6 +60,30 @@ export const useMeuPerfilViewModel = () => {
         }
     };
 
+    const handleRemoveGosto = (itemToRemove: string) => {
+        setGostos((prev) => prev.filter((item) => item !== itemToRemove));
+    };
+
+    const handleAddGosto = () => {
+        const trimmed = novoGosto.trim();
+        if (trimmed && !gostos.includes(trimmed)) {
+            setGostos((prev) => [...prev, trimmed]);
+            setNovoGosto('');
+        }
+    };
+
+    const handleRemoveEvitar = (itemToRemove: string) => {
+        setEvitar((prev) => prev.filter((item) => item !== itemToRemove));
+    };
+
+    const handleAddEvitar = () => {
+        const trimmed = novoEvitar.trim();
+        if (trimmed && !evitar.includes(trimmed)) {
+            setEvitar((prev) => [...prev, trimmed]);
+            setNovoEvitar('');
+        }
+    };
+
     const handleSalvar = async () => {
         if (!usuarioAtual) return;
         setIsSaving(true);
@@ -68,6 +98,8 @@ export const useMeuPerfilViewModel = () => {
                 bio: bio || undefined,
                 sizes: updatedSizes,
                 interesses: interesses,
+                gostos: gostos,
+                evitar: evitar,
             };
             await updateUsuario(usuarioAtual.id, updatedData);
             updateUsuarioAtual(updatedData);
@@ -99,6 +131,18 @@ export const useMeuPerfilViewModel = () => {
         setNovoInteresse,
         handleAddInteresse,
         handleRemoveInteresse,
+        gostos,
+        setGostos,
+        novoGosto,
+        setNovoGosto,
+        handleAddGosto,
+        handleRemoveGosto,
+        evitar,
+        setEvitar,
+        novoEvitar,
+        setNovoEvitar,
+        handleAddEvitar,
+        handleRemoveEvitar,
         isSaving,
         successMessage,
         errorMessage,

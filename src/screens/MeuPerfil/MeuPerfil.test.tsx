@@ -92,6 +92,8 @@ describe('MeuPerfilScreen e ViewModel', () => {
             calcado: '39',
         },
         interesses: ['Tecnologia', 'Moda'],
+        gostos: ['Chocolate', 'Futebol'],
+        evitar: ['Poeira', 'Mentiras'],
     };
 
     beforeEach(() => {
@@ -111,6 +113,8 @@ describe('MeuPerfilScreen e ViewModel', () => {
         expect(result.current.calca).toBe('40');
         expect(result.current.calcado).toBe('39');
         expect(result.current.interesses).toEqual(['Tecnologia', 'Moda']);
+        expect(result.current.gostos).toEqual(['Chocolate', 'Futebol']);
+        expect(result.current.evitar).toEqual(['Poeira', 'Mentiras']);
     });
 
     it('deve lidar com usuarioAtual nulo ou sem tamanhos especificados', () => {
@@ -126,6 +130,8 @@ describe('MeuPerfilScreen e ViewModel', () => {
         expect(resultNull.current.calca).toBe('');
         expect(resultNull.current.calcado).toBe('');
         expect(resultNull.current.interesses).toEqual([]);
+        expect(resultNull.current.gostos).toEqual([]);
+        expect(resultNull.current.evitar).toEqual([]);
 
         mockUseAuth.mockReturnValue({
             usuarioAtual: {
@@ -133,6 +139,8 @@ describe('MeuPerfilScreen e ViewModel', () => {
                 sizes: undefined,
                 bio: undefined,
                 interesses: undefined,
+                gostos: undefined,
+                evitar: undefined,
             },
             updateUsuarioAtual: mockUpdateUsuarioAtual,
             isLoading: false,
@@ -144,6 +152,8 @@ describe('MeuPerfilScreen e ViewModel', () => {
         expect(resultNoSizes.current.calca).toBe('');
         expect(resultNoSizes.current.calcado).toBe('');
         expect(resultNoSizes.current.interesses).toEqual([]);
+        expect(resultNoSizes.current.gostos).toEqual([]);
+        expect(resultNoSizes.current.evitar).toEqual([]);
     });
 
     it('deve atualizar os estados locais ao modificar no hook', () => {
@@ -155,6 +165,8 @@ describe('MeuPerfilScreen e ViewModel', () => {
             result.current.setCalca('42');
             result.current.setCalcado('40');
             result.current.setNovoInteresse('Futebol');
+            result.current.setNovoGosto('Basquete');
+            result.current.setNovoEvitar('Barulho');
         });
 
         expect(result.current.bio).toBe('Nova Bio');
@@ -162,18 +174,28 @@ describe('MeuPerfilScreen e ViewModel', () => {
         expect(result.current.calca).toBe('42');
         expect(result.current.calcado).toBe('40');
         expect(result.current.novoInteresse).toBe('Futebol');
+        expect(result.current.novoGosto).toBe('Basquete');
+        expect(result.current.novoEvitar).toBe('Barulho');
 
         act(() => {
             result.current.handleAddInteresse();
+            result.current.handleAddGosto();
+            result.current.handleAddEvitar();
         });
 
         expect(result.current.interesses).toEqual(['Tecnologia', 'Moda', 'Futebol']);
+        expect(result.current.gostos).toEqual(['Chocolate', 'Futebol', 'Basquete']);
+        expect(result.current.evitar).toEqual(['Poeira', 'Mentiras', 'Barulho']);
 
         act(() => {
             result.current.handleRemoveInteresse('Moda');
+            result.current.handleRemoveGosto('Futebol');
+            result.current.handleRemoveEvitar('Poeira');
         });
 
         expect(result.current.interesses).toEqual(['Tecnologia', 'Futebol']);
+        expect(result.current.gostos).toEqual(['Chocolate', 'Basquete']);
+        expect(result.current.evitar).toEqual(['Mentiras', 'Barulho']);
     });
 
     it('deve permitir salvar apenas 1 tamanho e limpar os outros', async () => {
@@ -200,6 +222,8 @@ describe('MeuPerfilScreen e ViewModel', () => {
                 calcado: undefined,
             },
             interesses: ['Tecnologia', 'Moda'],
+            gostos: ['Chocolate', 'Futebol'],
+            evitar: ['Poeira', 'Mentiras'],
         });
         expect(mockUpdateUsuarioAtual).toHaveBeenCalledWith({
             bio: 'Bio editada',
@@ -209,6 +233,8 @@ describe('MeuPerfilScreen e ViewModel', () => {
                 calcado: undefined,
             },
             interesses: ['Tecnologia', 'Moda'],
+            gostos: ['Chocolate', 'Futebol'],
+            evitar: ['Poeira', 'Mentiras'],
         });
         expect(result.current.successMessage).toBe('Perfil atualizado com sucesso!');
 
@@ -255,8 +281,10 @@ describe('MeuPerfilScreen e ViewModel', () => {
         expect(getByText('Salvar Alterações')).toBeTruthy();
         expect(queryByTestId('success-message')).toBeNull();
         expect(queryByTestId('error-message')).toBeNull();
-        expect(getByText('Tecnologia')).toBeTruthy();
-        expect(getByText('Moda')).toBeTruthy();
+        expect(getByText('Chocolate')).toBeTruthy();
+        expect(getByText('Futebol')).toBeTruthy();
+        expect(getByText('Poeira')).toBeTruthy();
+        expect(getByText('Mentiras')).toBeTruthy();
     });
 
     it('deve animar e sumir com a mensagem de sucesso no componente real', async () => {
@@ -301,6 +329,18 @@ describe('MeuPerfilScreen e ViewModel', () => {
             setNovoInteresse: jest.fn(),
             handleAddInteresse: jest.fn(),
             handleRemoveInteresse: jest.fn(),
+            gostos: ['Chocolate', 'Futebol'],
+            setGostos: jest.fn(),
+            novoGosto: '',
+            setNovoGosto: jest.fn(),
+            handleAddGosto: jest.fn(),
+            handleRemoveGosto: jest.fn(),
+            evitar: ['Poeira', 'Mentiras'],
+            setEvitar: jest.fn(),
+            novoEvitar: '',
+            setNovoEvitar: jest.fn(),
+            handleAddEvitar: jest.fn(),
+            handleRemoveEvitar: jest.fn(),
             isSaving: false,
             successMessage: 'Salvo com sucesso!',
             errorMessage: 'Erro inesperado!',
@@ -338,6 +378,18 @@ describe('MeuPerfilScreen e ViewModel', () => {
             setNovoInteresse: jest.fn(),
             handleAddInteresse: jest.fn(),
             handleRemoveInteresse: jest.fn(),
+            gostos: ['Chocolate', 'Futebol'],
+            setGostos: jest.fn(),
+            novoGosto: '',
+            setNovoGosto: jest.fn(),
+            handleAddGosto: jest.fn(),
+            handleRemoveGosto: jest.fn(),
+            evitar: ['Poeira', 'Mentiras'],
+            setEvitar: jest.fn(),
+            novoEvitar: '',
+            setNovoEvitar: jest.fn(),
+            handleAddEvitar: jest.fn(),
+            handleRemoveEvitar: jest.fn(),
             isSaving: false,
             successMessage: 'Salvo com sucesso!',
             errorMessage: 'Erro inesperado!',
