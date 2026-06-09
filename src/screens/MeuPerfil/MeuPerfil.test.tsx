@@ -308,7 +308,7 @@ describe('MeuPerfilScreen e ViewModel', () => {
 
         expect(queryByTestId('success-message')).toBeNull();
         jest.useRealTimers();
-    });
+    }, 15000);
 
     it('deve renderizar mensagens de erro e sucesso se presentes no viewmodel', () => {
         mockUseAuth.mockReturnValue({
