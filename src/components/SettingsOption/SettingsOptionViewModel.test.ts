@@ -20,7 +20,6 @@ describe('useSettingsOptionViewModel', () => {
     const { result } = renderHook(() => useSettingsOptionViewModel(mockProps));
 
     expect(result.current.iconName).toBe('chevron-right');
-    
     expect(result.current.iconSize).toBeUndefined();
     expect(result.current.iconColor).toBeUndefined();
   });
@@ -38,6 +37,18 @@ describe('useSettingsOptionViewModel', () => {
     expect(result.current.iconName).toBe('lock');
     expect(result.current.iconSize).toBe(20);
     expect(result.current.iconColor).toBe('#FF0000');
+  });
+
+  it('deve repassar a propriedade children corretamente', () => {
+    const mockChildren = 'Conteúdo de Teste'; 
+    const mockProps: Props = {
+      title: 'Configurações Avançadas',
+      children: mockChildren,
+    };
+
+    const { result } = renderHook(() => useSettingsOptionViewModel(mockProps));
+
+    expect(result.current.children).toBe(mockChildren);
   });
 
   it('deve repassar (forward) todas as propriedades adicionais do TouchableOpacityProps', () => {

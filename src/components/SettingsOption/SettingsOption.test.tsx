@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 import { SettingsOption } from './index';
 import { useSettingsOptionViewModel } from './SettingsOptionViewModel';
@@ -20,6 +21,7 @@ describe('SettingsOption Component', () => {
     iconSize: 24,
     iconColor: '#000',
     onPress: mockOnPress,
+    children: <Text>Conteúdo Extra</Text>,
   };
 
   beforeEach(() => {
@@ -35,12 +37,20 @@ describe('SettingsOption Component', () => {
     expect(getByText('Minha Conta')).toBeTruthy();
   });
 
-  it('deve repassar as propriedades do TouchableOpacity e responder ao clique', () => {
+  it('deve renderizar os elementos filhos (children) corretamente', () => {
     const { getByText } = render(
       <SettingsOption title="Minha Conta" iconName="user" />
     );
 
-    const touchableElement = getByText('Minha Conta');
+    expect(getByText('Conteúdo Extra')).toBeTruthy();
+  });
+
+  it('deve repassar as propriedades do TouchableOpacity e responder ao clique', () => {
+    const { getByRole } = render(
+      <SettingsOption title="Minha Conta" iconName="user" />
+    );
+
+    const touchableElement = getByRole('button');
     
     fireEvent.press(touchableElement);
 

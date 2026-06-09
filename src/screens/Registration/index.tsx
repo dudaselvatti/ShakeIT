@@ -19,6 +19,8 @@ export const RegistrationScreen = ({ navigation }: any) => {
     updateEmail,
     senha,
     updateSenha,
+    genero,
+    updateGenero,
     dataNascimento,
     updateDataNascimento,
     avatarUrl,
@@ -61,6 +63,8 @@ export const RegistrationScreen = ({ navigation }: any) => {
           value={email}
           onChangeText={updateEmail}
           maxLength={60}
+          autoCapitalize="none"
+          keyboardType="email-address"
         />
         {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
 
@@ -70,10 +74,22 @@ export const RegistrationScreen = ({ navigation }: any) => {
           value={senha}
           onChangeText={updateSenha}
           maxLength={50}
+          autoCapitalize="none"
+          secureTextEntry={true}
         />
         {errors.senha ? <Text style={styles.errorText}>{errors.senha}</Text> : null}
+        
+        <Input
+          label="Gênero"
+          placeholder="Gênero"
+          value={genero}
+          onChangeText={updateGenero}
+          maxLength={20}
+        />
+        {errors.genero ? <Text style={styles.errorText}>{errors.genero}</Text> : null}
 
         <DateInput
+          display="spinner"
           label="Data de Nascimento"
           value={dataNascimento}
           onChangeDate={updateDataNascimento}
@@ -96,7 +112,6 @@ export const RegistrationScreen = ({ navigation }: any) => {
           multiline
           numberOfLines={4}
         />
-        {errors.bio ? <Text style={styles.errorText}>{errors.bio}</Text> : null}
 
         <SelectInput
           label="Tamanho da Camiseta"
@@ -123,7 +138,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
         <Button
           title="Criar Conta"
           onPress={handleCadastrarUsuario}
-          disabled={!nomeUsuario || !email || !senha || !dataNascimento}
+          disabled={!nomeUsuario || !email || !senha || !genero || !dataNascimento}
         />
       </View>
 

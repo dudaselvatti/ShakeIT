@@ -12,6 +12,7 @@ export const ForgotMyPasswordScreen = ({ navigation }: any) => {
     email,
     updateEmail,
     errors,
+    success,
     handleBackPress,
     handleVerificarEmail,
   } = useForgotMyPasswordViewModel(navigation);
@@ -32,8 +33,11 @@ export const ForgotMyPasswordScreen = ({ navigation }: any) => {
           value={email}
           onChangeText={updateEmail}
           maxLength={60}
+          autoCapitalize="none"
+          keyboardType="email-address"
         />
         {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+        {success ? <Text style={styles.successText}>{success}</Text> : null}
       </View>
 
       <View style={styles.buttonsView}>

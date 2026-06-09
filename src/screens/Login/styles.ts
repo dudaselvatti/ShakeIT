@@ -49,5 +49,10 @@ export const styles = StyleSheet.create({
     marginTop: -16,
     marginBottom: 16,
     marginLeft: 4,
+  },
+  firebaseErrorText: {
+    color: theme.colors.danger,
+    fontSize: 20,
+    textAlign: 'center'
   }
 });

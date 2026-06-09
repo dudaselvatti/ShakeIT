@@ -6,6 +6,7 @@ import { formatDate } from "../../utils/Formatting/formatDate";
 
 export interface Props {
     label: string;
+    display?: "default" | "compact" | "inline" | "spinner" | "clock" | "calendar" | undefined;
     value?: Date;
     onChangeDate: (date: Date) => void;
     placeholder?: string;
@@ -14,7 +15,7 @@ export interface Props {
     maximumDate?: Date;
 }
 
-export function useDateInputViewModel({ label, value, onChangeDate, placeholder = "DD/MM/AAAA", containerStyle, minimumDate, maximumDate}: Props) {
+export function useDateInputViewModel({ label, display = "default", value, onChangeDate, placeholder = "DD/MM/AAAA", containerStyle, minimumDate, maximumDate}: Props) {
     const [showPicker, setShowPicker] = useState(false);
 
     const formattedDate = formatDate(value);
@@ -49,6 +50,7 @@ export function useDateInputViewModel({ label, value, onChangeDate, placeholder 
 
     return {
         label,
+        display,
         value,
         dateText,
         containerStyle,

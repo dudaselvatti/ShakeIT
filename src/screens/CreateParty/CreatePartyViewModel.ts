@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Party } from "../../types/Party";
 import { gerarPartyCode } from "../../utils/PartyCode/gerarPartyCode";
-import { createPartyInCloud } from "../../services/cloudDb/cloudDb";
+import { createPartyInCloud } from "../../services/cloud/Party/PartyDb";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 
 export function useCreatePartyViewModel(navigation: any) {

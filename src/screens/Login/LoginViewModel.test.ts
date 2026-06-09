@@ -1,14 +1,19 @@
 import { renderHook, act } from "@testing-library/react-native";
 import { useLoginViewModel } from "./LoginViewModel";
 import { isValidEmail } from "../../utils/Formatting/isValidEmail";
+import { userLogin } from "../../services/cloud/User/UserDb";
 
 jest.mock("../../utils/Formatting/isValidEmail");
+jest.mock("../../services/cloud/User/UserDb");
+
 const mockIsValidEmail = isValidEmail as jest.Mock;
+const mockUserLogin = userLogin as jest.Mock;
 
 describe("useLoginViewModel", () => {
   const mockNavigation = {
     goBack: jest.fn(),
     navigate: jest.fn(),
+    replace: jest.fn(),
   };
 
   beforeEach(() => {
@@ -22,7 +27,7 @@ describe("useLoginViewModel", () => {
 
       expect(result.current.email).toBe("");
       expect(result.current.senha).toBe("");
-      expect(result.current.errors).toEqual({ email: "", senha: "" });
+      expect(result.current.errors).toEqual({ email: "", senha: "", firebase: "" });
     });
   });
 
@@ -103,6 +108,7 @@ describe("useLoginViewModel", () => {
       expect(result.current.errors).toEqual({
         email: "Insira seu email.",
         senha: "Insira sua senha.",
+        firebase: "",
       });
     });
 
@@ -124,7 +130,8 @@ describe("useLoginViewModel", () => {
       expect(result.current.errors.senha).toBe("");
     });
 
-    it("deve passar na validação sem erros se email e senha forem válidos", async () => {
+    it("deve fazer login com sucesso e navegar para a Home", async () => {
+      mockUserLogin.mockResolvedValueOnce({ uid: "user_123", email: "correto@email.com" });
       const { result } = renderHook(() => useLoginViewModel(mockNavigation));
 
       act(() => {
@@ -136,7 +143,68 @@ describe("useLoginViewModel", () => {
         await result.current.handleAutenticarUsuario();
       });
 
-      expect(result.current.errors).toEqual({ email: "", senha: "" });
+      expect(mockUserLogin).toHaveBeenCalledWith({
+        email: "correto@email.com",
+        senha: "minhasenha",
+      });
+      expect(mockNavigation.replace).toHaveBeenCalledWith("Home");
+      expect(result.current.errors.firebase).toBe("");
+    });
+
+    it("deve setar erro de credenciais incorretas ao falhar no Firebase", async () => {
+      const mockError = { code: "auth/invalid-credential" };
+      mockUserLogin.mockRejectedValueOnce(mockError);
+      
+      const { result } = renderHook(() => useLoginViewModel(mockNavigation));
+
+      act(() => {
+        result.current.updateEmail("correto@email.com");
+        result.current.updateSenha("senha-errada");
+      });
+
+      await act(async () => {
+        await result.current.handleAutenticarUsuario();
+      });
+
+      expect(result.current.errors.firebase).toBe("E-mail ou senha incorretos.");
+    });
+
+    it("deve setar erro de muitas tentativas (too-many-requests) ao falhar no Firebase", async () => {
+      const mockError = { code: "auth/too-many-requests" };
+      mockUserLogin.mockRejectedValueOnce(mockError);
+      
+      const { result } = renderHook(() => useLoginViewModel(mockNavigation));
+
+      act(() => {
+        result.current.updateEmail("correto@email.com");
+        result.current.updateSenha("minhasenha");
+      });
+
+      await act(async () => {
+        await result.current.handleAutenticarUsuario();
+      });
+
+      expect(result.current.errors.firebase).toBe("Acesso bloqueado temporariamente por excesso de tentativas.");
+    });
+
+    it("deve setar erro genérico para qualquer outra falha desconhecida no Firebase", async () => {
+      const mockError = { code: "auth/unknown-error" };
+      mockUserLogin.mockRejectedValueOnce(mockError);
+      
+      jest.spyOn(console, "error").mockImplementation(() => {});
+      
+      const { result } = renderHook(() => useLoginViewModel(mockNavigation));
+
+      act(() => {
+        result.current.updateEmail("correto@email.com");
+        result.current.updateSenha("minhasenha");
+      });
+
+      await act(async () => {
+        await result.current.handleAutenticarUsuario();
+      });
+
+      expect(result.current.errors.firebase).toBe("Ocorreu um erro ao fazer login. Tente novamente.");
     });
   });
 });

@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { isValidEmail } from "../../utils/Formatting/isValidEmail";
+import { UserRegistrationDTO } from "../../dto/User/UserRegistrationDTO";
+import { storeUserInCloud } from "../../services/cloud/User/UserDb";
 
 export function useRegistrationViewModel(navigation: any) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [nomeUsuario, setNomeUsuario] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [genero, setGenero] = useState("");
   const [dataNascimento, setDataNascimento] = useState<Date | undefined>(undefined);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [bio, setBio] = useState("");
   const [sizes, setSizes] = useState<Map<string, string>>(new Map());
-  const [errors, setErrors] = useState({ nome: "", email: "", senha: "", data: "", bio: "" });
+  const [errors, setErrors] = useState({ nome: "", email: "", senha: "", genero: "", data: "" });
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
   const updateNomeUsuario = (text: string) => {
@@ -28,6 +31,11 @@ export function useRegistrationViewModel(navigation: any) {
     if (errors.senha) setErrors((prev) => ({ ...prev, senha: "" }));
   };
 
+  const updateGenero = (text: string) => {
+    setGenero(text);
+    if (errors.genero) setErrors((prev) => ({ ...prev, genero: "" }));
+  };
+
   const updateDataNascimento = (date: Date) => {
     setDataNascimento(date);
     if (errors.data) setErrors((prev) => ({ ...prev, data: "" }));
@@ -39,7 +47,6 @@ export function useRegistrationViewModel(navigation: any) {
 
   const updateBio = (text: string) => {
     setBio(text);
-    if (errors.bio) setErrors((prev) => ({ ...prev, bio: "" }));
   };
 
   const updateSizes = (key: string, value: string) => {
@@ -50,7 +57,7 @@ export function useRegistrationViewModel(navigation: any) {
     });
   };
 
-  const hasChanges = nomeUsuario !== "" ||  email !== "" || senha !== "" || dataNascimento !== undefined || avatarUrl !== "" || bio !== "";
+  const hasChanges = nomeUsuario !== "" ||  email !== "" || senha !== "" || genero !== "" || dataNascimento !== undefined || avatarUrl !== "" || bio !== "";
 
   const handleBackPress = () => {
     if (hasChanges) {
@@ -72,7 +79,7 @@ export function useRegistrationViewModel(navigation: any) {
 
   const handleCadastrarUsuario = async () => {
     let isValid = true;
-    let newErrors = { nome: "", email: "", senha: "", data: "", bio: "" };
+    let newErrors = { nome: "", email: "", senha: "", genero: "", data: "" };
 
     if (!nomeUsuario.trim()) {
       newErrors.nome = "O nome de usuário é obrigatório.";
@@ -92,13 +99,13 @@ export function useRegistrationViewModel(navigation: any) {
       isValid = false;
     }
 
-    if (!dataNascimento) {
-      newErrors.data = "A data de nascimento é obrigatória.";
+    if (!genero) {
+      newErrors.genero = "O gênero é obrigatório.";
       isValid = false;
     }
 
-    if (!bio) {
-      newErrors.bio = "A bio é obrigatória.";
+    if (!dataNascimento) {
+      newErrors.data = "A data de nascimento é obrigatória.";
       isValid = false;
     }
 
@@ -106,25 +113,37 @@ export function useRegistrationViewModel(navigation: any) {
 
     if (!isValid) return;
 
-    /*const novoUsuario: Omit<Usuario, id> = { //Deverá ser implementado na T22, de preferência após a T19
-      
+  try {
+    const userRegistrationDTO: UserRegistrationDTO = {
+      email: email,
+      senha: senha,
+      nome: nomeUsuario,
+      genero: genero,
+      birth_date: dataNascimento!,
+      //height: height,
+      avatar_url: avatarUrl,
+      bio: bio,
+      sizes: {
+        camisa: sizes.get("camiseta"),
+        calca: sizes.get("calca"),
+        calcado: sizes.get("calcado"),
+      },
+    };
+    const loggedUser = await storeUserInCloud(userRegistrationDTO);
+    if (loggedUser) {
+      navigation.replace("Home"); 
     }
 
-    try {
-    const registeredUser = await registerUserInCloud(novoUsuario);
-
-      console.log("Usuário cadastrado:", registeredUser);
-
-      navigation.navigate("Home");
-
-    } catch (error) {
-      console.error("Erro ao cadastrar Usuario no Firebase:", error);
-      setErrors((prev) => ({
-        ...prev,
-        nome: "Erro ao cadastrar o usuário. Tente novamente.",
-      }));
-    }*/
-  };
+  } catch (error: any) {
+    console.error("Erro no processo de cadastro:", error);
+    if (error.code === "auth/email-already-in-use") {
+      newErrors.email = "Este e-mail já está em uso por outra conta.";
+    } else if (error.code === "auth/weak-password") {
+      newErrors.senha = "A senha fornecida é muito fraca.";
+    }
+    setErrors(newErrors);
+  }
+};
 
   return {
     nomeUsuario,
@@ -133,6 +152,8 @@ export function useRegistrationViewModel(navigation: any) {
     updateEmail,
     senha,
     updateSenha,
+    genero,
+    updateGenero,
     dataNascimento,
     updateDataNascimento,
     avatarUrl,

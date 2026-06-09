@@ -1,72 +1,105 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { SettingsScreen } from './index';
-
-const mockNavigate = jest.fn();
-const mockHandleAlterarSenha = jest.fn();
-const mockHandleLogout = jest.fn();
-const mockCancelLogout = jest.fn();
-const mockConfirmLogout = jest.fn();
-
-let mockIsModalVisible = false;
+import { useSettingsViewModel } from './SettingsViewModel';
 
 jest.mock('./SettingsViewModel', () => ({
-    useSettingsViewModel: () => ({
-        isModalVisible: mockIsModalVisible,
-        handleAlterarSenha: mockHandleAlterarSenha,
-        handleLogout: mockHandleLogout,
-        cancelLogout: mockCancelLogout,
-        confirmLogout: mockConfirmLogout,
-    }),
+  useSettingsViewModel: jest.fn(),
 }));
 
 describe('SettingsScreen', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-        mockIsModalVisible = false;
+  const mockNavigation = { navigate: jest.fn() };
+  
+  const mockHandleAlterarSenha = jest.fn();
+  const mockHandleLogout = jest.fn();
+  const mockCancelLogout = jest.fn();
+  const mockConfirmLogout = jest.fn();
+
+  const setupHookMock = (overrides = {}) => {
+    (useSettingsViewModel as jest.Mock).mockReturnValue({
+      isModalVisible: false,
+      errors: { passwordReset: '', logout: '' },
+      success: { passwordReset: '', logout: '' },
+      handleAlterarSenha: mockHandleAlterarSenha,
+      handleLogout: mockHandleLogout,
+      cancelLogout: mockCancelLogout,
+      confirmLogout: mockConfirmLogout,
+      ...overrides,
+    });
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+  
+  it('deve renderizar a tela com os elementos estruturais principais', () => {
+    setupHookMock();
+
+    const { getByText, queryByText } = render(
+      <SettingsScreen navigation={mockNavigation} />
+    );
+
+    expect(getByText('Configurações')).toBeTruthy();
+    expect(getByText('Conta')).toBeTruthy();
+    expect(getByText('Alterar Senha')).toBeTruthy();
+    expect(getByText('Sair da Conta')).toBeTruthy();
+
+    expect(queryByText('Tem certeza que deseja sair da conta?')).toBeNull();
+  });
+  
+  it('deve exibir a mensagem de erro ao falhar a redefinição de senha', () => {
+    setupHookMock({
+      errors: { passwordReset: 'Erro ao enviar o link de redefinição.', logout: '' },
     });
 
-    it('deve renderizar a tela de configurações com os componentes principais', () => {
-        const { getByText } = render(<SettingsScreen navigation={{ navigate: mockNavigate }} />);
+    const { getByText } = render(<SettingsScreen navigation={mockNavigation} />);
 
-        expect(getByText('Configurações')).toBeTruthy();
-        expect(getByText('Conta')).toBeTruthy();
-        expect(getByText('Alterar Senha')).toBeTruthy();
-        expect(getByText('Sair da Conta')).toBeTruthy();
+    expect(getByText('Erro ao enviar o link de redefinição.')).toBeTruthy();
+  });
+
+  it('deve exibir a mensagem de sucesso ao enviar redefinição de senha', () => {
+    setupHookMock({
+      success: { passwordReset: 'O link de redefinição foi enviado!', logout: '' },
     });
 
-    it('deve chamar handleAlterarSenha ao clicar na opção de alterar senha', () => {
-        const { getByText } = render(<SettingsScreen navigation={{ navigate: mockNavigate }} />);
-        
-        const alterarSenhaOption = getByText('Alterar Senha');
-        fireEvent.press(alterarSenhaOption);
+    const { getByText } = render(<SettingsScreen navigation={mockNavigation} />);
 
-        expect(mockHandleAlterarSenha).toHaveBeenCalledTimes(1);
+    expect(getByText('O link de redefinição foi enviado!')).toBeTruthy();
+  });
+  
+  it('deve chamar handleAlterarSenha quando a opção Alterar Senha for pressionada', () => {
+    setupHookMock();
+
+    const { getByText } = render(<SettingsScreen navigation={mockNavigation} />);
+    
+    fireEvent.press(getByText('Alterar Senha'));
+
+    expect(mockHandleAlterarSenha).toHaveBeenCalledTimes(1);
+  });
+
+  it('deve chamar handleLogout quando o botão Sair da Conta for pressionado', () => {
+    setupHookMock();
+
+    const { getByText } = render(<SettingsScreen navigation={mockNavigation} />);
+    
+    fireEvent.press(getByText('Sair da Conta'));
+
+    expect(mockHandleLogout).toHaveBeenCalledTimes(1);
+  });
+  
+  it('deve repassar os callbacks de confirmar e cancelar para o PopupModal', () => {
+    setupHookMock({
+      isModalVisible: true,
     });
 
-    it('deve chamar handleLogout ao clicar em Sair da Conta', () => {
-        const { getByText } = render(<SettingsScreen navigation={{ navigate: mockNavigate }} />);
-        
-        const botaoSair = getByText('Sair da Conta');
-        fireEvent.press(botaoSair);
+    const { getByText } = render(<SettingsScreen navigation={mockNavigation} />);
 
-        expect(mockHandleLogout).toHaveBeenCalledTimes(1);
-    });
+    expect(getByText('Tem certeza que deseja sair da conta?')).toBeTruthy();
 
-    it('deve exibir o modal e responder aos comandos de confirmar e cancelar', () => {
-        mockIsModalVisible = true;
+    fireEvent.press(getByText('Cancelar'));
+    expect(mockCancelLogout).toHaveBeenCalledTimes(1);
 
-        const { getByText } = render(<SettingsScreen navigation={{ navigate: mockNavigate }} />);
-
-        expect(getByText('Atenção!')).toBeTruthy();
-        expect(getByText('Tem certeza que deseja sair da conta?')).toBeTruthy();
-
-        const botaoCancelar = getByText('Cancelar');
-        fireEvent.press(botaoCancelar);
-        expect(mockCancelLogout).toHaveBeenCalledTimes(1);
-
-        const botaoConfirmar = getByText('Confirmar');
-        fireEvent.press(botaoConfirmar);
-        expect(mockConfirmLogout).toHaveBeenCalledTimes(1);
-    });
+    fireEvent.press(getByText('Confirmar'));
+    expect(mockConfirmLogout).toHaveBeenCalledTimes(1);
+  });
 });

@@ -7,7 +7,6 @@ jest.mock("./RegistrationViewModel");
 
 jest.mock("../../components/AppHeader", () => {
   const ReactNative = jest.requireActual("react-native");
-
   return {
     AppHeader: ({ onBackPress, headerTitle }: any) => (
       <ReactNative.View
@@ -21,7 +20,6 @@ jest.mock("../../components/AppHeader", () => {
 
 jest.mock("../../components/Button", () => {
   const ReactNative = jest.requireActual("react-native");
-
   return {
     Button: ({ title, disabled, onPress }: any) => (
       <ReactNative.TouchableOpacity
@@ -38,10 +36,9 @@ jest.mock("../../components/Button", () => {
 
 jest.mock("../../components/Input", () => {
   const ReactNative = jest.requireActual("react-native");
-
   return {
     Input: ({ label, value, onChangeText, placeholder }: any) => (
-      <ReactNative.View
+      <ReactNative.TextInput
         testID={`input-${label}`}
         value={value}
         placeholder={placeholder}
@@ -53,7 +50,6 @@ jest.mock("../../components/Input", () => {
 
 jest.mock("../../components/DateInput", () => {
   const ReactNative = jest.requireActual("react-native");
-
   return {
     DateInput: ({ label, value, onChangeDate }: any) => (
       <ReactNative.View
@@ -67,7 +63,6 @@ jest.mock("../../components/DateInput", () => {
 
 jest.mock("../../components/ImagePicker", () => {
   const ReactNative = jest.requireActual("react-native");
-
   return {
     ImagePicker: ({ label, value, onChangeImage }: any) => (
       <ReactNative.View
@@ -81,7 +76,6 @@ jest.mock("../../components/ImagePicker", () => {
 
 jest.mock("../../components/SelectInput", () => {
   const ReactNative = jest.requireActual("react-native");
-
   return {
     SelectInput: ({ label, selectedValue, onValueChange }: any) => (
       <ReactNative.View
@@ -95,7 +89,6 @@ jest.mock("../../components/SelectInput", () => {
 
 jest.mock("../../components/PopupModal", () => {
   const ReactNative = jest.requireActual("react-native");
-
   return {
     PopupModal: ({ visible, onCancel, onConfirm }: any) =>
       visible ? (
@@ -109,16 +102,19 @@ jest.mock("../../components/PopupModal", () => {
 });
 
 describe("RegistrationScreen", () => {
-  const mockNavigation = { navigate: jest.fn() };
-  
-  const defaultViewModelMock = {
+  const mockNavigation = { navigate: jest.fn(), goBack: jest.fn(), replace: jest.fn() };
+  let currentViewModelMock: any;
+
+  const createDefaultViewModelMock = () => ({
     nomeUsuario: "",
     updateNomeUsuario: jest.fn(),
     email: "",
     updateEmail: jest.fn(),
     senha: "",
     updateSenha: jest.fn(),
-    dataNascimento: null,
+    genero: "",
+    updateGenero: jest.fn(),
+    dataNascimento: undefined,
     updateDataNascimento: jest.fn(),
     avatarUrl: "",
     updateAvatarUrl: jest.fn(),
@@ -126,17 +122,18 @@ describe("RegistrationScreen", () => {
     updateBio: jest.fn(),
     sizes: new Map(),
     updateSizes: jest.fn(),
-    errors: {},
+    errors: { nome: "", email: "", senha: "", genero: "", data: "" },
     isModalVisible: false,
     cancelExit: jest.fn(),
     handleBackPress: jest.fn(),
     confirmExit: jest.fn(),
     handleCadastrarUsuario: jest.fn(),
-  };
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useRegistrationViewModel as jest.Mock).mockReturnValue(defaultViewModelMock);
+    currentViewModelMock = createDefaultViewModelMock();
+    (useRegistrationViewModel as jest.Mock).mockReturnValue(currentViewModelMock);
   });
 
   it("deve renderizar os campos básicos do formulário corretamente", () => {
@@ -148,12 +145,12 @@ describe("RegistrationScreen", () => {
     expect(getByTestId("input-Nome de usuário")).toBeTruthy();
     expect(getByTestId("input-Email")).toBeTruthy();
     expect(getByTestId("input-Senha")).toBeTruthy();
+    expect(getByTestId("input-Gênero")).toBeTruthy();
     expect(getByText("Criar Conta")).toBeTruthy();
   });
 
   it("deve desabilitar o botão 'Criar Conta' se os campos obrigatórios estiverem vazios", () => {
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
-
     const button = getByTestId("custom-button");
     
     expect(button).toBeDisabled(); 
@@ -161,33 +158,45 @@ describe("RegistrationScreen", () => {
 
   it("deve habilitar o botão 'Criar Conta' quando todos os campos obrigatórios estiverem preenchidos", () => {
     (useRegistrationViewModel as jest.Mock).mockReturnValue({
-      ...defaultViewModelMock,
+      ...currentViewModelMock,
       nomeUsuario: "John Doe",
       email: "john@example.com",
       senha: "Password123",
+      genero: "Masculino",
       dataNascimento: new Date("2000-01-01"),
     });
 
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
     const button = getByTestId("custom-button");
 
-    expect(button.props.disabled).toBeFalsy();
+    expect(button).toBeEnabled();
   });
 
   it("deve chamar updateNomeUsuario ao digitar no campo correspondente", () => {
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
     const inputNome = getByTestId("input-Nome de usuário");
 
-    fireEvent(inputNome, "onChangeText", "Novo Nome");
-    expect(defaultViewModelMock.updateNomeUsuario).toHaveBeenCalledWith("Novo Nome");
+    fireEvent.changeText(inputNome, "Novo Nome");
+    expect(currentViewModelMock.updateNomeUsuario).toHaveBeenCalledWith("Novo Nome");
+  });
+
+  it("deve chamar updateGenero ao digitar no campo de Gênero", () => {
+    const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
+    const inputGenero = getByTestId("input-Gênero");
+
+    fireEvent.changeText(inputGenero, "Masculino");
+    expect(currentViewModelMock.updateGenero).toHaveBeenCalledWith("Masculino");
   });
 
   it("deve exibir mensagens de erro quando passadas pelo ViewModel", () => {
     (useRegistrationViewModel as jest.Mock).mockReturnValue({
-      ...defaultViewModelMock,
+      ...currentViewModelMock,
       errors: {
         nome: "Nome inválido",
         email: "Email já cadastrado",
+        senha: "",
+        genero: "",
+        data: "",
       },
     });
 
@@ -199,10 +208,11 @@ describe("RegistrationScreen", () => {
 
   it("deve chamar handleCadastrarUsuario ao clicar no botão Criar Conta", () => {
     (useRegistrationViewModel as jest.Mock).mockReturnValue({
-      ...defaultViewModelMock,
+      ...currentViewModelMock,
       nomeUsuario: "John Doe",
       email: "john@example.com",
       senha: "Password123",
+      genero: "Masculino",
       dataNascimento: new Date("2000-01-01"),
     });
 
@@ -210,12 +220,12 @@ describe("RegistrationScreen", () => {
     const button = getByTestId("custom-button");
 
     fireEvent.press(button);
-    expect(defaultViewModelMock.handleCadastrarUsuario).toHaveBeenCalled();
+    expect(currentViewModelMock.handleCadastrarUsuario).toHaveBeenCalled();
   });
 
   it("deve exibir e interagir com o PopupModal quando isModalVisible for true", () => {
     (useRegistrationViewModel as jest.Mock).mockReturnValue({
-      ...defaultViewModelMock,
+      ...currentViewModelMock,
       isModalVisible: true,
     });
 
@@ -225,10 +235,10 @@ describe("RegistrationScreen", () => {
     expect(modal).toBeTruthy();
 
     fireEvent(modal, "onCancel");
-    expect(defaultViewModelMock.cancelExit).toHaveBeenCalled();
+    expect(currentViewModelMock.cancelExit).toHaveBeenCalled();
 
     fireEvent(modal, "onConfirm");
-    expect(defaultViewModelMock.confirmExit).toHaveBeenCalled();
+    expect(currentViewModelMock.confirmExit).toHaveBeenCalled();
   });
 
   it("deve atualizar os seletores de tamanhos corretamente", () => {
@@ -237,6 +247,6 @@ describe("RegistrationScreen", () => {
     const selectCamiseta = getByTestId("select-Tamanho da Camiseta");
     fireEvent(selectCamiseta, "onChange", "M");
 
-    expect(defaultViewModelMock.updateSizes).toHaveBeenCalledWith("camiseta", "M");
+    expect(currentViewModelMock.updateSizes).toHaveBeenCalledWith("camiseta", "M");
   });
 });

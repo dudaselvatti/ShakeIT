@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
-import { updateUsuario } from '../../services/cloudDb/cloudDb';
+import { updateUsuario } from '../../services/cloud/User/UserDb';
 
 export const useMeuPerfilViewModel = () => {
     const { usuarioAtual, updateUsuarioAtual } = useAuth();

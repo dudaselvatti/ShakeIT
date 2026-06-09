@@ -4,14 +4,16 @@ import { MeuPerfilScreen } from './index';
 import { useMeuPerfilViewModel } from './MeuPerfilViewModel';
 import * as MeuPerfilViewModelModule from './MeuPerfilViewModel';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
-import { updateUsuario } from '../../services/cloudDb/cloudDb';
+import { updateUsuario } from '../../services/cloud/User/UserDb';
 
 jest.mock('../../contexts/AuthContext/AuthContext', () => ({
     useAuth: jest.fn(),
 }));
 
-jest.mock('../../services/cloudDb/cloudDb', () => ({
+jest.mock('../../services/cloud/User/UserDb', () => ({
     updateUsuario: jest.fn(),
+    getUserById: jest.fn(),
+    userLogout: jest.fn(),
 }));
 
 jest.mock('../../components/AppHeader', () => {
