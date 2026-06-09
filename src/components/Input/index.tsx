@@ -9,7 +9,7 @@ export const Input = (props: Props) => {
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Text style={styles.label}>{label}</Text>
+      {label ? <Text style={styles.label}>{label}</Text> : null}
       <TextInput 
         style={textInputStyle} 
         placeholderTextColor={theme.colors.textLight}

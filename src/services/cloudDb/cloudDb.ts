@@ -75,3 +75,11 @@ export async function createPartyInCloud(party: Omit<Party, "id">) {
         ...payload,
     };
 }
+
+export async function updateUsuario(id: string, data: Partial<Usuario>): Promise<void> {
+    const docRef = doc(db, USERS_COLLECTION, id);
+    await updateDoc(docRef, {
+        ...data,
+        updated_at: new Date().toISOString(),
+    });
+}

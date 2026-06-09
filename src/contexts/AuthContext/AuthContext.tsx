@@ -5,6 +5,7 @@ import { getUsuariosFromCloud, seedUsuarios } from '../../services/cloudDb/cloud
 interface AuthContextData {
   usuarioAtual: Usuario | null;
   isLoading: boolean;
+  updateUsuarioAtual: (data: Partial<Usuario>) => void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -12,6 +13,10 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [usuarioAtual, setUsuarioAtual] = useState<Usuario | null>(null);
     const [isLoading, setLoading] = useState(true);
+
+    const updateUsuarioAtual = (data: Partial<Usuario>) => {
+        setUsuarioAtual((prev) => (prev ? { ...prev, ...data } : null));
+    };
 
     useEffect(() => {
         const initializeAuth = async () => {
@@ -40,7 +45,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ usuarioAtual, isLoading }}>
+        <AuthContext.Provider value={{ usuarioAtual, isLoading, updateUsuarioAtual }}>
             {children}
         </AuthContext.Provider>
     );
