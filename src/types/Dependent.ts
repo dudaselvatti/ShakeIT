@@ -13,8 +13,10 @@ export interface Dependent {
     dependent_type: DependentType;
     birth_date: string;
     avatar_url: string;
+    gender: string;
     sizes?: Sizes;
     bio?: string;
+    relationship?: string;
     created_at: string;
     updated_at: string;
 }

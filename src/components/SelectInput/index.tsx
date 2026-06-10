@@ -1,31 +1,46 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { Feather } from "@expo/vector-icons";
 import { styles } from "./styles";
+import { theme } from "../../styles/theme";
 import { useSelectInputViewModel, Props } from "./SelectInputViewModel";
 
 export const SelectInput = (props: Props) => {
-  const { label, selectedValue, onValueChange, options, style, containerStyle } = useSelectInputViewModel(props)
+  const { label, selectedValue, onValueChange, options, style, containerStyle, testID } = useSelectInputViewModel(props);
+
+  const displayValue = selectedValue || "Selecione...";
+  const isPlaceholder = !selectedValue;
 
   return (
-    <View style={[styles.container, containerStyle]}>
-      <Text style={styles.label}>{label}</Text>
+    <View style={[styles.container, containerStyle]} testID={testID}>
+      {label ? <Text style={styles.label}>{label}</Text> : null}
 
-      <Picker
-        selectedValue={selectedValue}
-        onValueChange={onValueChange}
-        style={[styles.picker, style]}
-      >
-        <Picker.Item label="Selecione..." value="" />
+      <View style={[styles.dropdownVisual, style]}>
+        <View style={styles.innerContainer} pointerEvents="none">
+          <Text style={isPlaceholder ? styles.dropdownPlaceholderText : styles.dropdownValueText}>
+            {displayValue}
+          </Text>
+          <Feather name="chevron-down" size={16} color={theme.colors.textLight} style={styles.chevron} />
+        </View>
 
-        {options.map((option) => (
-          <Picker.Item
-            key={option}
-            label={option}
-            value={option}
-          />
-        ))}
-      </Picker>
+        <Picker
+          selectedValue={selectedValue}
+          onValueChange={onValueChange}
+          style={styles.picker}
+          mode="dropdown"
+        >
+          <Picker.Item label="Selecione..." value="" />
+
+          {options.map((option) => (
+            <Picker.Item
+              key={option}
+              label={option}
+              value={option}
+            />
+          ))}
+        </Picker>
+      </View>
     </View>
   );
-};
+};
