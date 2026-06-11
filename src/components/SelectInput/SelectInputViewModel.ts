@@ -7,15 +7,17 @@ export interface Props {
     options: string[];
     style?: any;
     containerStyle?: ViewStyle;
+    testID?: string;
 }
 
-export function useSelectInputViewModel({ label, selectedValue, onValueChange, options, style, containerStyle }: Props) {
+export function useSelectInputViewModel({ label, selectedValue, onValueChange, options, style, containerStyle, testID }: Props) {
     return {
         label,
         selectedValue,
         onValueChange,
         options,
         style,
-        containerStyle
+        containerStyle,
+        testID
     };
-}
+}

@@ -17,6 +17,9 @@ import { PartyPreviewScreen } from "./src/screens/PartyPreview";
 import { ParticipantLobbyScreen } from "./src/screens/ParticipantLobby";
 import { MeuPerfilScreen } from "./src/screens/MeuPerfil";
 import { SettingsScreen } from "./src/screens/Settings";
+import { GestaoDependentesScreen } from "./src/screens/GestaoDependentes";
+import { FormDependenteScreen } from "./src/screens/FormDependente";
+import { Dependent } from "./src/types/Dependent";
 
 import { AuthProvider } from "./src/contexts/AuthContext/AuthContext";
 import { RegistrationScreen } from "./src/screens/Registration";
@@ -39,6 +42,8 @@ export type RootStackParamList = {
   ParticipantLobby: { partyId: string };
   MeuPerfil: undefined;
   Settings: undefined;
+  GestaoDependentes: undefined;
+  FormDependente: { dependent?: Dependent } | undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -86,6 +91,8 @@ export default function App() {
           options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_right' })} 
         />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="GestaoDependentes" component={GestaoDependentesScreen} />
+        <Stack.Screen name="FormDependente" component={FormDependenteScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     </AuthProvider>

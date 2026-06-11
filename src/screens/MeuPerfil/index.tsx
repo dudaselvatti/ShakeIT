@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform, Pressable, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import { AppHeader } from '../../components/AppHeader';
@@ -70,6 +71,7 @@ const SizeCard = ({ title, emoji, placeholder, selectedValue, onValueChange, opt
 };
 
 export const MeuPerfilScreen = () => {
+    const navigation = useNavigation<any>();
     const {
         bio,
         setBio,
@@ -248,6 +250,18 @@ export const MeuPerfilScreen = () => {
                                 style={{ borderWidth: 0, backgroundColor: 'transparent', padding: 0 }}
                                 containerStyle={{ flex: 1, marginBottom: 0 }}
                                 testID="evitar-input"
+                            />
+                        </View>
+                    </Card>
+
+                    <Text style={styles.sectionTitle}>Dependentes (Filhos / Pets)</Text>
+                    <Card style={styles.interestsCard}>
+                        <View style={{ paddingVertical: 8 }}>
+                            <Button
+                                title="Gerenciar Dependentes"
+                                onPress={() => navigation.navigate("GestaoDependentes")}
+                                variant="outline"
+                                testID="btn-gerenciar-dependentes"
                             />
                         </View>
                     </Card>
