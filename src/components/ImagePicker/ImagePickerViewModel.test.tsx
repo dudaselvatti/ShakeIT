@@ -64,9 +64,10 @@ describe('useImagePickerViewModel', () => {
     });
 
     const mockUri = 'file://caminho/da/nova-imagem.jpg';
+    const mockBase64 = 'abcde12345';
     (ImagePicker.launchImageLibraryAsync as jest.Mock).mockResolvedValue({
       canceled: false,
-      assets: [{ uri: mockUri }],
+      assets: [{ uri: mockUri, base64: mockBase64 }],
     });
 
     const { result } = renderHook(() => useImagePickerViewModel(defaultProps));
@@ -79,10 +80,11 @@ describe('useImagePickerViewModel', () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.8,
+      quality: 0.1, // Compressão pesada para salvar no banco
+      base64: true, // Adicionado para retornar a string em base64
     });
 
-    expect(mockOnChangeImage).toHaveBeenCalledWith(mockUri);
+    expect(mockOnChangeImage).toHaveBeenCalledWith(`data:image/jpeg;base64,${mockBase64}`);
     expect(global.alert).not.toHaveBeenCalled();
   });
 

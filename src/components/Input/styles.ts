@@ -11,13 +11,23 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
     fontWeight: "600",
   },
-  input: {
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: theme.colors.surface,
     borderWidth: 1,
     borderColor: theme.colors.border,
     borderRadius: theme.metrics.borderRadius,
+  },
+  input: {
+    flex: 1,
     padding: theme.metrics.padding,
     fontSize: 16,
     color: theme.colors.text,
   },
+  eyeIcon: {
+    padding: theme.metrics.padding,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
