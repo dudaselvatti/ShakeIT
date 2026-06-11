@@ -8,6 +8,8 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { SelectInput } from "../../components/SelectInput";
 import { DateInput } from "../../components/DateInput";
+import { Card } from "../../components/Card";
+import { Tag } from "../../components/Tag";
 import { styles } from "./styles";
 import { useFormDependenteViewModel } from "./FormDependenteViewModel";
 
@@ -25,6 +27,12 @@ export const FormDependenteScreen = ({ navigation }: any) => {
         relationship,
         isSaving,
         errors,
+        gostos,
+        novoGostoState,
+        setNovoGostoState,
+        evitar,
+        novoEvitarState,
+        setNovoEvitarState,
         updateName,
         updateDependentType,
         updateBirthDate,
@@ -32,6 +40,10 @@ export const FormDependenteScreen = ({ navigation }: any) => {
         updateCustomGender,
         updateRelationship,
         setBio,
+        handleAddGosto,
+        handleRemoveGosto,
+        handleAddEvitar,
+        handleRemoveEvitar,
         handleSave,
     } = useFormDependenteViewModel(navigation, dependentToEdit);
 
@@ -177,6 +189,72 @@ export const FormDependenteScreen = ({ navigation }: any) => {
                         numberOfLines={3}
                         testID="input-bio"
                     />
+
+                    <Text style={styles.sectionTitle}>O que gosta? (Opcional)</Text>
+                    <Card style={styles.interestsCard}>
+                        <View style={styles.interestsContainer}>
+                            {gostos.map((item) => (
+                                <Tag
+                                    key={item}
+                                    label={item}
+                                    onRemove={() => handleRemoveGosto(item)}
+                                />
+                            ))}
+                            {gostos.length === 0 && (
+                                <Text style={{ color: "#888" }}>Nenhum item adicionado.</Text>
+                            )}
+                        </View>
+                        <View style={styles.addInterestRow}>
+                            <Input
+                                label=""
+                                placeholder="Ex: Futebol, Sorvete..."
+                                value={novoGostoState}
+                                onChangeText={setNovoGostoState}
+                                onSubmitEditing={handleAddGosto}
+                                returnKeyType="done"
+                                blurOnSubmit={false}
+                                containerStyle={styles.addInterestInput}
+                            />
+                            <Button
+                                title="+"
+                                onPress={handleAddGosto}
+                                style={styles.addInterestBtn}
+                            />
+                        </View>
+                    </Card>
+
+                    <Text style={styles.sectionTitle}>O que evitar? (Opcional)</Text>
+                    <Card style={styles.interestsCard}>
+                        <View style={styles.interestsContainer}>
+                            {evitar.map((item) => (
+                                <Tag
+                                    key={item}
+                                    label={item}
+                                    onRemove={() => handleRemoveEvitar(item)}
+                                />
+                            ))}
+                            {evitar.length === 0 && (
+                                <Text style={{ color: "#888" }}>Nenhum item adicionado.</Text>
+                            )}
+                        </View>
+                        <View style={styles.addInterestRow}>
+                            <Input
+                                label=""
+                                placeholder="Ex: Corante, Amendoim..."
+                                value={novoEvitarState}
+                                onChangeText={setNovoEvitarState}
+                                onSubmitEditing={handleAddEvitar}
+                                returnKeyType="done"
+                                blurOnSubmit={false}
+                                containerStyle={styles.addInterestInput}
+                            />
+                            <Button
+                                title="+"
+                                onPress={handleAddEvitar}
+                                style={styles.addInterestBtn}
+                            />
+                        </View>
+                    </Card>
                 </ScrollView>
 
                 <View style={styles.footer}>

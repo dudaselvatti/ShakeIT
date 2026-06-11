@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 import { updateUsuario } from '../../services/cloud/User/UserDb';
+import { getOrCreateWishlist, addLikeTags, removeLikeTags, addAvoidTags, removeAvoidTags } from '../../services/cloud/Wishlist/WishlistDb';
 import { Timestamp } from 'firebase/firestore';
 
 export const useMeuPerfilViewModel = () => {
@@ -20,6 +21,8 @@ export const useMeuPerfilViewModel = () => {
     const [evitar, setEvitar] = useState<string[]>([]);
     const [novoGostoState, setNovoGostoState] = useState('');
     const [novoEvitarState, setNovoEvitarState] = useState('');
+    const [originalGostos, setOriginalGostos] = useState<string[]>([]);
+    const [originalEvitar, setOriginalEvitar] = useState<string[]>([]);
 
     const setNovoGosto = (text: string) => {
         if (text.endsWith(' ')) {
@@ -70,8 +73,13 @@ export const useMeuPerfilViewModel = () => {
             setCalca(usuarioAtual.sizes?.calca || '');
             setCalcado(usuarioAtual.sizes?.calcado || '');
             setInteresses(usuarioAtual.interesses || []);
-            setGostos(usuarioAtual.gostos || []);
-            setEvitar(usuarioAtual.evitar || []);
+            
+            getOrCreateWishlist(usuarioAtual.id, 'user').then(wishlist => {
+                setGostos(wishlist.likes_tags || []);
+                setOriginalGostos(wishlist.likes_tags || []);
+                setEvitar(wishlist.avoids_tags || []);
+                setOriginalEvitar(wishlist.avoids_tags || []);
+            });
         }
     }, [usuarioAtual]);
 
@@ -144,19 +152,34 @@ export const useMeuPerfilViewModel = () => {
                 calca: calca,
                 calcado: calcado,
             };
-            const updatedData = {
-                nome: nome || undefined,
-                genero: genero || undefined,
-                birth_date: dataNascimento ? dataNascimento.toISOString() : undefined,
+            const updatedData: any = {
                 avatar_url: finalAvatarUrl,
-                bio: bio || undefined,
                 sizes: updatedSizes,
                 interesses: interesses,
-                gostos: gostos,
-                evitar: evitar,
             };
+
+            if (nome) updatedData.nome = nome;
+            if (genero) updatedData.genero = genero;
+            if (dataNascimento) updatedData.birth_date = dataNascimento.toISOString();
+            if (bio) updatedData.bio = bio;
+
             await updateUsuario(usuarioAtual.id, updatedData);
-            updateUsuarioAtual(updatedData);
+            
+            const wishlist = await getOrCreateWishlist(usuarioAtual.id, 'user');
+            const addedGostos = gostos.filter(g => !originalGostos.includes(g));
+            const removedGostos = originalGostos.filter(g => !gostos.includes(g));
+            const addedEvitar = evitar.filter(e => !originalEvitar.includes(e));
+            const removedEvitar = originalEvitar.filter(e => !evitar.includes(e));
+
+            if (addedGostos.length > 0) await addLikeTags(wishlist.id, addedGostos);
+            if (removedGostos.length > 0) await removeLikeTags(wishlist.id, removedGostos);
+            if (addedEvitar.length > 0) await addAvoidTags(wishlist.id, addedEvitar);
+            if (removedEvitar.length > 0) await removeAvoidTags(wishlist.id, removedEvitar);
+
+            setOriginalGostos(gostos);
+            setOriginalEvitar(evitar);
+
+            updateUsuarioAtual({ ...updatedData, gostos, evitar });
             setSuccessMessage('Perfil atualizado com sucesso!');
             setIsEditing(false);
             timeoutRef.current = setTimeout(() => {

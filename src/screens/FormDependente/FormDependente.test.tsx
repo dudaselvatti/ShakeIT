@@ -192,7 +192,6 @@ describe("FormDependente - Screen e ViewModel", () => {
                 gender: "Fêmea",
                 bio: "Gosta de sachê",
                 avatar_url: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
-                relationship: undefined,
             });
             expect(mockNavigation.goBack).toHaveBeenCalled();
         });

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { getDependentsByUser, deleteDependentFromCloud } from "../../services/cloud/Dependent/DependentDb";
+import { getOrCreateWishlist } from "../../services/cloud/Wishlist/WishlistDb";
 import { Dependent } from "../../types/Dependent";
 
 export function useGestaoDependentesViewModel(navigation: any) {
@@ -20,7 +21,15 @@ export function useGestaoDependentesViewModel(navigation: any) {
         setErrorMessage("");
         try {
             const data = await getDependentsByUser(usuarioAtual.id);
-            setDependents(data);
+            const depsWithWishlist = await Promise.all(data.map(async (dep) => {
+                const wishlist = await getOrCreateWishlist(dep.id, "dependent");
+                return { 
+                    ...dep, 
+                    gostos: wishlist.likes_tags || [], 
+                    evitar: wishlist.avoids_tags || [] 
+                };
+            }));
+            setDependents(depsWithWishlist as Dependent[]);
         } catch (error) {
             console.error("Erro ao carregar dependentes:", error);
             setErrorMessage("Não foi possível carregar os dependentes.");

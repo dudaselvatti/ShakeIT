@@ -57,4 +57,45 @@ export const styles = StyleSheet.create({
     halfColumn: {
         flex: 1,
     },
+    sectionTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: theme.colors.text,
+        marginTop: 12,
+        marginBottom: 8,
+    },
+    interestsCard: {
+        backgroundColor: theme.colors.surface,
+        borderRadius: theme.metrics.borderRadius,
+        padding: 16,
+        marginBottom: 10,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    interestsContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 12,
+    },
+    addInterestRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingBottom: 4,
+    },
+    addInterestInput: {
+        flex: 1,
+        marginRight: 8,
+        marginBottom: 0,
+    },
+    addInterestBtn: {
+        width: 48,
+        height: 48,
+        marginTop: 22,
+    },
 });

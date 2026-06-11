@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { PopupModal } from "../../components/PopupModal";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
@@ -31,7 +32,7 @@ export const CreatePartyScreen = ({ navigation }: any) => {
   } = useCreatePartyViewModel(navigation);
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+    <SafeAreaView style={styles.container}>
       <AppHeader 
         headerTitle="Nova Party" 
         showBackButton={true} 
@@ -39,7 +40,17 @@ export const CreatePartyScreen = ({ navigation }: any) => {
         showSettingsIcon={true}
       />
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 80}
+      >
+        <ScrollView 
+            style={styles.content} 
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+        >
 
         <Input
           label="Nome da Party"
@@ -51,6 +62,7 @@ export const CreatePartyScreen = ({ navigation }: any) => {
         {errors.nome ? <Text style={styles.errorText}>{errors.nome}</Text> : null}
 
         <DateInput
+          display="spinner"
           label="Data da Revelação"
           value={dataRevelacao}
           onChangeDate={updateDataRevelacao}
@@ -83,7 +95,8 @@ export const CreatePartyScreen = ({ navigation }: any) => {
           onPress={handleCriarParty}
           disabled={!nomeParty} 
         />
-      </View>
+        </View>
+      </KeyboardAvoidingView>
 
       <AppFooter onNavigateIntercept={handleFooterNavigate} />
 
@@ -96,6 +109,6 @@ export const CreatePartyScreen = ({ navigation }: any) => {
         onCancel={cancelExit}
         onConfirm={confirmExit}
       />
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
