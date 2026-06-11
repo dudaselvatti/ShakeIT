@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 import { updateUsuario } from '../../services/cloud/User/UserDb';
+import {
+    getWishlistByOwner,
+    addLikeTagToWishlist,
+    removeLikeTagFromWishlist,
+    addAvoidTagToWishlist,
+    removeAvoidTagFromWishlist,
+} from '../../services/cloud/Wishlist/WishlistDb';
 
 export const useMeuPerfilViewModel = () => {
     const { usuarioAtual, updateUsuarioAtual } = useAuth();
@@ -10,8 +17,8 @@ export const useMeuPerfilViewModel = () => {
     const [calcado, setCalcado] = useState('');
     const [interesses, setInteresses] = useState<string[]>([]);
     const [novoInteresse, setNovoInteresse] = useState('');
-    const [gostos, setGostos] = useState<string[]>([]);
-    const [evitar, setEvitar] = useState<string[]>([]);
+    const [gostos, setGostos] = useState<string[]>(usuarioAtual?.gostos || []);
+    const [evitar, setEvitar] = useState<string[]>(usuarioAtual?.evitar || []);
     const [novoGostoState, setNovoGostoState] = useState('');
     const [novoEvitarState, setNovoEvitarState] = useState('');
 
@@ -20,6 +27,9 @@ export const useMeuPerfilViewModel = () => {
             const trimmed = text.trim();
             if (trimmed && !gostos.includes(trimmed)) {
                 setGostos((prev) => [...prev, trimmed]);
+                if (usuarioAtual) {
+                    addLikeTagToWishlist(usuarioAtual.id, "user", trimmed).catch(console.error);
+                }
             }
             setNovoGostoState('');
         } else {
@@ -32,6 +42,9 @@ export const useMeuPerfilViewModel = () => {
             const trimmed = text.trim();
             if (trimmed && !evitar.includes(trimmed)) {
                 setEvitar((prev) => [...prev, trimmed]);
+                if (usuarioAtual) {
+                    addAvoidTagToWishlist(usuarioAtual.id, "user", trimmed).catch(console.error);
+                }
             }
             setNovoEvitarState('');
         } else {
@@ -44,6 +57,20 @@ export const useMeuPerfilViewModel = () => {
     const timeoutRef = useRef<any>(null);
 
     useEffect(() => {
+        const loadWishlist = async () => {
+            if (usuarioAtual) {
+                try {
+                    const wishlist = await getWishlistByOwner(usuarioAtual.id, "user");
+                    if (wishlist) {
+                        setGostos(wishlist.likes_tags || []);
+                        setEvitar(wishlist.avoids_tags || []);
+                    }
+                } catch (error) {
+                    console.error("Erro ao carregar wishlist:", error);
+                }
+            }
+        };
+
         if (usuarioAtual) {
             setBio(usuarioAtual.bio || '');
             setCamisa(usuarioAtual.sizes?.camisa || '');
@@ -52,6 +79,7 @@ export const useMeuPerfilViewModel = () => {
             setInteresses(usuarioAtual.interesses || []);
             setGostos(usuarioAtual.gostos || []);
             setEvitar(usuarioAtual.evitar || []);
+            loadWishlist();
         }
     }, [usuarioAtual]);
 
@@ -86,6 +114,9 @@ export const useMeuPerfilViewModel = () => {
 
     const handleRemoveGosto = (itemToRemove: string) => {
         setGostos((prev) => prev.filter((item) => item !== itemToRemove));
+        if (usuarioAtual) {
+            removeLikeTagFromWishlist(usuarioAtual.id, "user", itemToRemove).catch(console.error);
+        }
     };
 
     const handleAddGosto = () => {
@@ -93,11 +124,17 @@ export const useMeuPerfilViewModel = () => {
         if (trimmed && !gostos.includes(trimmed)) {
             setGostos((prev) => [...prev, trimmed]);
             setNovoGostoState('');
+            if (usuarioAtual) {
+                addLikeTagToWishlist(usuarioAtual.id, "user", trimmed).catch(console.error);
+            }
         }
     };
 
     const handleRemoveEvitar = (itemToRemove: string) => {
         setEvitar((prev) => prev.filter((item) => item !== itemToRemove));
+        if (usuarioAtual) {
+            removeAvoidTagFromWishlist(usuarioAtual.id, "user", itemToRemove).catch(console.error);
+        }
     };
 
     const handleAddEvitar = () => {
@@ -105,6 +142,9 @@ export const useMeuPerfilViewModel = () => {
         if (trimmed && !evitar.includes(trimmed)) {
             setEvitar((prev) => [...prev, trimmed]);
             setNovoEvitarState('');
+            if (usuarioAtual) {
+                addAvoidTagToWishlist(usuarioAtual.id, "user", trimmed).catch(console.error);
+            }
         }
     };
 
@@ -122,8 +162,6 @@ export const useMeuPerfilViewModel = () => {
                 bio: bio || undefined,
                 sizes: updatedSizes,
                 interesses: interesses,
-                gostos: gostos,
-                evitar: evitar,
             };
             await updateUsuario(usuarioAtual.id, updatedData);
             updateUsuarioAtual(updatedData);

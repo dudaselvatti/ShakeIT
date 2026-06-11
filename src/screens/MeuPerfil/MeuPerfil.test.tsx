@@ -5,6 +5,12 @@ import { useMeuPerfilViewModel } from './MeuPerfilViewModel';
 import * as MeuPerfilViewModelModule from './MeuPerfilViewModel';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 import { updateUsuario } from '../../services/cloud/User/UserDb';
+import {
+    addLikeTagToWishlist,
+    removeLikeTagFromWishlist,
+    addAvoidTagToWishlist,
+    removeAvoidTagFromWishlist,
+} from '../../services/cloud/Wishlist/WishlistDb';
 
 jest.mock('../../contexts/AuthContext/AuthContext', () => ({
     useAuth: jest.fn(),
@@ -14,6 +20,14 @@ jest.mock('../../services/cloud/User/UserDb', () => ({
     updateUsuario: jest.fn(),
     getUserById: jest.fn(),
     userLogout: jest.fn(),
+}));
+
+jest.mock('../../services/cloud/Wishlist/WishlistDb', () => ({
+    getWishlistByOwner: jest.fn(() => Promise.resolve(null)),
+    addLikeTagToWishlist: jest.fn(() => Promise.resolve()),
+    removeLikeTagFromWishlist: jest.fn(() => Promise.resolve()),
+    addAvoidTagToWishlist: jest.fn(() => Promise.resolve()),
+    removeAvoidTagFromWishlist: jest.fn(() => Promise.resolve()),
 }));
 
 jest.mock('../../components/AppHeader', () => {
@@ -249,6 +263,40 @@ describe('MeuPerfilScreen e ViewModel', () => {
         expect(result.current.novoEvitar).toBe('');
     });
 
+    it('deve chamar addLikeTagToWishlist e addAvoidTagToWishlist ao adicionar tags via Enter', async () => {
+        const { result } = renderHook(() => useMeuPerfilViewModel());
+
+        act(() => {
+            result.current.setNovoGosto('Basquete');
+        });
+        act(() => {
+            result.current.handleAddGosto();
+        });
+        expect(addLikeTagToWishlist).toHaveBeenCalledWith('user-id-123', 'user', 'Basquete');
+
+        act(() => {
+            result.current.setNovoEvitar('Barulho');
+        });
+        act(() => {
+            result.current.handleAddEvitar();
+        });
+        expect(addAvoidTagToWishlist).toHaveBeenCalledWith('user-id-123', 'user', 'Barulho');
+    });
+
+    it('deve chamar removeLikeTagFromWishlist e removeAvoidTagFromWishlist ao deletar tags via UI', async () => {
+        const { result } = renderHook(() => useMeuPerfilViewModel());
+
+        act(() => {
+            result.current.handleRemoveGosto('Chocolate');
+        });
+        expect(removeLikeTagFromWishlist).toHaveBeenCalledWith('user-id-123', 'user', 'Chocolate');
+
+        act(() => {
+            result.current.handleRemoveEvitar('Poeira');
+        });
+        expect(removeAvoidTagFromWishlist).toHaveBeenCalledWith('user-id-123', 'user', 'Poeira');
+    });
+
     it('deve permitir salvar apenas 1 tamanho e limpar os outros', async () => {
         jest.useFakeTimers();
         mockUpdateUsuario.mockResolvedValue(undefined);
@@ -273,8 +321,6 @@ describe('MeuPerfilScreen e ViewModel', () => {
                 calcado: undefined,
             },
             interesses: ['Tecnologia', 'Moda'],
-            gostos: ['Chocolate', 'Futebol'],
-            evitar: ['Poeira', 'Mentiras'],
         });
         expect(mockUpdateUsuarioAtual).toHaveBeenCalledWith({
             bio: 'Bio editada',
@@ -284,8 +330,6 @@ describe('MeuPerfilScreen e ViewModel', () => {
                 calcado: undefined,
             },
             interesses: ['Tecnologia', 'Moda'],
-            gostos: ['Chocolate', 'Futebol'],
-            evitar: ['Poeira', 'Mentiras'],
         });
         expect(result.current.successMessage).toBe('Perfil atualizado com sucesso!');
 
