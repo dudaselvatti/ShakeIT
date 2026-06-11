@@ -2,14 +2,14 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import { usePerfilSorteadoViewModel } from '../PerfilSorteado/PerfilSorteadoViewModel';
 import { useRoute } from '@react-navigation/native';
 import { participantesMock } from '../../mocks/participantesMock';
-import { getAmigoSecreto } from '../../services/cloud/Participant/PartcicipantDb';
+import { getAmigoSecreto } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
 import { storageService } from '../../services/storageService';
 
 jest.mock('@react-navigation/native', () => ({
   useRoute: jest.fn(),
 }));
 
-jest.mock('../../services/cloud/Participant/PartcicipantDb', () => ({
+jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
   getAmigoSecreto: jest.fn(),
 }));
 

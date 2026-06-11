@@ -15,6 +15,10 @@ export function usePartyAdminViewModel() {
     const participantesTotal = participantes.length;
     const headerTitle = "Painel do Evento";
 
+    const handleNavigatePartyDrawRestrictions = () => {
+        navigation.navigate("PartyDrawRestrictions", { partyId: "" })
+    }
+
     const handleSorteioPress = () => {
         navigation.navigate('ShakeReveal');
     };
@@ -26,6 +30,7 @@ export function usePartyAdminViewModel() {
         confirmadosCount,
         participantesTotal,
         headerTitle,
+        handleNavigatePartyDrawRestrictions,
         handleSorteioPress,
     };
 };

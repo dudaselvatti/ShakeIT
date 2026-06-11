@@ -22,12 +22,14 @@ import { AuthProvider } from "./src/contexts/AuthContext/AuthContext";
 import { RegistrationScreen } from "./src/screens/Registration";
 import { LoginScreen } from "./src/screens/Login";
 import { ForgotMyPasswordScreen } from "./src/screens/ForgotMyPassword";
+import { PartyDrawRestrictionsScreen } from "./src/screens/PartyDrawRestrictions";
 
 export type RootStackParamList = {
   Home: { novaParty?: Party } | undefined;
   CreateParty: undefined;
   PartyCreated: { party: Party };
   PartyAdmin: { partyName: string; partyCode: string };
+  PartyDrawRestrictions: { partyId: string };
   ShakeReveal: undefined;
   RevealResult: undefined;
   PerfilSorteado: { idUsuario: string };
@@ -68,6 +70,7 @@ export default function App() {
         <Stack.Screen name="CreateParty" component={CreatePartyScreen} />
         <Stack.Screen name="PartyCreated" component={PartyCreatedScreen} />
         <Stack.Screen name="PartyAdmin" component={PartyAdminScreen} />
+        <Stack.Screen name="PartyDrawRestrictions" component={PartyDrawRestrictionsScreen} />
         <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
         <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />

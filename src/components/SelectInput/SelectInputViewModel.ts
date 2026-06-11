@@ -1,8 +1,14 @@
+type SelectOption = {
+    key: string;
+    label: string;
+    value: string;
+};
+
 export interface Props {
     label: string;
     selectedValue: string;
     onValueChange: (value: string) => void;
-    options: string[];
+    options: SelectOption[];
 }
 
 export function useSelectInputViewModel({ label, selectedValue, onValueChange, options }: Props) {

@@ -20,9 +20,9 @@ export const SelectInput = (props: Props) => {
 
         {options.map((option) => (
           <Picker.Item
-            key={option}
-            label={option}
-            value={option}
+            key={option.key}
+            label={option.label}
+            value={option.value}
           />
         ))}
       </Picker>
