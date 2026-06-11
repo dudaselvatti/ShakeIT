@@ -22,11 +22,13 @@ export function useImagePickerViewModel({ label, value, onChangeImage, container
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
-            quality: 0.1, // Compressão pesada para salvar espaço no Firebase
+            quality: 0.1, // Compressão pesada para salvar no banco
+            base64: true, // Adicionado para retornar a string em base64
         });
         
-        if (!result.canceled) {
-            onChangeImage(result.assets[0].uri);
+        if (!result.canceled && result.assets[0].base64) {
+            const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`;
+            onChangeImage(base64Image);
         }
     };
 

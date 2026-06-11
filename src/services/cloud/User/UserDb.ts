@@ -61,32 +61,7 @@ export async function storeUserInCloud(dto: UserRegistrationDTO) {
     const uid = userCredential.user.uid;
     const userRef = doc(db, USERS_COLLECTION, uid);
 
-    let finalAvatarUrl = FOTO_PADRAO_URL;
-
-    if (dto.avatar_url) {
-        try {
-            const url = dto.avatar_url;
-            const blob: Blob = await new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.onload = function () {
-                    resolve(xhr.response);
-                };
-                xhr.onerror = function (e) {
-                    console.log(e);
-                    reject(new TypeError("Network request failed"));
-                };
-                xhr.responseType = "blob";
-                xhr.open("GET", url, true);
-                xhr.send(null);
-            });
-            
-            const storageRef = ref(storage, `avatars/${uid}_avatar.jpg`);
-            await uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
-            finalAvatarUrl = await getDownloadURL(storageRef);
-        } catch (error: any) {
-            console.error("Erro ao subir a imagem para o Storage, usando foto padrão:", error);
-        }
-    }
+    let finalAvatarUrl = dto.avatar_url || FOTO_PADRAO_URL;
   
     await setDoc(userRef, {
         id: uid,
@@ -130,29 +105,4 @@ export async function updateUsuario(id: string, data: Partial<Usuario>): Promise
         ...data,
         updated_at: new Date().toISOString(),
     });
-}
-
-export async function uploadUserAvatar(uid: string, avatarUri: string): Promise<string> {
-    try {
-        const blob: Blob = await new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-                resolve(xhr.response);
-            };
-            xhr.onerror = function (e) {
-                console.log(e);
-                reject(new TypeError("Network request failed"));
-            };
-            xhr.responseType = "blob";
-            xhr.open("GET", avatarUri, true);
-            xhr.send(null);
-        });
-        
-        const storageRef = ref(storage, `avatars/${uid}_avatar.jpg`);
-        await uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
-        return await getDownloadURL(storageRef);
-    } catch (error: any) {
-        console.error("Erro ao subir a imagem para o Storage:", error);
-        throw error;
-    }
 }

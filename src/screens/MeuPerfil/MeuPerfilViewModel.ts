@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
-import { updateUsuario, uploadUserAvatar } from '../../services/cloud/User/UserDb';
+import { updateUsuario } from '../../services/cloud/User/UserDb';
 import { Timestamp } from 'firebase/firestore';
 
 export const useMeuPerfilViewModel = () => {
@@ -134,13 +134,8 @@ export const useMeuPerfilViewModel = () => {
         clearMessages();
         try {
             let finalAvatarUrl = usuarioAtual.avatar_url;
-            if (avatarUrl && avatarUrl !== finalAvatarUrl && avatarUrl.startsWith('file://')) {
-                try {
-                    finalAvatarUrl = await uploadUserAvatar(usuarioAtual.id, avatarUrl);
-                } catch (error) {
-                    console.log("Não foi possível salvar o avatar no Storage, mantendo a foto anterior.");
-                    // Mantém o finalAvatarUrl como o antigo
-                }
+            if (avatarUrl && avatarUrl !== finalAvatarUrl) {
+                finalAvatarUrl = avatarUrl;
             }
 
             const updatedSizes = {

@@ -148,26 +148,13 @@ describe("UserDb - Testes Unitários", () => {
             avatar_url: "https://site.com/foto.jpg"
         };
 
-        it("deve cadastrar o usuário no Auth, fazer upload do avatar e salvar dados tratados no Firestore", async () => {
+        it("deve cadastrar o usuário no Auth e salvar dados tratados no Firestore", async () => {
             const mockUserCredential = { user: { uid: "auth_uid_123", email: "teste@email.com" } };
             (createUserWithEmailAndPassword as jest.Mock).mockResolvedValueOnce(mockUserCredential);
-
-            (global as any).XMLHttpRequest.mockClear();
-            mockXHR.open.mockClear();
-            mockXHR.send.mockImplementation(function(this: any) {
-                if (this.onload) this.onload();
-            });
-            (uploadBytes as jest.Mock).mockResolvedValueOnce({});
-            (getDownloadURL as jest.Mock).mockResolvedValueOnce("https://firebasestorage/avatar_url_final.jpg");
 
             const result = await storeUserInCloud(mockDto);
 
             expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(expect.any(Object), mockDto.email, mockDto.senha);
-
-            expect((global as any).XMLHttpRequest).toHaveBeenCalled();
-            expect(mockXHR.open).toHaveBeenCalledWith("GET", mockDto.avatar_url, true);
-            expect(uploadBytes).toHaveBeenCalled();
-            expect(getDownloadURL).toHaveBeenCalled();
 
             expect(setDoc).toHaveBeenCalledWith(
                 expect.any(Object),
@@ -175,7 +162,7 @@ describe("UserDb - Testes Unitários", () => {
                     id: "auth_uid_123",
                     email: "teste@email.com",
                     nome: "Teste Silva",
-                    avatar_url: "https://firebasestorage/avatar_url_final.jpg",
+                    avatar_url: mockDto.avatar_url,
                     created_at: "2026-06-08T10:00:00.000Z",
                     updated_at: "2026-06-08T10:00:00.000Z",
                     shake_enabled: true
@@ -185,15 +172,13 @@ describe("UserDb - Testes Unitários", () => {
             expect(result).toEqual(mockUserCredential.user);
         });
 
-        it("deve usar a foto padrão se o upload da imagem falhar", async () => {
+        it("deve usar a foto padrão se a foto não for fornecida", async () => {
             const mockUserCredential = { user: { uid: "auth_uid_123" } };
             (createUserWithEmailAndPassword as jest.Mock).mockResolvedValueOnce(mockUserCredential);
             
-            mockXHR.send.mockImplementation(function(this: any) {
-                if (this.onerror) this.onerror(new Error("Network Error"));
-            });
+            const dtoWithoutAvatar = { ...mockDto, avatar_url: "" };
 
-            await storeUserInCloud(mockDto);
+            await storeUserInCloud(dtoWithoutAvatar);
 
             expect(setDoc).toHaveBeenCalledWith(
                 expect.any(Object),
