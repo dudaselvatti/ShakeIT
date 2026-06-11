@@ -122,6 +122,8 @@ describe("FormDependente - Screen e ViewModel", () => {
                 avatar_url: "floquinho.jpg",
                 bio: "Muito brincalhão",
                 relationship: "Meu cãozinho",
+                created_at: "",
+                updated_at: "",
             };
 
             const { result } = renderHook(() => useFormDependenteViewModel(mockNavigation, mockDependent));

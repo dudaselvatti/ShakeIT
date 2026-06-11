@@ -69,6 +69,8 @@ const mockDependentes = [
         birth_date: "2021-06-01",
         gender: "Macho",
         avatar_url: "",
+        created_at: "",
+        updated_at: "",
     },
     {
         id: "dep-2",
@@ -78,6 +80,8 @@ const mockDependentes = [
         birth_date: "2015-08-10",
         gender: "Feminino",
         avatar_url: "",
+        created_at: "",
+        updated_at: "",
     },
 ];
 

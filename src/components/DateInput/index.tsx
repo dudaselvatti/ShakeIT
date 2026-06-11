@@ -18,10 +18,11 @@ export const DateInput = (props: Props) => {
     openPicker,
     //closePicker, //Não utilizado atualmente, mas pode ser útil no futuro
     handleChange,
+    testID,
   } = useDateInputViewModel(props);
 
   return (
-    <View style={[styles.container, containerStyle]}>
+    <View style={[styles.container, containerStyle]} testID={testID}>
       <Text style={styles.label}>{label}</Text>
       
       <TouchableOpacity 
