@@ -266,22 +266,30 @@ describe('MeuPerfilScreen e ViewModel', () => {
         });
 
         expect(mockUpdateUsuario).toHaveBeenCalledWith('user-id-123', {
+            nome: 'Tester',
+            genero: 'Outro',
+            birth_date: new Date('1990-01-01').toISOString(),
+            avatar_url: '',
             bio: 'Bio editada',
             sizes: {
                 camisa: 'G',
-                calca: undefined,
-                calcado: undefined,
+                calca: '',
+                calcado: '',
             },
             interesses: ['Tecnologia', 'Moda'],
             gostos: ['Chocolate', 'Futebol'],
             evitar: ['Poeira', 'Mentiras'],
         });
         expect(mockUpdateUsuarioAtual).toHaveBeenCalledWith({
+            nome: 'Tester',
+            genero: 'Outro',
+            birth_date: new Date('1990-01-01').toISOString(),
+            avatar_url: '',
             bio: 'Bio editada',
             sizes: {
                 camisa: 'G',
-                calca: undefined,
-                calcado: undefined,
+                calca: '',
+                calcado: '',
             },
             interesses: ['Tecnologia', 'Moda'],
             gostos: ['Chocolate', 'Futebol'],
@@ -325,11 +333,11 @@ describe('MeuPerfilScreen e ViewModel', () => {
     });
 
     it('deve renderizar a tela de meu perfil com os componentes e dados corretos', () => {
-        const { getByDisplayValue, getByText, queryByTestId } = render(<MeuPerfilScreen />);
+        const { getByText, queryByTestId } = render(<MeuPerfilScreen />);
 
         expect(getByText('Meu Perfil')).toBeTruthy();
-        expect(getByDisplayValue('Minha biografia')).toBeTruthy();
-        expect(getByText('Salvar Alterações')).toBeTruthy();
+        expect(getByText('Minha biografia')).toBeTruthy();
+        expect(getByText('Editar Perfil')).toBeTruthy();
         expect(queryByTestId('success-message')).toBeNull();
         expect(queryByTestId('error-message')).toBeNull();
         expect(getByText('Chocolate')).toBeTruthy();
@@ -343,6 +351,11 @@ describe('MeuPerfilScreen e ViewModel', () => {
         mockUpdateUsuario.mockResolvedValue(undefined);
 
         const { getByText, queryByTestId } = render(<MeuPerfilScreen />);
+
+        const editButton = getByText('Editar Perfil');
+        await act(async () => {
+            fireEvent.press(editButton);
+        });
 
         const saveButton = getByText('Salvar Alterações');
         await act(async () => {
@@ -367,6 +380,14 @@ describe('MeuPerfilScreen e ViewModel', () => {
         });
 
         jest.spyOn(MeuPerfilViewModelModule, 'useMeuPerfilViewModel').mockReturnValue({
+            nome: 'Tester',
+            setNome: jest.fn(),
+            genero: 'Outro',
+            setGenero: jest.fn(),
+            dataNascimento: new Date('1990-01-01'),
+            setDataNascimento: jest.fn(),
+            avatarUrl: '',
+            setAvatarUrl: jest.fn(),
             bio: 'Bio',
             setBio: jest.fn(),
             camisa: 'M',
@@ -398,6 +419,8 @@ describe('MeuPerfilScreen e ViewModel', () => {
             handleSalvar: jest.fn(),
             clearMessages: jest.fn(),
             usuarioAtual: mockUsuario,
+            isEditing: true,
+            setIsEditing: jest.fn(),
         });
 
         const { getByTestId } = render(<MeuPerfilScreen />);
@@ -416,6 +439,14 @@ describe('MeuPerfilScreen e ViewModel', () => {
         const mockClearMessages = jest.fn();
 
         jest.spyOn(MeuPerfilViewModelModule, 'useMeuPerfilViewModel').mockReturnValue({
+            nome: 'Tester',
+            setNome: jest.fn(),
+            genero: 'Outro',
+            setGenero: jest.fn(),
+            dataNascimento: new Date('1990-01-01'),
+            setDataNascimento: jest.fn(),
+            avatarUrl: '',
+            setAvatarUrl: jest.fn(),
             bio: 'Bio',
             setBio: jest.fn(),
             camisa: 'M',
@@ -447,6 +478,8 @@ describe('MeuPerfilScreen e ViewModel', () => {
             handleSalvar: jest.fn(),
             clearMessages: mockClearMessages,
             usuarioAtual: mockUsuario,
+            isEditing: true,
+            setIsEditing: jest.fn(),
         });
 
         const { getByTestId } = render(<MeuPerfilScreen />);

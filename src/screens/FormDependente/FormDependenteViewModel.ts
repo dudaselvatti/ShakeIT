@@ -148,13 +148,7 @@ export function useFormDependenteViewModel(navigation: any, dependentToEdit?: De
         
         let finalAvatarUrl = avatarUrl;
         if (!finalAvatarUrl) {
-            if (dependentType === "pet") {
-                finalAvatarUrl = "https://i.pravatar.cc/150?img=10"; // pet default
-            } else if (dependentType === "child") {
-                finalAvatarUrl = "https://i.pravatar.cc/150?img=7"; // child default
-            } else {
-                finalAvatarUrl = "https://i.pravatar.cc/150?img=8"; // other default
-            }
+            finalAvatarUrl = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
         }
 
         try {

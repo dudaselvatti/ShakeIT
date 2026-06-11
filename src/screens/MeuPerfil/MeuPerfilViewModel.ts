@@ -1,9 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
-import { updateUsuario } from '../../services/cloud/User/UserDb';
+import { updateUsuario, uploadUserAvatar } from '../../services/cloud/User/UserDb';
+import { Timestamp } from 'firebase/firestore';
 
 export const useMeuPerfilViewModel = () => {
     const { usuarioAtual, updateUsuarioAtual } = useAuth();
+    const [isEditing, setIsEditing] = useState(false);
+    const [nome, setNome] = useState('');
+    const [genero, setGenero] = useState('');
+    const [dataNascimento, setDataNascimento] = useState<Date | undefined>(undefined);
+    const [avatarUrl, setAvatarUrl] = useState('');
     const [bio, setBio] = useState('');
     const [camisa, setCamisa] = useState('');
     const [calca, setCalca] = useState('');
@@ -45,6 +51,20 @@ export const useMeuPerfilViewModel = () => {
 
     useEffect(() => {
         if (usuarioAtual) {
+            setNome(usuarioAtual.nome || '');
+            setGenero(usuarioAtual.genero || '');
+            let parsedDate: Date | undefined = undefined;
+            if (usuarioAtual.birth_date) {
+                if (typeof usuarioAtual.birth_date === 'string') {
+                    parsedDate = new Date(usuarioAtual.birth_date);
+                } else if (typeof (usuarioAtual.birth_date as any).toDate === 'function') {
+                    parsedDate = (usuarioAtual.birth_date as any).toDate();
+                } else if ((usuarioAtual.birth_date as any).seconds) {
+                    parsedDate = new Date((usuarioAtual.birth_date as any).seconds * 1000);
+                }
+            }
+            setDataNascimento(parsedDate);
+            setAvatarUrl(usuarioAtual.avatar_url || '');
             setBio(usuarioAtual.bio || '');
             setCamisa(usuarioAtual.sizes?.camisa || '');
             setCalca(usuarioAtual.sizes?.calca || '');
@@ -113,12 +133,27 @@ export const useMeuPerfilViewModel = () => {
         setIsSaving(true);
         clearMessages();
         try {
+            let finalAvatarUrl = usuarioAtual.avatar_url;
+            if (avatarUrl && avatarUrl !== finalAvatarUrl && avatarUrl.startsWith('file://')) {
+                try {
+                    finalAvatarUrl = await uploadUserAvatar(usuarioAtual.id, avatarUrl);
+                } catch (error) {
+                    console.log("Não foi possível salvar o avatar no Storage, mantendo a foto anterior.");
+                    // Mantém o finalAvatarUrl como o antigo
+                }
+            }
+
             const updatedSizes = {
-                camisa: camisa || undefined,
-                calca: calca || undefined,
-                calcado: calcado || undefined,
+                ...(usuarioAtual.sizes || {}),
+                camisa: camisa,
+                calca: calca,
+                calcado: calcado,
             };
             const updatedData = {
+                nome: nome || undefined,
+                genero: genero || undefined,
+                birth_date: dataNascimento ? dataNascimento.toISOString() : undefined,
+                avatar_url: finalAvatarUrl,
                 bio: bio || undefined,
                 sizes: updatedSizes,
                 interesses: interesses,
@@ -128,6 +163,7 @@ export const useMeuPerfilViewModel = () => {
             await updateUsuario(usuarioAtual.id, updatedData);
             updateUsuarioAtual(updatedData);
             setSuccessMessage('Perfil atualizado com sucesso!');
+            setIsEditing(false);
             timeoutRef.current = setTimeout(() => {
                 setSuccessMessage('');
             }, 3000);
@@ -142,6 +178,14 @@ export const useMeuPerfilViewModel = () => {
     };
 
     return {
+        nome,
+        setNome,
+        genero,
+        setGenero,
+        dataNascimento,
+        setDataNascimento,
+        avatarUrl,
+        setAvatarUrl,
         bio,
         setBio,
         camisa,
@@ -173,5 +217,7 @@ export const useMeuPerfilViewModel = () => {
         handleSalvar,
         clearMessages,
         usuarioAtual,
+        isEditing,
+        setIsEditing,
     };
 };

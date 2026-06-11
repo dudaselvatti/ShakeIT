@@ -191,7 +191,7 @@ describe("FormDependente - Screen e ViewModel", () => {
                 birth_date: "2022-02-15",
                 gender: "Fêmea",
                 bio: "Gosta de sachê",
-                avatar_url: "https://i.pravatar.cc/150?img=10",
+                avatar_url: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
                 relationship: undefined,
             });
             expect(mockNavigation.goBack).toHaveBeenCalled();

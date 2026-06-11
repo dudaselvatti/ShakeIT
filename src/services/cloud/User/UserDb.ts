@@ -22,7 +22,7 @@ import { UserLoginDTO } from "../../../dto/User/UserLoginDTO";
 import { UserForgotMyPasswordDTO } from "../../../dto/User/UserForgotMyPasswordDTO";
 
 const USERS_COLLECTION = "users";
-const FOTO_PADRAO_URL = "https://i.pravatar.cc/150?img=10"; //placeholder
+const FOTO_PADRAO_URL = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"; //placeholder
 
 export async function seedUsers() {
     const querySnapshot = await getDocs(collection(db, USERS_COLLECTION));
@@ -65,10 +65,23 @@ export async function storeUserInCloud(dto: UserRegistrationDTO) {
 
     if (dto.avatar_url) {
         try {
-            const response = await fetch(dto.avatar_url);
-            const blob = await response.blob();
+            const url = dto.avatar_url;
+            const blob: Blob = await new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.onload = function () {
+                    resolve(xhr.response);
+                };
+                xhr.onerror = function (e) {
+                    console.log(e);
+                    reject(new TypeError("Network request failed"));
+                };
+                xhr.responseType = "blob";
+                xhr.open("GET", url, true);
+                xhr.send(null);
+            });
+            
             const storageRef = ref(storage, `avatars/${uid}_avatar.jpg`);
-            await uploadBytes(storageRef, blob);
+            await uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
             finalAvatarUrl = await getDownloadURL(storageRef);
         } catch (error: any) {
             console.error("Erro ao subir a imagem para o Storage, usando foto padrão:", error);
@@ -117,4 +130,29 @@ export async function updateUsuario(id: string, data: Partial<Usuario>): Promise
         ...data,
         updated_at: new Date().toISOString(),
     });
+}
+
+export async function uploadUserAvatar(uid: string, avatarUri: string): Promise<string> {
+    try {
+        const blob: Blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(xhr.response);
+            };
+            xhr.onerror = function (e) {
+                console.log(e);
+                reject(new TypeError("Network request failed"));
+            };
+            xhr.responseType = "blob";
+            xhr.open("GET", avatarUri, true);
+            xhr.send(null);
+        });
+        
+        const storageRef = ref(storage, `avatars/${uid}_avatar.jpg`);
+        await uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
+        return await getDownloadURL(storageRef);
+    } catch (error: any) {
+        console.error("Erro ao subir a imagem para o Storage:", error);
+        throw error;
+    }
 }

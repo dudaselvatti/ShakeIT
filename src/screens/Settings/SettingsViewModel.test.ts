@@ -114,7 +114,7 @@ describe('useSettingsViewModel', () => {
     expect(mockLogoutContext).toHaveBeenCalled();
     expect(mockReset).toHaveBeenCalledWith({
       index: 0,
-      routes: [{ name: 'Login' }],
+      routes: [{ name: 'Welcome' }],
     });
     expect(result.current.isLoading).toBe(false);
   });

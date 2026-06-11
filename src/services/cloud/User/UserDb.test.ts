@@ -49,7 +49,17 @@ jest.mock("../../../mocks/usuariosMock", () => ({
     ]
 }));
 
-global.fetch = jest.fn();
+const mockXHR = {
+    open: jest.fn(),
+    send: jest.fn(function(this: any) {
+        if (this.onload) this.onload();
+    }),
+    response: new Blob(),
+    onload: null as any,
+    onerror: null as any,
+    responseType: "",
+};
+(global as any).XMLHttpRequest = jest.fn(() => mockXHR);
 
 describe("UserDb - Testes Unitários", () => {
     
@@ -142,8 +152,11 @@ describe("UserDb - Testes Unitários", () => {
             const mockUserCredential = { user: { uid: "auth_uid_123", email: "teste@email.com" } };
             (createUserWithEmailAndPassword as jest.Mock).mockResolvedValueOnce(mockUserCredential);
 
-            const mockBlob = {};
-            (global.fetch as jest.Mock).mockResolvedValueOnce({ blob: () => Promise.resolve(mockBlob) });
+            (global as any).XMLHttpRequest.mockClear();
+            mockXHR.open.mockClear();
+            mockXHR.send.mockImplementation(function(this: any) {
+                if (this.onload) this.onload();
+            });
             (uploadBytes as jest.Mock).mockResolvedValueOnce({});
             (getDownloadURL as jest.Mock).mockResolvedValueOnce("https://firebasestorage/avatar_url_final.jpg");
 
@@ -151,7 +164,8 @@ describe("UserDb - Testes Unitários", () => {
 
             expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(expect.any(Object), mockDto.email, mockDto.senha);
 
-            expect(global.fetch).toHaveBeenCalledWith(mockDto.avatar_url);
+            expect((global as any).XMLHttpRequest).toHaveBeenCalled();
+            expect(mockXHR.open).toHaveBeenCalledWith("GET", mockDto.avatar_url, true);
             expect(uploadBytes).toHaveBeenCalled();
             expect(getDownloadURL).toHaveBeenCalled();
 
@@ -175,14 +189,16 @@ describe("UserDb - Testes Unitários", () => {
             const mockUserCredential = { user: { uid: "auth_uid_123" } };
             (createUserWithEmailAndPassword as jest.Mock).mockResolvedValueOnce(mockUserCredential);
             
-            (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Network Error"));
+            mockXHR.send.mockImplementation(function(this: any) {
+                if (this.onerror) this.onerror(new Error("Network Error"));
+            });
 
             await storeUserInCloud(mockDto);
 
             expect(setDoc).toHaveBeenCalledWith(
                 expect.any(Object),
                 expect.objectContaining({
-                    avatar_url: "https://i.pravatar.cc/150?img=10"
+                    avatar_url: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
                 })
             );
         });
