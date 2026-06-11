@@ -200,6 +200,55 @@ describe('MeuPerfilScreen e ViewModel', () => {
         expect(result.current.evitar).toEqual(['Mentiras', 'Barulho']);
     });
 
+    it('deve adicionar tags de gostos e evitar quando o usuário digita espaço e prevenir duplicatas', () => {
+        const { result } = renderHook(() => useMeuPerfilViewModel());
+
+        // Começa com os dados do mockUsuario:
+        // gostos: ['Chocolate', 'Futebol']
+        // evitar: ['Poeira', 'Mentiras']
+
+        // Caso 1: Digitar algo válido seguido por espaço -> deve virar tag e limpar input
+        act(() => {
+            result.current.setNovoGosto('Livros ');
+        });
+        expect(result.current.gostos).toContain('Livros');
+        expect(result.current.novoGosto).toBe('');
+
+        act(() => {
+            result.current.setNovoEvitar('Frio ');
+        });
+        expect(result.current.evitar).toContain('Frio');
+        expect(result.current.novoEvitar).toBe('');
+
+        // Caso 2: Digitar duplicado seguido por espaço -> não deve adicionar e deve limpar
+        const totalGostos = result.current.gostos.length;
+        act(() => {
+            result.current.setNovoGosto('Chocolate ');
+        });
+        expect(result.current.gostos.length).toBe(totalGostos);
+        expect(result.current.novoGosto).toBe('');
+
+        const totalEvitar = result.current.evitar.length;
+        act(() => {
+            result.current.setNovoEvitar('Poeira ');
+        });
+        expect(result.current.evitar.length).toBe(totalEvitar);
+        expect(result.current.novoEvitar).toBe('');
+
+        // Caso 3: Digitar apenas espaço -> não deve adicionar tag vazia e deve limpar
+        act(() => {
+            result.current.setNovoGosto(' ');
+        });
+        expect(result.current.gostos.length).toBe(totalGostos);
+        expect(result.current.novoGosto).toBe('');
+
+        act(() => {
+            result.current.setNovoEvitar(' ');
+        });
+        expect(result.current.evitar.length).toBe(totalEvitar);
+        expect(result.current.novoEvitar).toBe('');
+    });
+
     it('deve permitir salvar apenas 1 tamanho e limpar os outros', async () => {
         jest.useFakeTimers();
         mockUpdateUsuario.mockResolvedValue(undefined);

@@ -12,8 +12,32 @@ export const useMeuPerfilViewModel = () => {
     const [novoInteresse, setNovoInteresse] = useState('');
     const [gostos, setGostos] = useState<string[]>([]);
     const [evitar, setEvitar] = useState<string[]>([]);
-    const [novoGosto, setNovoGosto] = useState('');
-    const [novoEvitar, setNovoEvitar] = useState('');
+    const [novoGostoState, setNovoGostoState] = useState('');
+    const [novoEvitarState, setNovoEvitarState] = useState('');
+
+    const setNovoGosto = (text: string) => {
+        if (text.endsWith(' ')) {
+            const trimmed = text.trim();
+            if (trimmed && !gostos.includes(trimmed)) {
+                setGostos((prev) => [...prev, trimmed]);
+            }
+            setNovoGostoState('');
+        } else {
+            setNovoGostoState(text);
+        }
+    };
+
+    const setNovoEvitar = (text: string) => {
+        if (text.endsWith(' ')) {
+            const trimmed = text.trim();
+            if (trimmed && !evitar.includes(trimmed)) {
+                setEvitar((prev) => [...prev, trimmed]);
+            }
+            setNovoEvitarState('');
+        } else {
+            setNovoEvitarState(text);
+        }
+    };
     const [isSaving, setIsSaving] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -65,10 +89,10 @@ export const useMeuPerfilViewModel = () => {
     };
 
     const handleAddGosto = () => {
-        const trimmed = novoGosto.trim();
+        const trimmed = novoGostoState.trim();
         if (trimmed && !gostos.includes(trimmed)) {
             setGostos((prev) => [...prev, trimmed]);
-            setNovoGosto('');
+            setNovoGostoState('');
         }
     };
 
@@ -77,10 +101,10 @@ export const useMeuPerfilViewModel = () => {
     };
 
     const handleAddEvitar = () => {
-        const trimmed = novoEvitar.trim();
+        const trimmed = novoEvitarState.trim();
         if (trimmed && !evitar.includes(trimmed)) {
             setEvitar((prev) => [...prev, trimmed]);
-            setNovoEvitar('');
+            setNovoEvitarState('');
         }
     };
 
@@ -133,13 +157,13 @@ export const useMeuPerfilViewModel = () => {
         handleRemoveInteresse,
         gostos,
         setGostos,
-        novoGosto,
+        novoGosto: novoGostoState,
         setNovoGosto,
         handleAddGosto,
         handleRemoveGosto,
         evitar,
         setEvitar,
-        novoEvitar,
+        novoEvitar: novoEvitarState,
         setNovoEvitar,
         handleAddEvitar,
         handleRemoveEvitar,
