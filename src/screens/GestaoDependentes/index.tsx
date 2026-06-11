@@ -143,6 +143,18 @@ export const GestaoDependentesScreen = ({ navigation }: any) => {
                                                 <Text style={styles.detailText} numberOfLines={2}>{item.bio}</Text>
                                             </View>
                                         ) : null}
+                                        {item.gostos && item.gostos.length > 0 ? (
+                                            <View style={styles.detailRow}>
+                                                <Feather name="heart" size={14} color={theme.colors.success} />
+                                                <Text style={styles.detailText}>Gosta de: {item.gostos.join(", ")}</Text>
+                                            </View>
+                                        ) : null}
+                                        {item.evitar && item.evitar.length > 0 ? (
+                                            <View style={styles.detailRow}>
+                                                <Feather name="x-circle" size={14} color={theme.colors.danger} />
+                                                <Text style={styles.detailText}>Evitar: {item.evitar.join(", ")}</Text>
+                                            </View>
+                                        ) : null}
 
                                         <View style={[styles.typeTag, tagStyles.tag]}>
                                             <Text style={[styles.typeTagText, tagStyles.text]}>

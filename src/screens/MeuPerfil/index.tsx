@@ -266,8 +266,13 @@ export const MeuPerfilScreen = () => {
                                     value={novoGosto}
                                     onChangeText={setNovoGosto}
                                     onSubmitEditing={handleAddGosto}
-                                    containerStyle={{ flex: 1, marginBottom: 0 }}
+                                    containerStyle={{ flex: 1, marginBottom: 0, marginRight: 8 }}
                                     testID="gostos-input"
+                                />
+                                <Button
+                                    title="+"
+                                    onPress={handleAddGosto}
+                                    style={{ width: 48, height: 48 }}
                                 />
                             </View>
                         )}
@@ -295,8 +300,13 @@ export const MeuPerfilScreen = () => {
                                     value={novoEvitar}
                                     onChangeText={setNovoEvitar}
                                     onSubmitEditing={handleAddEvitar}
-                                    containerStyle={{ flex: 1, marginBottom: 0 }}
+                                    containerStyle={{ flex: 1, marginBottom: 0, marginRight: 8 }}
                                     testID="evitar-input"
+                                />
+                                <Button
+                                    title="+"
+                                    onPress={handleAddEvitar}
+                                    style={{ width: 48, height: 48 }}
                                 />
                             </View>
                         )}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { storeDependentInCloud, updateDependentInCloud } from "../../services/cloud/Dependent/DependentDb";
+import { getOrCreateWishlist, addLikeTags, removeLikeTags, addAvoidTags, removeAvoidTags } from "../../services/cloud/Wishlist/WishlistDb";
 import { Dependent, DependentType } from "../../types/Dependent";
 
 export function useFormDependenteViewModel(navigation: any, dependentToEdit?: Dependent) {
@@ -13,6 +14,16 @@ export function useFormDependenteViewModel(navigation: any, dependentToEdit?: De
     const [bio, setBio] = useState("");
     const [avatarUrl, setAvatarUrl] = useState("");
     const [relationship, setRelationship] = useState("");
+    
+    // Novas states para wishlist do dependente
+    const [gostos, setGostos] = useState<string[]>([]);
+    const [originalGostos, setOriginalGostos] = useState<string[]>([]);
+    const [novoGostoState, setNovoGostoState] = useState("");
+
+    const [evitar, setEvitar] = useState<string[]>([]);
+    const [originalEvitar, setOriginalEvitar] = useState<string[]>([]);
+    const [novoEvitarState, setNovoEvitarState] = useState("");
+
     const [isSaving, setIsSaving] = useState(false);
 
     // Computed gender string for saving/editing compatibility
@@ -52,6 +63,14 @@ export function useFormDependenteViewModel(navigation: any, dependentToEdit?: De
                 // Evita problemas de timezone inicializando a data ao meio dia
                 setBirthDate(new Date(year, month - 1, day, 12, 0, 0));
             }
+
+            // Buscar Wishlist do dependente
+            getOrCreateWishlist(dependentToEdit.id, "dependent").then(wishlist => {
+                setGostos(wishlist.likes_tags || []);
+                setOriginalGostos(wishlist.likes_tags || []);
+                setEvitar(wishlist.avoids_tags || []);
+                setOriginalEvitar(wishlist.avoids_tags || []);
+            });
         }
     }, [dependentToEdit]);
 
@@ -95,6 +114,30 @@ export function useFormDependenteViewModel(navigation: any, dependentToEdit?: De
     const updateRelationship = (text: string) => {
         setRelationship(text);
         if (errors.relationship) setErrors((prev) => ({ ...prev, relationship: "" }));
+    };
+
+    const handleRemoveGosto = (itemToRemove: string) => {
+        setGostos((prev) => prev.filter((item) => item !== itemToRemove));
+    };
+
+    const handleAddGosto = () => {
+        const trimmed = novoGostoState.trim();
+        if (trimmed && !gostos.includes(trimmed)) {
+            setGostos((prev) => [...prev, trimmed]);
+            setNovoGostoState('');
+        }
+    };
+
+    const handleRemoveEvitar = (itemToRemove: string) => {
+        setEvitar((prev) => prev.filter((item) => item !== itemToRemove));
+    };
+
+    const handleAddEvitar = () => {
+        const trimmed = novoEvitarState.trim();
+        if (trimmed && !evitar.includes(trimmed)) {
+            setEvitar((prev) => [...prev, trimmed]);
+            setNovoEvitarState('');
+        }
     };
 
     const formatYYYYMMDD = (date: Date) => {
@@ -165,13 +208,29 @@ export function useFormDependenteViewModel(navigation: any, dependentToEdit?: De
                 dataToSave.relationship = relationship.trim();
             }
 
+            let dependentId = dependentToEdit?.id;
+
             if (dependentToEdit) {
                 await updateDependentInCloud(dependentToEdit.id, dataToSave);
             } else {
-                await storeDependentInCloud({
+                const created = await storeDependentInCloud({
                     user_id: usuarioAtual.id,
                     ...dataToSave
                 });
+                dependentId = created.id;
+            }
+
+            if (dependentId) {
+                const wishlist = await getOrCreateWishlist(dependentId, 'dependent');
+                const addedGostos = gostos.filter(g => !originalGostos.includes(g));
+                const removedGostos = originalGostos.filter(g => !gostos.includes(g));
+                const addedEvitar = evitar.filter(e => !originalEvitar.includes(e));
+                const removedEvitar = originalEvitar.filter(e => !evitar.includes(e));
+
+                if (addedGostos.length > 0) await addLikeTags(wishlist.id, addedGostos);
+                if (removedGostos.length > 0) await removeLikeTags(wishlist.id, removedGostos);
+                if (addedEvitar.length > 0) await addAvoidTags(wishlist.id, addedEvitar);
+                if (removedEvitar.length > 0) await removeAvoidTags(wishlist.id, removedEvitar);
             }
 
             navigation.goBack();
@@ -194,6 +253,12 @@ export function useFormDependenteViewModel(navigation: any, dependentToEdit?: De
         relationship,
         isSaving,
         errors,
+        gostos,
+        novoGostoState,
+        setNovoGostoState,
+        evitar,
+        novoEvitarState,
+        setNovoEvitarState,
         updateName,
         updateDependentType,
         updateBirthDate,
@@ -203,6 +268,10 @@ export function useFormDependenteViewModel(navigation: any, dependentToEdit?: De
         updateRelationship,
         setBio,
         setAvatarUrl,
+        handleAddGosto,
+        handleRemoveGosto,
+        handleAddEvitar,
+        handleRemoveEvitar,
         handleSave,
     };
 }

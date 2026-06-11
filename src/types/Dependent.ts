@@ -17,6 +17,8 @@ export interface Dependent {
     sizes?: Sizes;
     bio?: string;
     relationship?: string;
+    gostos?: string[];
+    evitar?: string[];
     created_at: string;
     updated_at: string;
 }
