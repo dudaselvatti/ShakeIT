@@ -192,40 +192,23 @@ export const MeuPerfilScreen = () => {
                     )}
 
                     <Text style={[styles.sectionTitle, styles.firstSectionTitle]}>Conte-nos sobre você:</Text>
-                    <Card style={styles.bioCard}>
-                        {isEditing ? (
-                            <Input
-                                label=""
-                                placeholder="Diga-nos um pouco sobre quem você é..."
-                                placeholderTextColor={theme.colors.textLight}
-                                value={bio}
-                                onChangeText={setBio}
-                                maxLength={1000}
-                                multiline
-                                onContentSizeChange={(e) => {
-                                    const height = e.nativeEvent.contentSize.height;
-                                    if (height > 0) {
-                                        setBioHeight(height);
-                                    }
-                                }}
-                                style={{
-                                    padding: 0,
-                                    paddingTop: 0,
-                                    paddingBottom: 0,
-                                    paddingVertical: 0,
-                                    height: Math.min(Math.max(24, bioHeight), 72),
-                                    textAlignVertical: 'top',
-                                }}
-                                inputContainerStyle={{
-                                    borderWidth: 0,
-                                    backgroundColor: 'transparent',
-                                }}
-                                containerStyle={{ marginBottom: 0 }}
-                            />
-                        ) : (
+                    {isEditing ? (
+                        <Input
+                            label=""
+                            placeholder="Diga-nos um pouco sobre quem você é..."
+                            value={bio}
+                            onChangeText={setBio}
+                            maxLength={1000}
+                            multiline
+                            numberOfLines={4}
+                            blurOnSubmit={true}
+                            returnKeyType="done"
+                        />
+                    ) : (
+                        <Card style={styles.bioCard}>
                             <Text style={{ color: theme.colors.text, minHeight: 24 }}>{bio || 'Nenhuma biografia adicionada.'}</Text>
-                        )}
-                    </Card>
+                        </Card>
+                    )}
 
                     <Text style={styles.sectionTitle}>Preferências de Estilo & Tamanho</Text>
 
@@ -280,12 +263,9 @@ export const MeuPerfilScreen = () => {
                                 <Input
                                     label=""
                                     placeholder="Gosto de... (pressione Enter)"
-                                    placeholderTextColor={theme.colors.textLight}
                                     value={novoGosto}
                                     onChangeText={setNovoGosto}
                                     onSubmitEditing={handleAddGosto}
-                                    style={{ padding: 0 }}
-                                    inputContainerStyle={{ borderWidth: 0, backgroundColor: 'transparent' }}
                                     containerStyle={{ flex: 1, marginBottom: 0 }}
                                     testID="gostos-input"
                                 />
@@ -312,12 +292,9 @@ export const MeuPerfilScreen = () => {
                                 <Input
                                     label=""
                                     placeholder="Evitar... (pressione Enter)"
-                                    placeholderTextColor={theme.colors.textLight}
                                     value={novoEvitar}
                                     onChangeText={setNovoEvitar}
                                     onSubmitEditing={handleAddEvitar}
-                                    style={{ padding: 0 }}
-                                    inputContainerStyle={{ borderWidth: 0, backgroundColor: 'transparent' }}
                                     containerStyle={{ flex: 1, marginBottom: 0 }}
                                     testID="evitar-input"
                                 />

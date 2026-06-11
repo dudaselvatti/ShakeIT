@@ -222,8 +222,6 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.border,
         paddingBottom: 4,
     },
     addChipButton: {
