@@ -1,5 +1,6 @@
 import { ViewStyle } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 
 export interface Props {
     label: string;
@@ -22,13 +23,25 @@ export function useImagePickerViewModel({ label, value, onChangeImage, container
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
-            quality: 0.1, // Compressão pesada para salvar no banco
-            base64: true, // Adicionado para retornar a string em base64
+            quality: 1, // Let ImageManipulator handle the compression
         });
         
-        if (!result.canceled && result.assets[0].base64) {
-            const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`;
-            onChangeImage(base64Image);
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+            try {
+                const manipResult = await ImageManipulator.manipulateAsync(
+                    result.assets[0].uri,
+                    [{ resize: { width: 500, height: 500 } }],
+                    { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+                );
+                
+                if (manipResult.base64) {
+                    const base64Image = `data:image/jpeg;base64,${manipResult.base64}`;
+                    onChangeImage(base64Image);
+                }
+            } catch (error) {
+                alert("Erro ao processar a imagem. Tente uma foto menor.");
+                console.error(error);
+            }
         }
     };
 

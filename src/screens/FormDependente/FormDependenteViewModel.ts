@@ -152,26 +152,25 @@ export function useFormDependenteViewModel(navigation: any, dependentToEdit?: De
         }
 
         try {
+            const dataToSave: any = {
+                name: name.trim(),
+                dependent_type: dependentType as DependentType,
+                birth_date: birthDateString,
+                gender: gender.trim(),
+                bio: bio.trim(),
+                avatar_url: finalAvatarUrl,
+            };
+
+            if (dependentType === "other") {
+                dataToSave.relationship = relationship.trim();
+            }
+
             if (dependentToEdit) {
-                await updateDependentInCloud(dependentToEdit.id, {
-                    name: name.trim(),
-                    dependent_type: dependentType as DependentType,
-                    birth_date: birthDateString,
-                    gender: gender.trim(),
-                    bio: bio.trim(),
-                    avatar_url: finalAvatarUrl,
-                    relationship: dependentType === "other" ? relationship.trim() : undefined,
-                });
+                await updateDependentInCloud(dependentToEdit.id, dataToSave);
             } else {
                 await storeDependentInCloud({
                     user_id: usuarioAtual.id,
-                    name: name.trim(),
-                    dependent_type: dependentType as DependentType,
-                    birth_date: birthDateString,
-                    gender: gender.trim(),
-                    bio: bio.trim(),
-                    avatar_url: finalAvatarUrl,
-                    relationship: dependentType === "other" ? relationship.trim() : undefined,
+                    ...dataToSave
                 });
             }
 

@@ -16,6 +16,18 @@ jest.mock('../../services/cloud/User/UserDb', () => ({
     userLogout: jest.fn(),
 }));
 
+jest.mock('../../services/cloud/Wishlist/WishlistDb', () => ({
+    getOrCreateWishlist: jest.fn(() => Promise.resolve({
+        id: 'wishlist-id',
+        likes_tags: ['Chocolate', 'Futebol'],
+        avoids_tags: ['Poeira', 'Mentiras']
+    })),
+    addLikeTags: jest.fn(),
+    removeLikeTags: jest.fn(),
+    addAvoidTags: jest.fn(),
+    removeAvoidTags: jest.fn(),
+}));
+
 jest.mock('../../components/AppHeader', () => {
     const ReactNative = jest.requireActual('react-native');
     return {
@@ -107,8 +119,13 @@ describe('MeuPerfilScreen e ViewModel', () => {
         });
     });
 
-    it('deve retornar os dados iniciais do usuario no hook useMeuPerfilViewModel', () => {
+    it('deve retornar os dados iniciais do usuario no hook useMeuPerfilViewModel', async () => {
         const { result } = renderHook(() => useMeuPerfilViewModel());
+
+        // Esperar pelas promessas de getOrCreateWishlist resolverem
+        await act(async () => {
+            await new Promise(resolve => setTimeout(resolve, 0));
+        });
 
         expect(result.current.bio).toBe('Minha biografia');
         expect(result.current.camisa).toBe('M');
@@ -277,8 +294,6 @@ describe('MeuPerfilScreen e ViewModel', () => {
                 calcado: '',
             },
             interesses: ['Tecnologia', 'Moda'],
-            gostos: ['Chocolate', 'Futebol'],
-            evitar: ['Poeira', 'Mentiras'],
         });
         expect(mockUpdateUsuarioAtual).toHaveBeenCalledWith({
             nome: 'Tester',
@@ -332,8 +347,15 @@ describe('MeuPerfilScreen e ViewModel', () => {
         expect(mockUpdateUsuario).not.toHaveBeenCalled();
     });
 
-    it('deve renderizar a tela de meu perfil com os componentes e dados corretos', () => {
-        const { getByText, queryByTestId } = render(<MeuPerfilScreen />);
+    it('deve renderizar a tela de meu perfil com os componentes e dados corretos', async () => {
+        let getByText: any;
+        let queryByTestId: any;
+        await act(async () => {
+            const renderResult = render(<MeuPerfilScreen />);
+            getByText = renderResult.getByText;
+            queryByTestId = renderResult.queryByTestId;
+            await new Promise(resolve => setTimeout(resolve, 0));
+        });
 
         expect(getByText('Meu Perfil')).toBeTruthy();
         expect(getByText('Minha biografia')).toBeTruthy();
@@ -350,7 +372,14 @@ describe('MeuPerfilScreen e ViewModel', () => {
         jest.useFakeTimers();
         mockUpdateUsuario.mockResolvedValue(undefined);
 
-        const { getByText, queryByTestId } = render(<MeuPerfilScreen />);
+        let getByText: any;
+        let queryByTestId: any;
+        await act(async () => {
+            const renderResult = render(<MeuPerfilScreen />);
+            getByText = renderResult.getByText;
+            queryByTestId = renderResult.queryByTestId;
+            await new Promise(resolve => setTimeout(resolve, 0));
+        });
 
         const editButton = getByText('Editar Perfil');
         await act(async () => {
@@ -372,7 +401,7 @@ describe('MeuPerfilScreen e ViewModel', () => {
         jest.useRealTimers();
     }, 15000);
 
-    it('deve renderizar mensagens de erro e sucesso se presentes no viewmodel', () => {
+    it('deve renderizar mensagens de erro e sucesso se presentes no viewmodel', async () => {
         mockUseAuth.mockReturnValue({
             usuarioAtual: mockUsuario,
             updateUsuarioAtual: mockUpdateUsuarioAtual,
@@ -423,13 +452,18 @@ describe('MeuPerfilScreen e ViewModel', () => {
             setIsEditing: jest.fn(),
         });
 
-        const { getByTestId } = render(<MeuPerfilScreen />);
+        let getByTestId: any;
+        await act(async () => {
+            const renderResult = render(<MeuPerfilScreen />);
+            getByTestId = renderResult.getByTestId;
+            await new Promise(resolve => setTimeout(resolve, 0));
+        });
 
         expect(getByTestId('success-message').props.children).toBe('Salvo com sucesso!');
         expect(getByTestId('error-message').props.children).toBe('Erro inesperado!');
     });
 
-    it('deve chamar clearMessages ao clicar no backdrop ou nos toasts', () => {
+    it('deve chamar clearMessages ao clicar no backdrop ou nos toasts', async () => {
         mockUseAuth.mockReturnValue({
             usuarioAtual: mockUsuario,
             updateUsuarioAtual: mockUpdateUsuarioAtual,
@@ -482,19 +516,24 @@ describe('MeuPerfilScreen e ViewModel', () => {
             setIsEditing: jest.fn(),
         });
 
-        const { getByTestId } = render(<MeuPerfilScreen />);
+        let getByTestId: any;
+        await act(async () => {
+            const renderResult = render(<MeuPerfilScreen />);
+            getByTestId = renderResult.getByTestId;
+            await new Promise(resolve => setTimeout(resolve, 0));
+        });
 
         const backdrop = getByTestId('message-backdrop');
         const successToast = getByTestId('success-toast');
         const errorToast = getByTestId('error-toast');
 
-        fireEvent.press(backdrop);
+        act(() => { fireEvent.press(backdrop); });
         expect(mockClearMessages).toHaveBeenCalledTimes(1);
 
-        fireEvent.press(successToast);
+        act(() => { fireEvent.press(successToast); });
         expect(mockClearMessages).toHaveBeenCalledTimes(2);
 
-        fireEvent.press(errorToast);
+        act(() => { fireEvent.press(errorToast); });
         expect(mockClearMessages).toHaveBeenCalledTimes(3);
     });
 });
