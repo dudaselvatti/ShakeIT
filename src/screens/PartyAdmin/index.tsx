@@ -52,11 +52,11 @@ export const PartyAdminScreen = () => {
 
             <View style={styles.footer}>
                 <Button 
-                    title='Configurar restrições de sorteio'
+                    title="Configurar restrições de sorteio"
                     onPress={handleNavigatePartyDrawRestrictions}
-                    variant='outline'
+                    variant="outline"
                 />
-                <Button 
+                <Button style={styles.btnSorteio}
                     title="Realizar Sorteio" 
                     onPress={handleSorteioPress}
                 />

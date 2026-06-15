@@ -19,14 +19,12 @@ export const styles = StyleSheet.create({
     backgroundColor: theme.colors.surface,
     borderRadius: 16,
     padding: 16,
-    gap: 16,
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
   RestrictionDirection: {
     alignItems: "center",
     justifyContent: "flex-start",
-    gap: 4,
   },
   RestrictionDirectionArrows: {
     flexDirection: "row",
@@ -49,8 +47,8 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
     padding: 14,
     borderRadius: 12,
-    backgroundColor: "#FEF3C7",
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: "#FCD34D",
+    borderColor: theme.colors.border,
   },
 });

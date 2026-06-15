@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { RestrictionDirection } from "../../types/DrawRestriction";
 
 export interface Props {

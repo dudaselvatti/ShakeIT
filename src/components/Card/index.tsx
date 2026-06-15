@@ -5,11 +5,12 @@ import { styles } from './styles';
 interface CardProps {
     children: React.ReactNode;
     style?: ViewStyle | ViewStyle[];
+    testID?: string;
 }
 
-export const Card = ({ children, style }: CardProps) => {
+export const Card = ({ children, style, testID }: CardProps) => {
     return (
-        <View style={[styles.container, style]}>
+        <View style={[styles.container, style]} testID={testID}>
             {children}
         </View>
     );

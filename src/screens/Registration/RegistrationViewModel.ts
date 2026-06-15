@@ -16,6 +16,12 @@ export function useRegistrationViewModel(navigation: any) {
   const [errors, setErrors] = useState({ nome: "", email: "", senha: "", genero: "", data: "" });
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
+  const generoOptions = ["Masculino", "Feminino", "Outro"].map((size) => ({
+    key: size,
+    label: size,
+    value: size,
+  }));
+
   const camisetaOptions = ["PP", "P", "M", "G", "GG"].map((size) => ({
     key: size,
     label: size,
@@ -180,6 +186,7 @@ export function useRegistrationViewModel(navigation: any) {
     updateBio,
     sizes,
     updateSizes,
+    generoOptions,
     camisetaOptions,
     calcaOptions,
     calcadoOptions,

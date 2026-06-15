@@ -42,15 +42,6 @@ export const styles = StyleSheet.create({
         padding: theme.metrics.padding,
     },
     btnSorteio: {
-        backgroundColor: theme.colors.primary,
-        paddingVertical: 15,
-        borderRadius: 8,
-        alignItems: 'center',
-    },
-    btnSorteioText: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        color: theme.colors.text,
-        textTransform: 'uppercase',
+        marginTop: 12,
     },
 });

@@ -10,6 +10,13 @@ jest.mock('expo-image-picker', () => ({
   },
 }));
 
+jest.mock('expo-image-manipulator', () => ({
+  manipulateAsync: jest.fn(),
+  SaveFormat: {
+    JPEG: 'jpeg',
+  },
+}));
+
 describe('useImagePickerViewModel', () => {
   const mockOnChangeImage = jest.fn();
   const defaultProps: Props = {
@@ -64,9 +71,18 @@ describe('useImagePickerViewModel', () => {
     });
 
     const mockUri = 'file://caminho/da/nova-imagem.jpg';
+    const mockBase64 = 'abcde12345';
     (ImagePicker.launchImageLibraryAsync as jest.Mock).mockResolvedValue({
       canceled: false,
       assets: [{ uri: mockUri }],
+    });
+
+    const ImageManipulator = require('expo-image-manipulator');
+    ImageManipulator.manipulateAsync.mockResolvedValue({
+      uri: 'file://manipulada.jpg',
+      width: 500,
+      height: 500,
+      base64: mockBase64,
     });
 
     const { result } = renderHook(() => useImagePickerViewModel(defaultProps));
@@ -79,10 +95,16 @@ describe('useImagePickerViewModel', () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.8,
+      quality: 1, // Let ImageManipulator handle the compression
     });
 
-    expect(mockOnChangeImage).toHaveBeenCalledWith(mockUri);
+    expect(ImageManipulator.manipulateAsync).toHaveBeenCalledWith(
+        mockUri,
+        [{ resize: { width: 500, height: 500 } }],
+        { compress: 0.5, format: 'jpeg', base64: true }
+    );
+
+    expect(mockOnChangeImage).toHaveBeenCalledWith(`data:image/jpeg;base64,${mockBase64}`);
     expect(global.alert).not.toHaveBeenCalled();
   });
 

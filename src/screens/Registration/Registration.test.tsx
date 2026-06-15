@@ -142,10 +142,10 @@ describe("RegistrationScreen", () => {
     );
 
     expect(getByTestId("app-header")).toBeTruthy();
-    expect(getByTestId("input-Nome de usuário")).toBeTruthy();
-    expect(getByTestId("input-Email")).toBeTruthy();
-    expect(getByTestId("input-Senha")).toBeTruthy();
-    expect(getByTestId("input-Gênero")).toBeTruthy();
+    expect(getByTestId("input-Nome de usuário *")).toBeTruthy();
+    expect(getByTestId("input-Email *")).toBeTruthy();
+    expect(getByTestId("input-Senha *")).toBeTruthy();
+    expect(getByTestId("select-Gênero *")).toBeTruthy();
     expect(getByText("Criar Conta")).toBeTruthy();
   });
 
@@ -174,17 +174,17 @@ describe("RegistrationScreen", () => {
 
   it("deve chamar updateNomeUsuario ao digitar no campo correspondente", () => {
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
-    const inputNome = getByTestId("input-Nome de usuário");
+    const inputNome = getByTestId("input-Nome de usuário *");
 
     fireEvent.changeText(inputNome, "Novo Nome");
     expect(currentViewModelMock.updateNomeUsuario).toHaveBeenCalledWith("Novo Nome");
   });
 
-  it("deve chamar updateGenero ao digitar no campo de Gênero", () => {
+  it("deve chamar updateGenero ao alterar o campo de Gênero", () => {
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
-    const inputGenero = getByTestId("input-Gênero");
+    const inputGenero = getByTestId("select-Gênero *");
 
-    fireEvent.changeText(inputGenero, "Masculino");
+    fireEvent(inputGenero, "onChange", "Masculino");
     expect(currentViewModelMock.updateGenero).toHaveBeenCalledWith("Masculino");
   });
 

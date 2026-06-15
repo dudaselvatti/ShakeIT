@@ -5,6 +5,7 @@ import {
     getDoc,
     getDocs,
     Timestamp,
+    updateDoc,
 } from "firebase/firestore";
 import { 
     signInWithEmailAndPassword,
@@ -12,8 +13,7 @@ import {
     sendPasswordResetEmail,
     signOut,
  } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { auth, storage, db } from "../../../config/firebase";
+import { auth, db } from "../../../config/firebase";
 import { Usuario } from "../../../types/Usuario";
 import { usuariosMock } from "../../../mocks/usuariosMock";
 import { UserRegistrationDTO } from "../../../dto/User/UserRegistrationDTO";
@@ -21,7 +21,7 @@ import { UserLoginDTO } from "../../../dto/User/UserLoginDTO";
 import { UserForgotMyPasswordDTO } from "../../../dto/User/UserForgotMyPasswordDTO";
 
 const USERS_COLLECTION = "users";
-const FOTO_PADRAO_URL = "https://i.pravatar.cc/150?img=10"; //placeholder
+const FOTO_PADRAO_URL = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"; //placeholder
 
 export async function seedUsers() {
     const querySnapshot = await getDocs(collection(db, USERS_COLLECTION));
@@ -60,19 +60,7 @@ export async function storeUserInCloud(dto: UserRegistrationDTO) {
     const uid = userCredential.user.uid;
     const userRef = doc(db, USERS_COLLECTION, uid);
 
-    let finalAvatarUrl = FOTO_PADRAO_URL;
-
-    if (dto.avatar_url) {
-        try {
-            const response = await fetch(dto.avatar_url);
-            const blob = await response.blob();
-            const storageRef = ref(storage, `avatars/${uid}_avatar.jpg`);
-            await uploadBytes(storageRef, blob);
-            finalAvatarUrl = await getDownloadURL(storageRef);
-        } catch (error: any) {
-            console.error("Erro ao subir a imagem para o Storage, usando foto padrão:", error);
-        }
-    }
+    let finalAvatarUrl = dto.avatar_url || FOTO_PADRAO_URL;
   
     await setDoc(userRef, {
         id: uid,
@@ -108,4 +96,12 @@ export async function resetUserPassword(dto: UserForgotMyPasswordDTO): Promise<v
 
 export async function userLogout(): Promise<void> {
     await signOut(auth);
+}
+
+export async function updateUsuario(id: string, data: Partial<Usuario>): Promise<void> {
+    const docRef = doc(db, USERS_COLLECTION, id);
+    await updateDoc(docRef, {
+        ...data,
+        updated_at: new Date().toISOString(),
+    });
 }

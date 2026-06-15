@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { checkFirebaseConnection } from "./src/services/testFirebase";
 
@@ -17,14 +18,20 @@ import { PartyPreviewScreen } from "./src/screens/PartyPreview";
 import { ParticipantLobbyScreen } from "./src/screens/ParticipantLobby";
 import { MeuPerfilScreen } from "./src/screens/MeuPerfil";
 import { SettingsScreen } from "./src/screens/Settings";
+import { GestaoDependentesScreen } from "./src/screens/GestaoDependentes";
+import { FormDependenteScreen } from "./src/screens/FormDependente";
+import { Dependent } from "./src/types/Dependent";
 
-import { AuthProvider } from "./src/contexts/AuthContext/AuthContext";
+import { AuthProvider, useAuth } from "./src/contexts/AuthContext/AuthContext";
 import { RegistrationScreen } from "./src/screens/Registration";
 import { LoginScreen } from "./src/screens/Login";
 import { ForgotMyPasswordScreen } from "./src/screens/ForgotMyPassword";
+import { WelcomeScreen } from "./src/screens/Welcome";
+import { LoadingScreen } from "./src/components/LoadingScreen";
 import { PartyDrawRestrictionsScreen } from "./src/screens/PartyDrawRestrictions";
 
 export type RootStackParamList = {
+  Welcome: undefined;
   Home: { novaParty?: Party } | undefined;
   CreateParty: undefined;
   PartyCreated: { party: Party };
@@ -41,22 +48,22 @@ export type RootStackParamList = {
   ParticipantLobby: { partyId: string };
   MeuPerfil: undefined;
   Settings: undefined;
+  GestaoDependentes: undefined;
+  FormDependente: { dependent?: Dependent } | undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App() {
-  useEffect(() => {
-    checkFirebaseConnection();
-  }, []);
+function RootNavigator() {
+  const { usuarioAtual, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <StatusBar style="dark" />
-
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName={usuarioAtual ? "Home" : "Welcome"}
         screenOptions={{
           headerShown: false,
           animation: "slide_from_right",
@@ -73,6 +80,7 @@ export default function App() {
         <Stack.Screen name="PartyDrawRestrictions" component={PartyDrawRestrictionsScreen} />
         <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
         <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="ForgotMyPassword" component={ForgotMyPasswordScreen} />
@@ -89,8 +97,25 @@ export default function App() {
           options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_right' })} 
         />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="GestaoDependentes" component={GestaoDependentesScreen} />
+        <Stack.Screen name="FormDependente" component={FormDependenteScreen} />
       </Stack.Navigator>
-    </NavigationContainer>
-    </AuthProvider>
+  );
+}
+
+export default function App() {
+  useEffect(() => {
+    checkFirebaseConnection();
+  }, []);
+
+  return (
+    <SafeAreaProvider>
+      <AuthProvider>
+        <NavigationContainer>
+          <StatusBar style="dark" />
+          <RootNavigator />
+        </NavigationContainer>
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 }

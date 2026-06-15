@@ -50,7 +50,7 @@ export function usePartyDrawRestrictionsViewModel() {
 
   const participantsOptions: SelectOption[] = useMemo(() => {
     return participants.map((p) => ({
-      key: p.perfil.id,
+      key: p.perfil.participant_name,
       label: p.perfil.participant_name,
       value: p.perfil.id,
     }));
@@ -105,7 +105,7 @@ export function usePartyDrawRestrictionsViewModel() {
     setPersonB("");
   }
 
-  function handleDeleteRestriction(RestrictionId: String) {
+  function handleDeleteRestriction(RestrictionId: string) {
     //Deverá ser implementado durante a T32, com uma função de deletar restrição do banco de dados
   }
 

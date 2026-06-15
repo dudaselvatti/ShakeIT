@@ -10,10 +10,12 @@ export const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginRight: 8,
     marginBottom: 8,
+    maxWidth: "100%",
   },
   label: {
     fontSize: 14,
     fontWeight: "600",
+    flexShrink: 1,
   },
   removeButton: {
     marginLeft: 6,

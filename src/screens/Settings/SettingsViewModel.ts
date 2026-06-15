@@ -45,7 +45,7 @@ export const useSettingsViewModel = (navigation: any) => {
             if (navigation && typeof navigation.reset === "function") {
                 navigation.reset({
                     index: 0,
-                    routes: [{ name: "Login" }],
+                    routes: [{ name: "Welcome" }],
                 });
             }
         } catch (error: any) {

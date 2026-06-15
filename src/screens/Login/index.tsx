@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { AppHeader } from "../../components/AppHeader";
@@ -22,12 +23,12 @@ export const LoginScreen = ({ navigation }: any) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-      <AppHeader 
-        headerTitle="Login" 
-        showBackButton={true} 
-        onBackPress={handleBackPress}
-        showSettingsIcon={true}
-      />
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }} edges={['top', 'bottom']}>
+        <AppHeader 
+          headerTitle="Login" 
+          showBackButton={true} 
+          onBackPress={handleBackPress}
+        />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <Input
@@ -47,7 +48,7 @@ export const LoginScreen = ({ navigation }: any) => {
           onChangeText={updateSenha}
           maxLength={50}
           autoCapitalize="none"
-          secureTextEntry={true}
+          isPassword={true}
         />
         {errors.senha ? <Text style={styles.errorText}>{errors.senha}</Text> : null}
 
@@ -70,7 +71,7 @@ export const LoginScreen = ({ navigation }: any) => {
           variant="text"
         />
       </View>
-
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };

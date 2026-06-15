@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { PopupModal } from "../../components/PopupModal";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
@@ -29,6 +30,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
     updateBio,
     sizes,
     updateSizes,
+    generoOptions,
     camisetaOptions,
     calcaOptions,
     calcadoOptions,
@@ -42,17 +44,17 @@ export const RegistrationScreen = ({ navigation }: any) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-      <AppHeader 
-        headerTitle="Cadastre-se" 
-        showBackButton={true} 
-        onBackPress={handleBackPress}
-        showSettingsIcon={true}
-      />
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }} edges={['top', 'bottom']}>
+        <AppHeader 
+          headerTitle="Cadastre-se" 
+          showBackButton={true} 
+          onBackPress={handleBackPress}
+        />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
 
         <Input
-          label="Nome de usuário"
+          label="Nome de usuário *"
           placeholder="Nome de usuário"
           value={nomeUsuario}
           onChangeText={updateNomeUsuario}
@@ -61,7 +63,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
         {errors.nome ? <Text style={styles.errorText}>{errors.nome}</Text> : null}
 
         <Input
-          label="Email"
+          label="Email *"
           placeholder="Email"
           value={email}
           onChangeText={updateEmail}
@@ -72,28 +74,27 @@ export const RegistrationScreen = ({ navigation }: any) => {
         {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
 
         <Input
-          label="Senha"
+          label="Senha *"
           placeholder="Senha"
           value={senha}
           onChangeText={updateSenha}
           maxLength={50}
           autoCapitalize="none"
-          secureTextEntry={true}
+          isPassword={true}
         />
         {errors.senha ? <Text style={styles.errorText}>{errors.senha}</Text> : null}
         
-        <Input
-          label="Gênero"
-          placeholder="Gênero"
-          value={genero}
-          onChangeText={updateGenero}
-          maxLength={20}
+        <SelectInput
+          label="Gênero *"
+          selectedValue={genero}
+          onValueChange={updateGenero}
+          options={generoOptions}
         />
         {errors.genero ? <Text style={styles.errorText}>{errors.genero}</Text> : null}
 
         <DateInput
           display="spinner"
-          label="Data de Nascimento"
+          label="Data de Nascimento *"
           value={dataNascimento}
           onChangeDate={updateDataNascimento}
           maximumDate={new Date()}
@@ -154,6 +155,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
         onCancel={cancelExit}
         onConfirm={confirmExit}
       />
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };

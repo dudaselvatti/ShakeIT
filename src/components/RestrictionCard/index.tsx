@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRestrictionCardViewModel, Props } from "./RestrictionCardViewModel";
-import { styles, iconColor } from "./styles";
+import { styles, arrowColor, xColor } from "./styles";
 
 export const RestrictionCard = (props: Props) => {
     const { personAName, personBName, restrictionDirection, onPress } = useRestrictionCardViewModel(props);
@@ -13,23 +13,23 @@ export const RestrictionCard = (props: Props) => {
                     {restrictionDirection === "both_ways" && (
                         <Feather
                             name="arrow-left"
-                            size={16}
-                            color={iconColor}
+                            size={20}
+                            color={arrowColor}
                         />
                     )}
                     <Feather
                         name="arrow-right"
                         size={20}
-                        color={iconColor}
+                        color={arrowColor}
                     />
                 <Text>{personBName}</Text>
             </View>
 
-            <TouchableOpacity onPress={onPress}>
+            <TouchableOpacity onPress={onPress} testID="close-button">
                 <Feather
                     name="x"
                     size={20}
-                    color={iconColor}
+                    color={xColor}
                 />
             </TouchableOpacity>
         </View>

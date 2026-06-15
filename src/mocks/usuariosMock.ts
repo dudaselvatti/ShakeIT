@@ -11,6 +11,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -24,6 +25,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -37,6 +39,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -50,6 +53,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -63,6 +67,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -76,6 +81,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -89,6 +95,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -102,6 +109,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -115,6 +123,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -128,6 +137,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -141,6 +151,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -154,6 +165,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -167,6 +179,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -180,6 +193,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     },
@@ -193,6 +207,7 @@ export const usuariosMock: Usuario[] = [
         shake_enabled: true,
         dark_mode: false,
         notifications_enabled: true,
+        interesses: ["Tecnologia", "Moda", "Esportes", "Música", "Viagens"],
         created_at: "2024-01-10T10:00:00Z",
         updated_at: "2024-01-10T10:00:00Z"
     }

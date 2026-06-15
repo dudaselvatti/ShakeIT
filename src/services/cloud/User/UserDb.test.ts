@@ -9,7 +9,6 @@ import {
 } from "./UserDb";
 import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
-import { uploadBytes, getDownloadURL } from "firebase/storage";
 import { usuariosMock } from "../../../mocks/usuariosMock";
 
 jest.mock("firebase/firestore", () => ({
@@ -49,7 +48,17 @@ jest.mock("../../../mocks/usuariosMock", () => ({
     ]
 }));
 
-global.fetch = jest.fn();
+const mockXHR = {
+    open: jest.fn(),
+    send: jest.fn(function(this: any) {
+        if (this.onload) this.onload();
+    }),
+    response: new Blob(),
+    onload: null as any,
+    onerror: null as any,
+    responseType: "",
+};
+(global as any).XMLHttpRequest = jest.fn(() => mockXHR);
 
 describe("UserDb - Testes Unitários", () => {
     
@@ -138,22 +147,13 @@ describe("UserDb - Testes Unitários", () => {
             avatar_url: "https://site.com/foto.jpg"
         };
 
-        it("deve cadastrar o usuário no Auth, fazer upload do avatar e salvar dados tratados no Firestore", async () => {
+        it("deve cadastrar o usuário no Auth e salvar dados tratados no Firestore", async () => {
             const mockUserCredential = { user: { uid: "auth_uid_123", email: "teste@email.com" } };
             (createUserWithEmailAndPassword as jest.Mock).mockResolvedValueOnce(mockUserCredential);
-
-            const mockBlob = {};
-            (global.fetch as jest.Mock).mockResolvedValueOnce({ blob: () => Promise.resolve(mockBlob) });
-            (uploadBytes as jest.Mock).mockResolvedValueOnce({});
-            (getDownloadURL as jest.Mock).mockResolvedValueOnce("https://firebasestorage/avatar_url_final.jpg");
 
             const result = await storeUserInCloud(mockDto);
 
             expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(expect.any(Object), mockDto.email, mockDto.senha);
-
-            expect(global.fetch).toHaveBeenCalledWith(mockDto.avatar_url);
-            expect(uploadBytes).toHaveBeenCalled();
-            expect(getDownloadURL).toHaveBeenCalled();
 
             expect(setDoc).toHaveBeenCalledWith(
                 expect.any(Object),
@@ -161,7 +161,7 @@ describe("UserDb - Testes Unitários", () => {
                     id: "auth_uid_123",
                     email: "teste@email.com",
                     nome: "Teste Silva",
-                    avatar_url: "https://firebasestorage/avatar_url_final.jpg",
+                    avatar_url: mockDto.avatar_url,
                     created_at: "2026-06-08T10:00:00.000Z",
                     updated_at: "2026-06-08T10:00:00.000Z",
                     shake_enabled: true
@@ -171,18 +171,18 @@ describe("UserDb - Testes Unitários", () => {
             expect(result).toEqual(mockUserCredential.user);
         });
 
-        it("deve usar a foto padrão se o upload da imagem falhar", async () => {
+        it("deve usar a foto padrão se a foto não for fornecida", async () => {
             const mockUserCredential = { user: { uid: "auth_uid_123" } };
             (createUserWithEmailAndPassword as jest.Mock).mockResolvedValueOnce(mockUserCredential);
             
-            (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Network Error"));
+            const dtoWithoutAvatar = { ...mockDto, avatar_url: "" };
 
-            await storeUserInCloud(mockDto);
+            await storeUserInCloud(dtoWithoutAvatar);
 
             expect(setDoc).toHaveBeenCalledWith(
                 expect.any(Object),
                 expect.objectContaining({
-                    avatar_url: "https://i.pravatar.cc/150?img=10"
+                    avatar_url: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
                 })
             );
         });
