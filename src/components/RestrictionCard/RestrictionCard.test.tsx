@@ -58,7 +58,7 @@ describe("RestrictionCard Component", () => {
 
     const { UNSAFE_getAllByType } = render(<RestrictionCard {...mockProps} />);
 
-    const icons = UNSAFE_getAllByType("Feather");
+    const icons = UNSAFE_getAllByType(Feather);
     const iconNames = icons.map(icon => icon.props.name);
 
     expect(iconNames).toContain("arrow-right");
