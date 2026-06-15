@@ -7,14 +7,16 @@ jest.mock("./RestrictionCardViewModel", () => ({
   useRestrictionCardViewModel: jest.fn(),
 }));
 
-jest.mock("@expo/vector-icons", () => ({
-  Feather: "Feather",
-}));
+jest.mock("@expo/vector-icons", () => {
+  const actualReact = jest.requireActual("react");
+  return {
+    Feather: (props: any) => actualReact.createElement("Feather", props),
+  };
+});
 
 describe("RestrictionCard Component", () => {
   const mockOnPress = jest.fn();
   
-  // 1. Define all required props here
   const mockProps = {
     id: "123",
     personAName: "Alice",
