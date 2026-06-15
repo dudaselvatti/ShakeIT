@@ -28,6 +28,7 @@ import { LoginScreen } from "./src/screens/Login";
 import { ForgotMyPasswordScreen } from "./src/screens/ForgotMyPassword";
 import { WelcomeScreen } from "./src/screens/Welcome";
 import { LoadingScreen } from "./src/components/LoadingScreen";
+import { PartyDrawRestrictionsScreen } from "./src/screens/PartyDrawRestrictions";
 
 export type RootStackParamList = {
   Welcome: undefined;
@@ -35,6 +36,7 @@ export type RootStackParamList = {
   CreateParty: undefined;
   PartyCreated: { party: Party };
   PartyAdmin: { partyName: string; partyCode: string };
+  PartyDrawRestrictions: { partyId: string };
   ShakeReveal: undefined;
   RevealResult: undefined;
   PerfilSorteado: { idUsuario: string };
@@ -75,6 +77,7 @@ function RootNavigator() {
         <Stack.Screen name="CreateParty" component={CreatePartyScreen} />
         <Stack.Screen name="PartyCreated" component={PartyCreatedScreen} />
         <Stack.Screen name="PartyAdmin" component={PartyAdminScreen} />
+        <Stack.Screen name="PartyDrawRestrictions" component={PartyDrawRestrictionsScreen} />
         <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
         <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />

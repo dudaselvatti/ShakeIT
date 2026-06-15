@@ -9,7 +9,6 @@ import {
 } from "./UserDb";
 import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
-import { uploadBytes, getDownloadURL } from "firebase/storage";
 import { usuariosMock } from "../../../mocks/usuariosMock";
 
 jest.mock("firebase/firestore", () => ({

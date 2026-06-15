@@ -2,57 +2,49 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { SelectInput } from "./index";
 import { useSelectInputViewModel } from "./SelectInputViewModel";
-import { View } from "react-native";
 
 jest.mock("./SelectInputViewModel", () => ({
   useSelectInputViewModel: jest.fn(),
 }));
 
-function MockPickerContainer({
-  children,
-  selectedValue,
-  onValueChange,
-  ...props
-}: any) {
-  return (
-    <View testID="mock-picker" {...props}>
-      {React.Children.map(children, (child: any) =>
-        child
-          ? React.cloneElement(child, {
-              onValueChange,
-              isSelected: child.props.value === selectedValue,
-            })
-          : null
-      )}
-    </View>
-  );
-}
+jest.mock('@react-native-picker/picker', () => {
+  const React = jest.requireActual('react');
 
-function MockPickerItem({
-  label,
-  value,
-  onValueChange,
-}: any) {
-  return (
-    <View
-      testID={`picker-item-${value}`}
-      onTouchEnd={() => onValueChange?.(value)}
-      accessibilityLabel={label}
-    />
-  );
-}
+  const MockPicker = ({ children, ...props }: any) => {
+    return React.createElement('View', { testID: 'mock-picker', ...props }, children);
+  };
 
-jest.mock("@react-native-picker/picker", () => ({
-  Picker: Object.assign(MockPickerContainer, {
-    Item: MockPickerItem,
-  }),
-}));
+  const MockPickerItem = ({ label, value, testID }: any) => {
+    return React.createElement('View', { testID: testID || `picker-item-${label}`, value });
+  };
+
+  MockPicker.Item = MockPickerItem;
+  return { Picker: MockPicker };
+});
+
+const options = [
+  {
+    key: "ts",
+    label: "TypeScript",
+    value: "TypeScript",
+  },
+  {
+    key: "js",
+    label: "JavaScript",
+    value: "JavaScript",
+  },
+  {
+    key: "py",
+    label: "Python",
+    value: "Python",
+  },
+];
 
 describe("SelectInput Component", () => {
   const mockOnValueChange = jest.fn();
   const defaultProps = {
     label: "Selecione o idioma",
-    options: ["TypeScript", "JavaScript", "Python"],
+    options,
     selectedValue: "TypeScript",
     onValueChange: mockOnValueChange,
   };
@@ -66,7 +58,7 @@ describe("SelectInput Component", () => {
       label: "Selecione o idioma",
       selectedValue: "TypeScript",
       onValueChange: mockOnValueChange,
-      options: ["TypeScript", "JavaScript", "Python"],
+      options,
     });
 
     const { getByText, getByTestId } = render(<SelectInput {...defaultProps} />);
@@ -82,7 +74,7 @@ describe("SelectInput Component", () => {
       label: "Selecione o idioma",
       selectedValue: "",
       onValueChange: mockOnValueChange,
-      options: ["TypeScript"],
+      options,
     });
 
     const { getByTestId } = render(<SelectInput {...defaultProps} />);

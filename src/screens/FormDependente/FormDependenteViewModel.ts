@@ -26,6 +26,18 @@ export function useFormDependenteViewModel(navigation: any, dependentToEdit?: De
 
     const [isSaving, setIsSaving] = useState(false);
 
+    const dependentOptions = ["Filho(a)", "Pet", "Outro"].map((size) => ({
+        key: size,
+        label: size,
+        value: size,
+    }));
+
+    const generoOptions = ["Masculino", "Feminino", "Outro"].map((size) => ({
+        key: size,
+        label: size,
+        value: size,
+    }));
+
     // Computed gender string for saving/editing compatibility
     const gender = genderType === "other" ? customGender : genderType;
 
@@ -244,9 +256,11 @@ export function useFormDependenteViewModel(navigation: any, dependentToEdit?: De
     return {
         name,
         dependentType,
+        dependentOptions,
         birthDate,
         gender,
         genderType,
+        generoOptions,
         customGender,
         bio,
         avatarUrl,

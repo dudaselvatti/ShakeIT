@@ -16,6 +16,30 @@ export function useRegistrationViewModel(navigation: any) {
   const [errors, setErrors] = useState({ nome: "", email: "", senha: "", genero: "", data: "" });
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
+  const generoOptions = ["Masculino", "Feminino", "Outro"].map((size) => ({
+    key: size,
+    label: size,
+    value: size,
+  }));
+
+  const camisetaOptions = ["PP", "P", "M", "G", "GG"].map((size) => ({
+    key: size,
+    label: size,
+    value: size,
+  }));
+
+  const calcaOptions = ["36", "38", "40", "42", "44", "46"].map((size) => ({
+    key: size,
+    label: size,
+    value: size,
+  }));
+
+  const calcadoOptions = ["34", "35", "36", "37", "38", "39", "40", "41", "42", "43"].map((size) => ({
+    key: size,
+    label: size,
+    value: size,
+  }));
+
   const updateNomeUsuario = (text: string) => {
     setNomeUsuario(text);
     if (errors.nome) setErrors((prev) => ({ ...prev, nome: "" }));
@@ -162,6 +186,10 @@ export function useRegistrationViewModel(navigation: any) {
     updateBio,
     sizes,
     updateSizes,
+    generoOptions,
+    camisetaOptions,
+    calcaOptions,
+    calcadoOptions,
     errors,
     isModalVisible,
     cancelExit,

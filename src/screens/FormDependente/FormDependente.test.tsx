@@ -15,6 +15,14 @@ jest.mock("../../services/cloud/Dependent/DependentDb", () => ({
     updateDependentInCloud: jest.fn(),
 }));
 
+jest.mock("../../services/cloud/Wishlist/WishlistDb", () => ({
+    getWishlistByOwner: jest.fn(() => Promise.resolve(null)),
+    getOrCreateWishlist: jest.fn(() => Promise.resolve({
+        likes_tags: [],
+        avoids_tags: []
+    })),
+}));
+
 jest.mock("@react-navigation/native", () => {
     const originalModule = jest.requireActual("@react-navigation/native");
     return {
@@ -65,15 +73,22 @@ jest.mock("../../components/SelectInput", () => {
             <ReactNative.View testID={testID}>
                 <ReactNative.Text>{label}</ReactNative.Text>
                 <ReactNative.Text testID="selected-value-display">{selectedValue}</ReactNative.Text>
-                {options.map((opt: string) => (
-                    <ReactNative.Pressable
-                        key={opt}
-                        testID={`select-option-${opt}`}
-                        onPress={() => onValueChange(opt)}
-                    >
-                        <ReactNative.Text>{opt}</ReactNative.Text>
-                    </ReactNative.Pressable>
-                ))}
+                {options && options.map((opt: any, index: number) => {
+                    const optionLabel = typeof opt === "object" ? opt.label : opt;
+                    const optionValue = typeof opt === "object" ? opt.value : opt;
+                    
+                    const baseID = testID ? `${testID}-option` : 'select-option';
+
+                    return (
+                        <ReactNative.Pressable
+                            key={opt.key || optionValue || index}
+                            testID={`${baseID}-${optionLabel}`}
+                            onPress={() => onValueChange(optionValue)}
+                        >
+                            <ReactNative.Text>{optionLabel}</ReactNative.Text>
+                        </ReactNative.Pressable>
+                    );
+                })}
             </ReactNative.View>
         ),
     };
@@ -203,26 +218,21 @@ describe("FormDependente - Screen e ViewModel", () => {
                 <FormDependenteScreen navigation={mockNavigation} />
             );
 
-            // Preenche os outros campos obrigatórios: Nome, Tipo (Pet)
             const inputNome = getByTestId("input-nome");
             fireEvent.changeText(inputNome, "Spyke");
 
-            // Clica na opção "Pet" no SelectInput mockado
-            const optionPet = getByTestId("select-option-Pet");
+            const optionPet = getByTestId("select-tipo-option-Pet");
             fireEvent.press(optionPet);
 
-            // Verifica que a data de nascimento está vazia e tenta salvar
             const saveBtn = getByTestId("btn-salvar");
             await act(async () => {
                 fireEvent.press(saveBtn);
             });
 
-            // O erro de data de nascimento deve aparecer na UI
             const dateErrorText = getByTestId("birth-date-error");
             expect(dateErrorText).toBeTruthy();
             expect(dateErrorText.props.children).toBe("A data de nascimento é obrigatória.");
 
-            // Verifica que a gravação não foi executada
             expect(storeDependentInCloud).not.toHaveBeenCalled();
         });
     });
@@ -233,14 +243,11 @@ describe("FormDependente - Screen e ViewModel", () => {
                 <FormDependenteScreen navigation={mockNavigation} />
             );
 
-            // Inicialmente o input customizado não deve estar visível
             expect(queryByTestId("input-genero-custom")).toBeNull();
 
-            // Clica na opção "Outros" no SelectInput de Gênero
-            const optionOutros = getByTestId("select-option-Outros");
+            const optionOutros = getByTestId("select-genero-option-Outro");
             fireEvent.press(optionOutros);
 
-            // Agora o input customizado deve aparecer
             expect(getByTestId("input-genero-custom")).toBeTruthy();
         });
     });

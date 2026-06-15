@@ -6,9 +6,13 @@ describe("useSelectInputViewModel", () => {
   
   const defaultProps: Props = {
     label: "Selecione uma opção",
-    selectedValue: "Opção 1",
+    selectedValue: "opcao_1",
     onValueChange: mockOnValueChange,
-    options: ["Opção 1", "Opção 2", "Opção 3"],
+    options: [
+      { key: "1", label: "Opção 1", value: "opcao_1" },
+      { key: "2", label: "Opção 2", value: "opcao_2" },
+      { key: "3", label: "Opção 3", value: "opcao_3" },
+    ],
   };
 
   it("deve retornar exatamente os mesmos valores passados por parâmetro", () => {
@@ -23,9 +27,9 @@ describe("useSelectInputViewModel", () => {
   it("deve disparar a função onValueChange corretamente quando invocada do retorno", () => {
     const { result } = renderHook(() => useSelectInputViewModel(defaultProps));
 
-    result.current.onValueChange("Opção 2");
+    result.current.onValueChange("opcao_2");
 
     expect(mockOnValueChange).toHaveBeenCalledTimes(1);
-    expect(mockOnValueChange).toHaveBeenCalledWith("Opção 2");
+    expect(mockOnValueChange).toHaveBeenCalledWith("opcao_2");
   });
 });

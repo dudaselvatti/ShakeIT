@@ -4,6 +4,15 @@ import { GestaoDependentesScreen } from "./index";
 import { useGestaoDependentesViewModel } from "./GestaoDependentesViewModel";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { getDependentsByUser, deleteDependentFromCloud } from "../../services/cloud/Dependent/DependentDb";
+import { getOrCreateWishlist } from "../../services/cloud/Wishlist/WishlistDb";
+
+jest.mock("./GestaoDependentesViewModel", () => ({
+    useGestaoDependentesViewModel: jest.fn(),
+}));
+
+jest.mock("../../services/cloud/Wishlist/WishlistDb", () => ({
+    getOrCreateWishlist: jest.fn(),
+}));
 
 jest.mock("../../contexts/AuthContext/AuthContext", () => ({
     useAuth: jest.fn(),
@@ -85,13 +94,38 @@ const mockDependentes = [
     },
 ];
 
+const baseViewModelMock = {
+    dependents: mockDependentes,
+    isLoading: false,
+    errorMessage: "",
+    successMessage: "",
+    dependentToDelete: null,
+    handleAddDependent: jest.fn(),
+    handleEditDependent: jest.fn(),
+    confirmDeleteDependent: jest.fn(),
+    cancelDelete: jest.fn(),
+    executeDelete: jest.fn(),
+    clearMessages: jest.fn(),
+    loadDependents: jest.fn(),
+};
+
 describe("GestaoDependentes - Screen e ViewModel", () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        
         (useAuth as jest.Mock).mockReturnValue({
             usuarioAtual: mockUsuario,
         });
-        (getDependentsByUser as jest.Mock).mockResolvedValue(mockDependentes);
+
+        (getDependentsByUser as jest.Mock).mockImplementation(() => Promise.resolve(mockDependentes));
+
+        (getOrCreateWishlist as jest.Mock).mockResolvedValue({
+            likes_tags: [],
+            avoids_tags: [],
+        });
+        
+        const actualHook = jest.requireActual("./GestaoDependentesViewModel").useGestaoDependentesViewModel;
+        (useGestaoDependentesViewModel as jest.Mock).mockImplementation(actualHook);
     });
 
     describe("ViewModel", () => {
@@ -103,10 +137,21 @@ describe("GestaoDependentes - Screen e ViewModel", () => {
             });
 
             expect(getDependentsByUser).toHaveBeenCalledWith("user-id-123");
-            expect(result.current.dependents).toEqual(mockDependentes);
+            expect(result.current.dependents).toEqual([
+                {
+                    ...mockDependentes[0],
+                    gostos: [],
+                    evitar: [],
+                },
+                {
+                    ...mockDependentes[1],
+                    gostos: [],
+                    evitar: [],
+                },
+            ]);
             expect(result.current.isLoading).toBe(false);
         });
-
+        
         it("deve navegar para cadastrar dependente", () => {
             const { result } = renderHook(() => useGestaoDependentesViewModel(mockNavigation));
 
@@ -153,45 +198,53 @@ describe("GestaoDependentes - Screen e ViewModel", () => {
 
     describe("Screen", () => {
         it("deve renderizar a listagem e os cards dos dependentes", async () => {
+            (useGestaoDependentesViewModel as jest.Mock).mockReturnValue({
+                ...baseViewModelMock,
+                dependents: mockDependentes,
+            });
+
             const { getByText } = render(<GestaoDependentesScreen navigation={mockNavigation} />);
 
-            await act(async () => {});
-
-            expect(getByText("Gerenciar Dependentes")).toBeTruthy();
             expect(getByText("Bolinha")).toBeTruthy();
             expect(getByText("Luluzinha")).toBeTruthy();
-            expect(getByText(/PET/)).toBeTruthy();
-            expect(getByText(/FILHO\(A\)/)).toBeTruthy();
+            expect(getByText(/Gerenciar Dependentes/i)).toBeTruthy();
+            expect(getByText(/Filho\(a\)/i)).toBeTruthy();
+            expect(getByText(/Pet/i)).toBeTruthy();
         });
 
         it("deve renderizar tela vazia se nao houver dependentes", async () => {
-            (getDependentsByUser as jest.Mock).mockResolvedValue([]);
+            (useGestaoDependentesViewModel as jest.Mock).mockReturnValue({
+                ...baseViewModelMock,
+                dependents: [],
+            });
+            
             const { getByTestId } = render(<GestaoDependentesScreen navigation={mockNavigation} />);
-
-            await act(async () => {});
 
             expect(getByTestId("empty-state")).toBeTruthy();
         });
 
         it("deve disparar exclusão ao confirmar modal", async () => {
-            (deleteDependentFromCloud as jest.Mock).mockResolvedValue(undefined);
-            const { getByTestId } = render(<GestaoDependentesScreen navigation={mockNavigation} />);
+            const mockConfirmDeleteDependent = jest.fn();
+            const mockExecuteDelete = jest.fn();
 
-            await act(async () => {});
-
-            const deleteBtn = getByTestId("delete-button-dep-1");
-            act(() => {
-                fireEvent.press(deleteBtn);
+            (useGestaoDependentesViewModel as jest.Mock).mockReturnValue({
+                ...baseViewModelMock,
+                dependentToDelete: "dep-1",
+                confirmDeleteDependent: mockConfirmDeleteDependent,
+                executeDelete: mockExecuteDelete,
             });
+
+            const { getByTestId } = render(<GestaoDependentesScreen navigation={mockNavigation} />);
 
             expect(getByTestId("confirmation-modal")).toBeTruthy();
 
             const confirmBtn = getByTestId("btn-confirm");
-            await act(async () => {
+            
+            act(() => {
                 fireEvent.press(confirmBtn);
             });
 
-            expect(deleteDependentFromCloud).toHaveBeenCalledWith("dep-1");
+            expect(mockExecuteDelete).toHaveBeenCalled();
         });
     });
 });

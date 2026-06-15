@@ -7,10 +7,7 @@ import { theme } from "../../styles/theme";
 import { useSelectInputViewModel, Props } from "./SelectInputViewModel";
 
 export const SelectInput = (props: Props) => {
-  const { label, selectedValue, onValueChange, options, style, containerStyle, testID } = useSelectInputViewModel(props);
-
-  const displayValue = selectedValue || "Selecione...";
-  const isPlaceholder = !selectedValue;
+  const { label, selectedValue, onValueChange, options, style, containerStyle, displayValue, isPlaceholder, testID } = useSelectInputViewModel(props);
 
   return (
     <View style={[styles.container, containerStyle]} testID={testID}>
@@ -34,13 +31,13 @@ export const SelectInput = (props: Props) => {
 
           {options.map((option) => (
             <Picker.Item
-              key={option}
-              label={option}
-              value={option}
+              key={option.key}
+              label={option.label}
+              value={option.value}
             />
           ))}
         </Picker>
       </View>
     </View>
   );
-};
+};

@@ -85,6 +85,7 @@ export const MeuPerfilScreen = () => {
         setNome,
         genero,
         setGenero,
+        generoOptions,
         dataNascimento,
         setDataNascimento,
         avatarUrl,
@@ -179,7 +180,7 @@ export const MeuPerfilScreen = () => {
                                 label="Gênero"
                                 selectedValue={genero}
                                 onValueChange={setGenero}
-                                options={["Feminino", "Masculino", "Outro"]}
+                                options={generoOptions}
                             />
                             <DateInput
                                 display="spinner"

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 import { updateUsuario } from '../../services/cloud/User/UserDb';
 import { getOrCreateWishlist, addLikeTags, removeLikeTags, addAvoidTags, removeAvoidTags } from '../../services/cloud/Wishlist/WishlistDb';
-import { Timestamp } from 'firebase/firestore';
 
 export const useMeuPerfilViewModel = () => {
     const { usuarioAtual, updateUsuarioAtual } = useAuth();
@@ -23,6 +22,12 @@ export const useMeuPerfilViewModel = () => {
     const [novoEvitarState, setNovoEvitarState] = useState('');
     const [originalGostos, setOriginalGostos] = useState<string[]>([]);
     const [originalEvitar, setOriginalEvitar] = useState<string[]>([]);
+
+    const generoOptions = ["Masculino", "Feminino", "Outro"].map((size) => ({
+        key: size,
+        label: size,
+        value: size,
+    }));
 
     const setNovoGosto = (text: string) => {
         if (text.endsWith(' ')) {
@@ -200,6 +205,7 @@ export const useMeuPerfilViewModel = () => {
         setNome,
         genero,
         setGenero,
+        generoOptions,
         dataNascimento,
         setDataNascimento,
         avatarUrl,

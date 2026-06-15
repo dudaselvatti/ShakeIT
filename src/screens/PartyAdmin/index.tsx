@@ -10,7 +10,16 @@ import { usePartyAdminViewModel } from './PartyAdminViewModel';
 import { styles } from './styles';
 
 export const PartyAdminScreen = () => {
-    const { partyName, partyCode, participantes, confirmadosCount, participantesTotal, headerTitle, handleSorteioPress } = usePartyAdminViewModel();
+    const {
+        partyName,
+        partyCode,
+        participantes,
+        confirmadosCount,
+        participantesTotal,
+        headerTitle,
+        handleNavigatePartyDrawRestrictions,
+        handleSorteioPress
+    } = usePartyAdminViewModel();
     return (
         <SafeAreaView style={styles.container}>
             <AppHeader headerTitle={headerTitle} showSettingsIcon={true} />
@@ -43,6 +52,11 @@ export const PartyAdminScreen = () => {
 
             <View style={styles.footer}>
                 <Button 
+                    title="Configurar restrições de sorteio"
+                    onPress={handleNavigatePartyDrawRestrictions}
+                    variant="outline"
+                />
+                <Button style={styles.btnSorteio}
                     title="Realizar Sorteio" 
                     onPress={handleSorteioPress}
                 />

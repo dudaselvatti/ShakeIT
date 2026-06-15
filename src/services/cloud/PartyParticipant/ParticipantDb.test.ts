@@ -1,7 +1,7 @@
-import { getAmigoSecreto } from "./PartcicipantDb";
+import { getAmigoSecreto } from "./PartyParticipantDb";
 import { participantesMock } from "../../../mocks/participantesMock";
 
-describe("PartcicipantDb - Testes Unitários", () => {
+describe("ParticipantDb - Testes Unitários", () => {
     
     it("deve retornar o participante correto quando um idUsuario válido for fornecido", async () => {
         const participanteEsperado = participantesMock[0];

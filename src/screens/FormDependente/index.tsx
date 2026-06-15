@@ -20,9 +20,11 @@ export const FormDependenteScreen = ({ navigation }: any) => {
     const {
         name,
         dependentType,
+        dependentOptions,
         birthDate,
         genderType,
         customGender,
+        generoOptions,
         bio,
         relationship,
         isSaving,
@@ -71,7 +73,7 @@ export const FormDependenteScreen = ({ navigation }: any) => {
     const handleGenderChange = (label: string) => {
         if (label === "Masculino") updateGenderType("Masculino");
         else if (label === "Feminino") updateGenderType("Feminino");
-        else if (label === "Outros") updateGenderType("other");
+        else if (label === "Outro") updateGenderType("other");
         else updateGenderType("");
     };
 
@@ -110,7 +112,7 @@ export const FormDependenteScreen = ({ navigation }: any) => {
                                 label="Tipo de Dependente"
                                 selectedValue={getTypeValue(dependentType)}
                                 onValueChange={handleTypeChange}
-                                options={["Filho(a)", "Pet", "Outro"]}
+                                options={dependentOptions}
                                 containerStyle={{ marginBottom: 12 }}
                                 testID="select-tipo"
                             />
@@ -157,7 +159,7 @@ export const FormDependenteScreen = ({ navigation }: any) => {
                         label="Gênero"
                         selectedValue={getGenderValue(genderType)}
                         onValueChange={handleGenderChange}
-                        options={["Masculino", "Feminino", "Outros"]}
+                        options={generoOptions}
                         containerStyle={{ marginBottom: 12 }}
                         testID="select-genero"
                     />

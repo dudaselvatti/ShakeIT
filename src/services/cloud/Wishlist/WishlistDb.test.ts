@@ -7,7 +7,7 @@ import {
     addAvoidTags,
     removeAvoidTags,
 } from "./WishlistDb";
-import { doc, setDoc, updateDoc, arrayUnion, arrayRemove, getDocs, query, where, collection } from "firebase/firestore";
+import { doc, setDoc, updateDoc, arrayUnion, arrayRemove, getDocs, query, where } from "firebase/firestore";
 
 jest.mock("firebase/firestore", () => ({
     collection: jest.fn(),

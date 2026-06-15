@@ -30,6 +30,10 @@ export const RegistrationScreen = ({ navigation }: any) => {
     updateBio,
     sizes,
     updateSizes,
+    generoOptions,
+    camisetaOptions,
+    calcaOptions,
+    calcadoOptions,
     errors,
     isModalVisible,
     cancelExit,
@@ -84,7 +88,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
           label="Gênero *"
           selectedValue={genero}
           onValueChange={updateGenero}
-          options={["Feminino", "Masculino", "Outro"]}
+          options={generoOptions}
         />
         {errors.genero ? <Text style={styles.errorText}>{errors.genero}</Text> : null}
 
@@ -117,19 +121,19 @@ export const RegistrationScreen = ({ navigation }: any) => {
           label="Tamanho da Camiseta"
           selectedValue={sizes.get("camiseta") || ""}
           onValueChange={(value) => updateSizes("camiseta", value)}
-          options={["PP", "P", "M", "G", "GG"]}
+          options={camisetaOptions}
         />
         <SelectInput
           label="Tamanho da Calça"
           selectedValue={sizes.get("calca") || ""}
           onValueChange={(value) => updateSizes("calca", value)}
-          options={["36", "38", "40", "42", "44", "46"]}
+          options={calcaOptions}
         />
         <SelectInput
           label="Tamanho do Calçado"
           selectedValue={sizes.get("calcado") || ""}
           onValueChange={(value) => updateSizes("calcado", value)}
-          options={["34", "35", "36", "37", "38", "39", "40", "41", "42", "43"]}
+          options={calcadoOptions}
         />
 
       </ScrollView>

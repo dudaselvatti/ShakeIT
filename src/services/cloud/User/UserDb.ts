@@ -13,8 +13,7 @@ import {
     sendPasswordResetEmail,
     signOut,
  } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { auth, storage, db } from "../../../config/firebase";
+import { auth, db } from "../../../config/firebase";
 import { Usuario } from "../../../types/Usuario";
 import { usuariosMock } from "../../../mocks/usuariosMock";
 import { UserRegistrationDTO } from "../../../dto/User/UserRegistrationDTO";
