@@ -51,7 +51,7 @@ describe("DrawRestrictionDb Service", () => {
                         party_id: mockPartyId,
                         person_a_id: "user-a",
                         person_b_id: "user-b",
-                        direction: "unidirectional",
+                        direction: "one_way",
                     }),
                 },
                 {
@@ -60,7 +60,7 @@ describe("DrawRestrictionDb Service", () => {
                         party_id: mockPartyId,
                         person_a_id: "user-c",
                         person_b_id: "user-d",
-                        direction: "bidirectional",
+                        direction: "both_ways",
                     }),
                 }
             ];
@@ -84,14 +84,14 @@ describe("DrawRestrictionDb Service", () => {
                     party_id: mockPartyId,
                     person_a_id: "user-a",
                     person_b_id: "user-b",
-                    direction: "unidirectional",
+                    direction: "one_way",
                 },
                 {
                     id: "restriction-2",
                     party_id: mockPartyId,
                     person_a_id: "user-c",
                     person_b_id: "user-d",
-                    direction: "bidirectional",
+                    direction: "both_ways",
                 },
             ]);
         });
@@ -113,7 +113,7 @@ describe("DrawRestrictionDb Service", () => {
             party_id: "party-123",
             person_a_id: "user-a",
             person_b_id: "user-b",
-            direction: "unidirectional",
+            direction: "one_way",
         };
 
         it("deve criar uma restrição, atualizar com o ID gerado e retornar o ID com sucesso", async () => {
