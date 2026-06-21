@@ -35,7 +35,7 @@ export type RootStackParamList = {
   Home: { novaParty?: Party } | undefined;
   CreateParty: undefined;
   PartyCreated: { party: Party };
-  PartyAdmin: { partyName: string; partyCode: string };
+  PartyAdmin: { partyId: string };
   PartyDrawRestrictions: { partyId: string };
   ShakeReveal: undefined;
   RevealResult: undefined;

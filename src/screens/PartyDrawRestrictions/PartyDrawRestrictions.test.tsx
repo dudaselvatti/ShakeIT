@@ -1,11 +1,13 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { render, fireEvent } from "@testing-library/react-native";
 import { PartyDrawRestrictionsScreen } from "./index";
 import { usePartyDrawRestrictionsViewModel } from "./PartyDrawRestrictionsViewModel";
 
+// 1. Declare all mock variables here (prefixed with 'Mock')
 const MockView = View;
 const MockText = Text;
+const MockTouchableOpacity = TouchableOpacity;
 
 jest.mock("./PartyDrawRestrictionsViewModel");
 const mockUsePartyDrawRestrictionsViewModel = usePartyDrawRestrictionsViewModel as jest.Mock;
@@ -16,7 +18,6 @@ jest.mock("@expo/vector-icons", () => ({
 
 jest.mock("../../components/AppHeader", () => {
   const actual = jest.requireActual("../../components/AppHeader");
-
   return {
     ...actual,
     AppHeader: ({ headerTitle }: { headerTitle: string }) => (
@@ -26,6 +27,17 @@ jest.mock("../../components/AppHeader", () => {
     ),
   };
 });
+
+// 2. Update this mock to use the allowed 'Mock' prefixed variables
+jest.mock("../../components/RestrictionCard", () => ({
+  RestrictionCard: ({ personAName, personBName, onPress }: any) => (
+    <MockView>
+      <MockText>{personAName}</MockText>
+      <MockText>{personBName}</MockText>
+      <MockTouchableOpacity testID="btn-delete-restriction" onPress={onPress} />
+    </MockView>
+  ),
+}));
 
 describe("PartyDrawRestrictionsScreen", () => {
   const defaultViewModelMock = {
@@ -43,7 +55,7 @@ describe("PartyDrawRestrictionsScreen", () => {
     RestrictionDirectionButtonTitle: "Não pode tirar",
     handleCreateRestriction: jest.fn(),
     handleDeleteRestriction: jest.fn(),
-    blockDependentDraw: true,
+    blockDependentDraw: false,
     BlockDependentDrawButtonTitle: "Impedir que Titulares e seus Dependentes se tirem",
     handleToggleBlockDependentDraw: jest.fn(),
   };
@@ -92,10 +104,10 @@ describe("PartyDrawRestrictionsScreen", () => {
     expect(defaultViewModelMock.handleToggleBlockDependentDraw).toHaveBeenCalledTimes(1);
   });
 
-  it("deve exibir o aviso se blockDependentDraw for false", () => {
+  it("deve exibir o aviso se blockDependentDraw for true", () => {
     mockUsePartyDrawRestrictionsViewModel.mockReturnValue({
       ...defaultViewModelMock,
-      blockDependentDraw: false,
+      blockDependentDraw: true,
     });
 
     const { getByText } = render(<PartyDrawRestrictionsScreen />);
@@ -110,7 +122,6 @@ describe("PartyDrawRestrictionsScreen", () => {
         personAName: "Alice",
         personBName: "Bob",
         restrictionDirection: "one_way",
-        onPress: jest.fn(),
       },
     ];
 
@@ -119,9 +130,14 @@ describe("PartyDrawRestrictionsScreen", () => {
       restrictionsList: mockList,
     });
 
-    const { getByText } = render(<PartyDrawRestrictionsScreen />);
+    const { getByText, getByTestId } = render(<PartyDrawRestrictionsScreen />);
 
     expect(getByText("Alice")).toBeTruthy();
     expect(getByText("Bob")).toBeTruthy();
+
+    const deleteButton = getByTestId("btn-delete-restriction");
+    fireEvent.press(deleteButton);
+
+    expect(defaultViewModelMock.handleDeleteRestriction).toHaveBeenCalledWith("id-regra-1");
   });
 });

@@ -1,7 +1,6 @@
 import { renderHook, act } from '@testing-library/react-native';
 import { useHomeViewModel } from './HomeViewModel';
 import { useNavigation } from '@react-navigation/native';
-import { gerarPartyCode } from '../../utils/PartyCode/gerarPartyCode';
 import { partiesMock } from '../../mocks/partiesMock';
 
 jest.mock('@react-navigation/native', () => {
@@ -10,7 +9,7 @@ jest.mock('@react-navigation/native', () => {
     useNavigation: jest.fn(),
   };
 });
-jest.mock('../../utils/PartyCode/gerarPartyCode');
+
 jest.mock('../../mocks/partiesMock', () => ({
   partiesMock: [
     { id: '1', name: 'Festa A', status: 'aguardando_sorteio' },
@@ -18,11 +17,13 @@ jest.mock('../../mocks/partiesMock', () => ({
     { id: '4', name: 'Festa D', status: 'Status Invalido' },
   ]
 }));
+
 jest.mock('../../mocks/participantesMock', () => ({
   participantesMock: [
     { usuario: { id: 'mock-user-uuid-1', nome: 'Duda' } }
   ]
 }));
+
 jest.mock('../../contexts/AuthContext/AuthContext', () => ({
   useAuth: jest.fn(() => ({
     usuarioAtual: { nome: 'Duda' },
@@ -35,7 +36,6 @@ describe('useHomeViewModel', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useNavigation as jest.Mock).mockReturnValue({ navigate: mockNavigate });
-    (gerarPartyCode as jest.Mock).mockReturnValue('ABC-123');
   });
 
   it('deve retornar os dados iniciais corretamente (parties e userName)', () => {
@@ -55,7 +55,17 @@ describe('useHomeViewModel', () => {
     expect(mockNavigate).toHaveBeenCalledWith('CreateParty');
   });
 
-  it('deve gerar código e navegar para PartyAdmin quando status for "aguardando_sorteio"', () => {
+  it('deve navegar para Scan ao chamar handleScanPress', () => {
+    const { result } = renderHook(() => useHomeViewModel());
+
+    act(() => {
+      result.current.handleScanPress();
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith('Scan');
+  });
+
+  it('deve navegar para PartyAdmin enviando o partyId quando status for "aguardando_sorteio"', () => {
     const { result } = renderHook(() => useHomeViewModel());
     const party = partiesMock[0];
 
@@ -63,10 +73,8 @@ describe('useHomeViewModel', () => {
       result.current.handleCardPress(party);
     });
 
-    expect(gerarPartyCode).toHaveBeenCalled();
     expect(mockNavigate).toHaveBeenCalledWith('PartyAdmin', {
-      partyName: party.name,
-      partyCode: 'ABC-123',
+      partyId: party.id,
     });
   });
 
@@ -78,7 +86,9 @@ describe('useHomeViewModel', () => {
       result.current.handleCardPress(party);
     });
 
-    expect(mockNavigate).toHaveBeenCalledWith('PerfilSorteado', { idUsuario: 'mock-user-uuid-1' });
+    expect(mockNavigate).toHaveBeenCalledWith('PerfilSorteado', { 
+      idUsuario: 'mock-user-uuid-1' 
+    });
   });
 
   it('não deve navegar se o status for desconhecido (default)', () => {

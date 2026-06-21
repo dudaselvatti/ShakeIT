@@ -81,7 +81,7 @@ export const PartyDrawRestrictionsScreen = () => {
             </View>
             <View>
                 <Text style={styles.heading}>Regras Ativas</Text>
-                {!blockDependentDraw && (
+                {blockDependentDraw && (
                     <View style={styles.activeBlockDependentDraw}>
                         <Text>Titulares e dependentes não podem se tirar</Text>
                     </View>

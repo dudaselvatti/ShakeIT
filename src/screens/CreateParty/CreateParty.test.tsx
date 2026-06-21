@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
+import { render, fireEvent, act } from '@testing-library/react-native';
 import { CreatePartyScreen } from './index';
 import { createPartyInCloud } from '../../services/cloud/Party/PartyDb';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
@@ -23,8 +23,6 @@ jest.mock("firebase/firestore", () => ({
   getFirestore: jest.fn(),
   collection: jest.fn(),
 }));
-
-
 
 jest.mock('../../components/AppFooter', () => ({
   AppFooter: jest.fn(() => null),
@@ -57,8 +55,9 @@ jest.mock('../../components/IconButton', () => {
 });
 
 const mockUseAuth = useAuth as jest.Mock;
+const mockCreatePartyInCloud = createPartyInCloud as jest.Mock;
 
-(createPartyInCloud as unknown as jest.Mock).mockResolvedValue({
+const mockPartyResponse = {
   id: 'mockPartyId',
   name: 'Natal 2026',
   minPrice: 10,
@@ -67,7 +66,7 @@ const mockUseAuth = useAuth as jest.Mock;
   inviteCode: '#XYZ123',
   eventDate: '2026-12-25T00:00:00.000Z',
   status: 'Aguardando Sorteio',
-});
+};
 
 describe('Tela CreateParty', () => {
   beforeEach(() => {
@@ -79,8 +78,11 @@ describe('Tela CreateParty', () => {
         nome: 'Usuário Teste',
       },
     });
+
+    mockCreatePartyInCloud.mockResolvedValue(mockPartyResponse);
   });
-  it('deve validar os campos vazios, exibir erros vermelhos e não navegar', () => {
+
+  it('deve validar os campos vazios, exibir erros vermelhos e não navegar', async () => {
     const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
     const { getByText, getByPlaceholderText } = render(
       <CreatePartyScreen navigation={mockNavigation} />
@@ -88,7 +90,9 @@ describe('Tela CreateParty', () => {
 
     fireEvent.changeText(getByPlaceholderText('Ex: Amigo Secreto da Firma'), 'Natal 2026');
 
-    fireEvent.press(getByText('Criar Party'));
+    await act(async () => {
+      fireEvent.press(getByText('Criar Party'));
+    });
 
     expect(getByText('Selecione a data da revelação.')).toBeTruthy();
     expect(getByText('Preencha o valor mínimo e máximo.')).toBeTruthy();
@@ -102,24 +106,24 @@ describe('Tela CreateParty', () => {
     );
 
     fireEvent.changeText(getByPlaceholderText('Ex: Amigo Secreto da Firma'), 'Natal 2026');
-
     fireEvent.press(getByTestId('btn-selecionar-data'));
+    fireEvent.changeText(getByPlaceholderText('0,00'), '10,00'); 
+    fireEvent.changeText(getByPlaceholderText('50,00'), '50,00');
 
-    fireEvent.changeText(getByPlaceholderText('0,00'), '1000'); 
-    fireEvent.changeText(getByPlaceholderText('50,00'), '5000');
+    await act(async () => {
+      fireEvent.press(getByText('Criar Party'));
+    });
 
-    await fireEvent.press(getByText('Criar Party'));
+    expect(mockCreatePartyInCloud).toHaveBeenCalledWith({
+      name: 'Natal 2026',
+      event_date: '2026-12-25T00:00:00.000Z',
+      min_value: 10,
+      max_value: 50,
+      admin_id: 2, // ID vindo do mock do useAuth
+    });
 
     expect(mockNavigation.navigate).toHaveBeenCalledWith('PartyCreated', {
-      party: expect.objectContaining({
-        name: 'Natal 2026',
-        minPrice: 10,
-        maxPrice: 50,
-        idAdmin: 1,
-        inviteCode: '#XYZ123',
-        eventDate: '2026-12-25T00:00:00.000Z',
-        status: 'Aguardando Sorteio'
-      })
+      party: mockPartyResponse,
     });
   });
 
@@ -128,36 +132,25 @@ describe('Tela CreateParty', () => {
       usuarioAtual: null,
     });
 
-    const mockNavigation = {
-      navigate: jest.fn(),
-      goBack: jest.fn(),
-    };
-
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
     const { getByText, getByPlaceholderText, getByTestId } = render(
       <CreatePartyScreen navigation={mockNavigation} />
     );
 
-    fireEvent.changeText(
-      getByPlaceholderText('Ex: Amigo Secreto da Firma'),
-      'Natal 2026'
-    );
-
+    fireEvent.changeText(getByPlaceholderText('Ex: Amigo Secreto da Firma'), 'Natal 2026');
     fireEvent.press(getByTestId('btn-selecionar-data'));
+    fireEvent.changeText(getByPlaceholderText('0,00'), '10,00');
+    fireEvent.changeText(getByPlaceholderText('50,00'), '50,00');
 
-    fireEvent.changeText(getByPlaceholderText('0,00'), '1000');
-
-    fireEvent.changeText(getByPlaceholderText('50,00'), '5000');
-
-    fireEvent.press(getByText('Criar Party'));
-
-    await waitFor(() => {
-      expect(createPartyInCloud).not.toHaveBeenCalled();
-
-      expect(mockNavigation.navigate).not.toHaveBeenCalled();
+    await act(async () => {
+      fireEvent.press(getByText('Criar Party'));
     });
+
+    expect(mockCreatePartyInCloud).not.toHaveBeenCalled();
+    expect(mockNavigation.navigate).not.toHaveBeenCalled();
   });
 
-  it('deve voltar à tela anterior ao confirmar a saída no modal', () => {
+  it('deve voltar à tela anterior ao confirmar a saída no modal', async () => {
     const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
     const { getByTestId, getByText, getByPlaceholderText } = render(
       <CreatePartyScreen navigation={mockNavigation} />
@@ -165,7 +158,10 @@ describe('Tela CreateParty', () => {
 
     fireEvent.changeText(getByPlaceholderText('Ex: Amigo Secreto da Firma'), 'Mudança');
     fireEvent.press(getByTestId('btn-chevron-left'));
-    fireEvent.press(getByText('Sair sem salvar'));
+    
+    await act(async () => {
+      fireEvent.press(getByText('Sair sem salvar'));
+    });
     
     expect(mockNavigation.goBack).toHaveBeenCalled();
   });
@@ -180,7 +176,7 @@ describe('Tela CreateParty', () => {
     expect(mockNavigation.goBack).toHaveBeenCalled();
   });
 
-  it('deve interceptar navegação do footer e exibir modal se houver alterações', () => {
+  it('deve interceptar navegação do footer e exibir modal se houver alterações', async () => {
     const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
     const { getByPlaceholderText, getByText } = render(
       <CreatePartyScreen navigation={mockNavigation} />
@@ -188,15 +184,17 @@ describe('Tela CreateParty', () => {
 
     fireEvent.changeText(getByPlaceholderText('Ex: Amigo Secreto da Firma'), 'Mudança');
     
-    // Disparar o onNavigateIntercept
     const calls = mockAppFooter.mock.calls;
     const testProps = calls[calls.length - 1][0];
+    
     act(() => {
       testProps.onNavigateIntercept('Home');
     });
 
-    // Confirmar saída
-    fireEvent.press(getByText('Sair sem salvar'));
+    await act(async () => {
+      fireEvent.press(getByText('Sair sem salvar'));
+    });
+
     expect(mockNavigation.navigate).toHaveBeenCalledWith('Home');
   });
 });

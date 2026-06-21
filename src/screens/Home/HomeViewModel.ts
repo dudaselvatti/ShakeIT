@@ -2,7 +2,6 @@ import { useNavigation } from "@react-navigation/native";
 import { partiesMock } from "../../mocks/partiesMock";
 import { participantesMock } from "../../mocks/participantesMock";
 import { Party } from "../../types/Party";
-import { gerarPartyCode } from "../../utils/PartyCode/gerarPartyCode";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 
 export function useHomeViewModel() {
@@ -13,10 +12,8 @@ export function useHomeViewModel() {
   const handleCardPress = (party: Party) => {
     switch (party.status) {
       case "aguardando_sorteio":
-        const partyCodeGerado = gerarPartyCode();
         navigation.navigate("PartyAdmin", {
-          partyName: party.name,
-          partyCode: partyCodeGerado,
+          partyId: party.id,
         });
         break;
       case "sorteio_realizado":
