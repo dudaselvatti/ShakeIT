@@ -1,18 +1,25 @@
-import { renderHook, act } from '@testing-library/react-native';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { usePartyDrawRestrictionsViewModel } from "./PartyDrawRestrictionsViewModel";
+import { getPartyFromCloud, updatePartyDependentDrawFlagInCloud } from "../../services/cloud/Party/PartyDb";
+import { getDrawRestrictionsByPartyFromCloud, createDrawRestrictionInCloud, deleteDrawRestrictionFromCloud } from "../../services/cloud/DrawRestriction/DrawRestrictionDb";
 
 const mockPartyId = "party-123";
+
 jest.mock("@react-navigation/native", () => ({
   useRoute: () => ({
     params: { partyId: mockPartyId },
   }),
 }));
 
-jest.mock("../../mocks/partiesMock", () => ({
-  partiesMock: [
-    { id: "party-123", block_dependent_draw: true },
-    { id: "party-456", block_dependent_draw: false },
-  ],
+jest.mock("../../services/cloud/Party/PartyDb", () => ({
+  getPartyFromCloud: jest.fn(),
+  updatePartyDependentDrawFlagInCloud: jest.fn(),
+}));
+
+jest.mock("../../services/cloud/DrawRestriction/DrawRestrictionDb", () => ({
+  getDrawRestrictionsByPartyFromCloud: jest.fn(),
+  createDrawRestrictionInCloud: jest.fn(),
+  deleteDrawRestrictionFromCloud: jest.fn(),
 }));
 
 jest.mock("../../mocks/participantesMock", () => ({
@@ -22,12 +29,39 @@ jest.mock("../../mocks/participantesMock", () => ({
   ],
 }));
 
+const mockGetPartyFromCloud = getPartyFromCloud as jest.Mock;
+const mockUpdatePartyDependentDrawFlagInCloud = updatePartyDependentDrawFlagInCloud as jest.Mock;
+const mockGetDrawRestrictionsByPartyFromCloud = getDrawRestrictionsByPartyFromCloud as jest.Mock;
+const mockCreateDrawRestrictionInCloud = createDrawRestrictionInCloud as jest.Mock;
+const mockDeleteDrawRestrictionFromCloud = deleteDrawRestrictionFromCloud as jest.Mock;
+
 describe("usePartyDrawRestrictionsViewModel", () => {
+  const mockPartyResponse = {
+    id: "party-123",
+    name: "Festa de Teste",
+    block_dependent_draw: true,
+  };
+
+  const mockCloudRestrictions = [
+    {
+      id: "restriction-cloud-id",
+      party_id: "party-123",
+      person_a_id: "user-1",
+      person_b_id: "user-2",
+      direction: "one_way",
+    }
+  ];
+
   beforeEach(() => {
     jest.clearAllMocks();
+    mockGetPartyFromCloud.mockResolvedValue(mockPartyResponse);
+    mockGetDrawRestrictionsByPartyFromCloud.mockResolvedValue(mockCloudRestrictions);
+    mockCreateDrawRestrictionInCloud.mockResolvedValue("new-generated-id");
+    mockDeleteDrawRestrictionFromCloud.mockResolvedValue(undefined);
+    mockUpdatePartyDependentDrawFlagInCloud.mockResolvedValue(undefined);
   });
 
-  it("deve inicializar com os estados corretos baseados nos mocks", () => {
+  it("deve inicializar com os estados corretos e carregar dados assíncronos da nuvem", async () => {
     const { result } = renderHook(() => usePartyDrawRestrictionsViewModel());
 
     expect(result.current.participantsOptions).toEqual([
@@ -37,20 +71,28 @@ describe("usePartyDrawRestrictionsViewModel", () => {
 
     expect(result.current.personA).toBe("");
     expect(result.current.personB).toBe("");
-    expect(result.current.restrictionsList).toEqual([]);
     expect(result.current.restrictionDirection).toBe("one_way");
-    expect(result.current.blockDependentDraw).toBe(true);
     expect(result.current.RestrictionDirectionButtonTitle).toBe("Não pode tirar");
-    expect(result.current.BlockDependentDrawButtonTitle).toBe(
-      "Impedir que Titulares e seus Dependentes se tirem"
-    );
+
+    await waitFor(() => {
+      expect(mockGetPartyFromCloud).toHaveBeenCalledWith(mockPartyId);
+      expect(mockGetDrawRestrictionsByPartyFromCloud).toHaveBeenCalledWith(mockPartyId);
+      expect(result.current.blockDependentDraw).toBe(true);
+      expect(result.current.BlockDependentDrawButtonTitle).toBe("Permitir que Titulares e seus Dependentes se tirem");
+      expect(result.current.restrictionsList).toHaveLength(1);
+      expect(result.current.restrictionsList[0]).toMatchObject({
+        id: "restriction-cloud-id",
+        personAName: "Alice",
+        personBName: "Bob",
+        restrictionDirection: "one_way",
+      });
+    });
   });
 
-  it("deve alternar a direção da restrição (one_way / both_ways)", () => {
+  it("deve alternar a direção da restrição (one_way / both_ways)", async () => {
     const { result } = renderHook(() => usePartyDrawRestrictionsViewModel());
 
     expect(result.current.restrictionDirection).toBe("one_way");
-    expect(result.current.RestrictionDirectionButtonTitle).toBe("Não pode tirar");
 
     act(() => {
       result.current.handleChangeRestrictionDirection();
@@ -60,33 +102,32 @@ describe("usePartyDrawRestrictionsViewModel", () => {
     expect(result.current.RestrictionDirectionButtonTitle).toBe("Não podem se tirar");
   });
 
-  it("deve alternar o bloqueio de sorteio de dependentes", () => {
+  it("deve alternar o bloqueio de sorteio de dependentes e salvar no banco", async () => {
     const { result } = renderHook(() => usePartyDrawRestrictionsViewModel());
 
-    expect(result.current.blockDependentDraw).toBe(true);
+    await waitFor(() => expect(result.current.blockDependentDraw).toBe(true));
 
-    act(() => {
-      result.current.handleToggleBlockDependentDraw();
+    await act(async () => {
+      await result.current.handleToggleBlockDependentDraw();
     });
 
+    expect(mockUpdatePartyDependentDrawFlagInCloud).toHaveBeenCalledWith(mockPartyId, false);
     expect(result.current.blockDependentDraw).toBe(false);
-    expect(result.current.BlockDependentDrawButtonTitle).toBe(
-      "Permitir que Titulares e seus Dependentes se tirem"
-    );
+    expect(result.current.BlockDependentDrawButtonTitle).toBe("Impedir que Titulares e seus Dependentes se tirem");
   });
 
   describe("handleCreateRestriction", () => {
-    it("não deve criar restrição se personA ou personB estiverem vazios", () => {
+    it("não deve criar restrição se personA ou personB estiverem vazios", async () => {
       const { result } = renderHook(() => usePartyDrawRestrictionsViewModel());
 
-      act(() => {
-        result.current.handleCreateRestriction();
+      await act(async () => {
+        await result.current.handleCreateRestriction();
       });
 
-      expect(result.current.restrictionsList).toHaveLength(0);
+      expect(mockCreateDrawRestrictionInCloud).not.toHaveBeenCalled();
     });
 
-    it("não deve criar restrição se personA for igual a personB", () => {
+    it("não deve criar restrição se personA for igual a personB", async () => {
       const { result } = renderHook(() => usePartyDrawRestrictionsViewModel());
 
       act(() => {
@@ -94,14 +135,14 @@ describe("usePartyDrawRestrictionsViewModel", () => {
         result.current.setPersonB("user-1");
       });
 
-      act(() => {
-        result.current.handleCreateRestriction();
+      await act(async () => {
+        await result.current.handleCreateRestriction();
       });
 
-      expect(result.current.restrictionsList).toHaveLength(0);
+      expect(mockCreateDrawRestrictionInCloud).not.toHaveBeenCalled();
     });
 
-    it("deve criar uma restrição válida e limpar os inputs de seleção", () => {
+    it("deve criar uma restrição válida na nuvem e limpar os inputs de seleção", async () => {
       const { result } = renderHook(() => usePartyDrawRestrictionsViewModel());
 
       act(() => {
@@ -109,29 +150,37 @@ describe("usePartyDrawRestrictionsViewModel", () => {
         result.current.setPersonB("user-2");
       });
 
-      act(() => {
-        result.current.handleCreateRestriction();
+      await act(async () => {
+        await result.current.handleCreateRestriction();
       });
 
-      expect(result.current.restrictionsList).toHaveLength(1);
-      expect(result.current.restrictionsList[0]).toMatchObject({
-        personAName: "Alice",
-        personBName: "Bob",
-        restrictionDirection: "one_way",
+      expect(mockCreateDrawRestrictionInCloud).toHaveBeenCalledWith({
+        party_id: mockPartyId,
+        person_a_id: "user-1",
+        person_b_id: "user-2",
+        direction: "one_way",
       });
 
-      expect(result.current.personA).toBe("");
-      expect(result.current.personB).toBe("");
+      await waitFor(() => {
+        expect(result.current.personA).toBe("");
+        expect(result.current.personB).toBe("");
+        expect(result.current.restrictionsList).toHaveLength(2); 
+      });
     });
   });
 
-  it("deve chamar handleDeleteRestriction sem quebrar (mesmo que não implementado ainda)", () => {
-    const { result } = renderHook(() => usePartyDrawRestrictionsViewModel());
+  describe("handleDeleteRestriction", () => {
+    it("deve deletar uma restrição da nuvem e removê-la da listagem local do estado", async () => {
+      const { result } = renderHook(() => usePartyDrawRestrictionsViewModel());
 
-    expect(() => {
-      act(() => {
-        result.current.handleDeleteRestriction("algum-id");
+      await waitFor(() => expect(result.current.restrictionsList).toHaveLength(1));
+
+      await act(async () => {
+        await result.current.handleDeleteRestriction("restriction-cloud-id");
       });
-    }).not.toThrow();
+
+      expect(mockDeleteDrawRestrictionFromCloud).toHaveBeenCalledWith("restriction-cloud-id");
+      expect(result.current.restrictionsList).toHaveLength(0);
+    });
   });
 });

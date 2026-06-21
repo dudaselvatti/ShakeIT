@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import { Participante } from "../../types/Participante";
-import { DrawRestriction, RestrictionDirection } from "../../types/DrawRestriction";
+import { RestrictionDirection } from "../../types/DrawRestriction";
 import { Party } from "../../types/Party";
-import { partiesMock } from "../../mocks/partiesMock";
 import { participantesMock } from "../../mocks/participantesMock";
+import { getPartyFromCloud, updatePartyDependentDrawFlagInCloud} from "../../services/cloud/Party/PartyDb";
+import { getDrawRestrictionsByPartyFromCloud, createDrawRestrictionInCloud, deleteDrawRestrictionFromCloud } from "../../services/cloud/DrawRestriction/DrawRestrictionDb";
+import { DrawRestrictionCreationDTO } from "../../dto/DrawRestriction/DrawRestrictionCreationDTO";
 
 type RouteParams = {
   partyId: string;
@@ -36,14 +38,26 @@ export function usePartyDrawRestrictionsViewModel() {
   const [restrictionDirection, setRestrictionDirection] = useState<RestrictionDirection>("one_way");
   const [blockDependentDraw, setBlockDependentDraw] = useState(true);
 
-  useEffect(() => { //Tirar isto daqui durante a T32
-    const foundParty = partiesMock.find(
-      (party) => party.id === partyId
-    );
-    setParty(foundParty ?? null);
+  useEffect(() => {
+    async function fetchParty() {
+      try {
+        const cloudParty = await getPartyFromCloud(partyId);
+        if (cloudParty) {
+          setParty(cloudParty);
+        } else {
+          console.warn(`Festa com o ID ${partyId} não foi encontrada no banco.`);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar a festa no Firestore:", error);
+      }
+    }
+
+    if (partyId) {
+      fetchParty();
+    }
   }, [partyId]);
 
-  useEffect(() => { //Tirar isto daqui durante a T32
+  useEffect(() => { //Tirar isso daqui quando tivermos participantes no banco de dados
     const partyParticipants = participantesMock;
     setParticipants(partyParticipants);
   }, [partyId]);
@@ -66,47 +80,84 @@ export function usePartyDrawRestrictionsViewModel() {
     return map;
   }, [participants]);
 
+  useEffect(() => {
+    async function fetchRestrictions() {
+      if (!partyId || participants.length === 0) return;
+
+      try {
+        const cloudRestrictions = await getDrawRestrictionsByPartyFromCloud(partyId);
+        
+        const formattedRestrictions = cloudRestrictions.map((restriction) => {
+          const participantA = participantsMap.get(restriction.person_a_id);
+          const participantB = participantsMap.get(restriction.person_b_id);
+
+          return {
+            id: restriction.id,
+            personAName: participantA?.perfil.participant_name || "Desconhecido",
+            personBName: participantB?.perfil.participant_name || "Desconhecido",
+            restrictionDirection: restriction.direction,
+            onPress: () => handleDeleteRestriction(restriction.id),
+          };
+        });
+
+        setRestrictionsList(formattedRestrictions);
+      } catch (error) {
+        console.error("Erro ao carregar restrições da nuvem:", error);
+      }
+    }
+
+    fetchRestrictions();
+  }, [partyId, participants, participantsMap]);
+
   function handleChangeRestrictionDirection() {
     setRestrictionDirection((prev) =>
       prev === "one_way" ? "both_ways" : "one_way"
     );
   }
 
-  function handleCreateRestriction() {
+  async function handleCreateRestriction() {
     if (!personA || !personB) return;
     if (personA === personB) return;
 
-    const newRestriction: DrawRestriction = {
-      id: String(Date.now()), //Tirar isto daqui durante a T32
-      party_id: partyId,
-      person_a_id: personA,
-      person_b_id: personB,
-      direction: restrictionDirection,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
+    try {
+      const restrictionData: DrawRestrictionCreationDTO = {
+        party_id: partyId,
+        person_a_id: personA,
+        person_b_id: personB,
+        direction: restrictionDirection,
+      };
 
-    const participantA = participantsMap.get(personA);
-    const participantB = participantsMap.get(personB);
+      const generatedId = await createDrawRestrictionInCloud(restrictionData);
 
-    if (!participantA || !participantB) return;
+      const participantA = participantsMap.get(personA);
+      const participantB = participantsMap.get(personB);
 
-    const newRestrictionListElement: restrictionsListProps = {
-      id: newRestriction.id,
-      personAName: participantA.perfil.participant_name,
-      personBName: participantB.perfil.participant_name,
-      restrictionDirection: newRestriction.direction,
-      onPress: () => handleDeleteRestriction(newRestriction.id),
-    };
+      if (!participantA || !participantB) return;
 
-    setRestrictionsList((prev) => [...prev, newRestrictionListElement]);
+      const newRestrictionListElement: restrictionsListProps = {
+        id: generatedId,
+        personAName: participantA.perfil.participant_name,
+        personBName: participantB.perfil.participant_name,
+        restrictionDirection: restrictionDirection,
+        onPress: () => handleDeleteRestriction(generatedId),
+      };
 
-    setPersonA("");
-    setPersonB("");
+      setRestrictionsList((prev) => [...prev, newRestrictionListElement]);
+
+      setPersonA("");
+      setPersonB("");
+    } catch (error) {
+      console.error("Erro ao salvar restrição manual:", error);
+    }
   }
 
-  function handleDeleteRestriction(RestrictionId: string) {
-    //Deverá ser implementado durante a T32, com uma função de deletar restrição do banco de dados
+  async function handleDeleteRestriction(RestrictionId: string) {
+    try {
+      await deleteDrawRestrictionFromCloud(RestrictionId);
+      setRestrictionsList((prev) => prev.filter((item) => item.id !== RestrictionId));
+    } catch (error) {
+      console.error("Erro ao deletar restrição na nuvem:", error);
+    }
   }
 
   useEffect(() => {
@@ -115,24 +166,31 @@ export function usePartyDrawRestrictionsViewModel() {
     }
   }, [party]);
 
-  function handleToggleBlockDependentDraw() {
-    setBlockDependentDraw((prev) => !prev);
-    
+  async function handleToggleBlockDependentDraw() {
+  const newValue = !blockDependentDraw;
+
+  try {
+    await updatePartyDependentDrawFlagInCloud(partyId, newValue);
+
+    setBlockDependentDraw(newValue);
     setParty((prev) => {
       if (!prev) return prev;
-
       return {
         ...prev,
-        block_dependent_draw: !prev.block_dependent_draw,
+        block_dependent_draw: newValue,
       };
     });
+  } catch (error) {
+    console.error("Erro ao atualizar a flag global de dependentes na nuvem:", error);
   }
+}
 
   const RestrictionDirectionButtonTitle =
     restrictionDirection === "one_way" ? "Não pode tirar" : "Não podem se tirar";
 
-  const BlockDependentDrawButtonTitle =
-    blockDependentDraw ? "Impedir que Titulares e seus Dependentes se tirem" : "Permitir que Titulares e seus Dependentes se tirem";
+  const BlockDependentDrawButtonTitle = blockDependentDraw
+  ? "Permitir que Titulares e seus Dependentes se tirem"
+  : "Impedir que Titulares e seus Dependentes se tirem";
 
   return {
     participantsOptions,

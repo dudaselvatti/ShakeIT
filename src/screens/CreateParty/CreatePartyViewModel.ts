@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Party } from "../../types/Party";
-import { gerarPartyCode } from "../../utils/PartyCode/gerarPartyCode";
 import { createPartyInCloud } from "../../services/cloud/Party/PartyDb";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
+import { PartyCreationDTO } from "../../dto/Party/PartyCreationDTO";
 
 export function useCreatePartyViewModel(navigation: any) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -97,22 +96,16 @@ export function useCreatePartyViewModel(navigation: any) {
 
     if (!isValid || !usuarioAtual) return;
 
-    const novaParty: Omit<Party, "id"> = {
+    const novaParty: PartyCreationDTO = {
       name: nomeParty,
       event_date: dataRevelacao!.toISOString(),
       min_value: numMin,
       max_value: numMax,
       admin_id: usuarioAtual.id,
-      invite_code: gerarPartyCode(),
-      status: "aguardando_sorteio",
-      block_dependent_draw: false,
-      allow_wishlist_changes_after_draw: false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
     };
 
     try {
-    const createdParty = await createPartyInCloud(novaParty);
+      const createdParty = await createPartyInCloud(novaParty);
 
       console.log("Party criada no Firebase:", createdParty);
 
