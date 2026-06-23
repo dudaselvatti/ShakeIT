@@ -38,15 +38,10 @@ export function useCreatePartyViewModel(navigation: any) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
-      // If we don't have unsaved changes, don't intercept
       if (!hasChanges) {
         return;
       }
-
-      // Prevent default behavior of leaving the screen
       e.preventDefault();
-
-      // Store the action to dispatch if user confirms
       setPendingAction(e.data.action);
       setModalVisible(true);
     });

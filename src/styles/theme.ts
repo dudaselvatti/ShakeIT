@@ -38,6 +38,4 @@ export const darkTheme = {
 };
 
 export type ThemeType = typeof lightTheme;
-
-// Maintain backward compatibility for files not yet refactored to use ThemeContext
 export const theme = lightTheme;
