@@ -87,7 +87,7 @@ describe('useHomeViewModel', () => {
     });
 
     expect(mockNavigate).toHaveBeenCalledWith('PerfilSorteado', { 
-      idUsuario: 'mock-user-uuid-1' 
+      idPerfil: 'mock-user-uuid-1' 
     });
   });
 

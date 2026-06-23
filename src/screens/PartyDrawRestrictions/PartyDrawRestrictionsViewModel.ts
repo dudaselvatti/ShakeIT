@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRoute } from "@react-navigation/native";
-import { Participante } from "../../types/Participante";
+import { PartyParticipant } from "../../types/PartyParticipant";
 import { RestrictionDirection } from "../../types/DrawRestriction";
 import { Party } from "../../types/Party";
-import { participantesMock } from "../../mocks/participantesMock";
 import { getPartyFromCloud, updatePartyDependentDrawFlagInCloud} from "../../services/cloud/Party/PartyDb";
 import { getDrawRestrictionsByPartyFromCloud, createDrawRestrictionInCloud, deleteDrawRestrictionFromCloud } from "../../services/cloud/DrawRestriction/DrawRestrictionDb";
 import { DrawRestrictionCreationDTO } from "../../dto/DrawRestriction/DrawRestrictionCreationDTO";
+import { getParticipantsByPartyId } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
 
 type RouteParams = {
   partyId: string;
@@ -31,7 +31,7 @@ export function usePartyDrawRestrictionsViewModel() {
   const { partyId } = route.params as RouteParams;
 
   const [party, setParty] = useState<Party | null>(null);
-  const [participants, setParticipants] = useState<Participante[]>([]);
+  const [participants, setParticipants] = useState<PartyParticipant[]>([]);
   const [restrictionsList, setRestrictionsList] = useState<restrictionsListProps[]>([]);
   const [personA, setPersonA] = useState("");
   const [personB, setPersonB] = useState("");
@@ -57,9 +57,19 @@ export function usePartyDrawRestrictionsViewModel() {
     }
   }, [partyId]);
 
-  useEffect(() => { //Tirar isso daqui quando tivermos participantes no banco de dados
-    const partyParticipants = participantesMock;
-    setParticipants(partyParticipants);
+  useEffect(() => {
+    async function fetchParticipants() {
+      try {
+        const partyParticipants = await getParticipantsByPartyId(partyId);
+        setParticipants(partyParticipants);
+      } catch (error) {
+        console.error("Erro ao buscar participantes no Firestore:", error);
+      }
+    }
+
+    if (partyId) {
+      fetchParticipants();
+    }
   }, [partyId]);
 
   const participantsOptions: SelectOption[] = useMemo(() => {
@@ -71,7 +81,7 @@ export function usePartyDrawRestrictionsViewModel() {
   }, [participants]);
 
   const participantsMap = useMemo(() => {
-    const map = new Map<string, Participante>();
+    const map = new Map<string, PartyParticipant>();
 
     participants.forEach((p) => {
       map.set(p.perfil.id, p);

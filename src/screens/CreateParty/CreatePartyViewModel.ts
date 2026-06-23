@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createPartyInCloud } from "../../services/cloud/Party/PartyDb";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { PartyCreationDTO } from "../../dto/Party/PartyCreationDTO";
+import { createPartyParticipant } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
 
 export function useCreatePartyViewModel(navigation: any) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -106,12 +107,12 @@ export function useCreatePartyViewModel(navigation: any) {
 
     try {
       const createdParty = await createPartyInCloud(novaParty);
-
       console.log("Party criada no Firebase:", createdParty);
 
-      navigation.navigate("PartyCreated", {
-        party: createdParty,
-      });
+      const partyCreatorParticipant = await createPartyParticipant(createdParty.id, usuarioAtual);
+      console.log("Criador da party registrado como participante:", partyCreatorParticipant);
+
+      navigation.navigate("PartyCreated", { party: createdParty, });
 
     } catch (error) {
       console.error("Erro ao criar Party no Firebase:", error);

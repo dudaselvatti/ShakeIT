@@ -30,10 +30,10 @@ describe('ViewModel: usePerfilSorteadoViewModel', () => {
     jest.clearAllMocks();
   });
 
-  it('deve retornar o participante correto baseado no idUsuario da rota', async () => {
-    const mockId = participantesMock[0].usuario.id;
+  it('deve retornar o participante correto baseado no idPerfil da rota', async () => {
+    const mockId = participantesMock[0].perfil.id;
     mockedUseRoute.mockReturnValue({
-      params: { idUsuario: mockId },
+      params: { idPerfil: mockId },
     });
     mockedGetAmigoSecreto.mockResolvedValue(participantesMock[0]);
 
@@ -52,7 +52,7 @@ describe('ViewModel: usePerfilSorteadoViewModel', () => {
   it('deve recuperar do cache quando a requisicao online falhar', async () => {
     const mockId = participantesMock[0].usuario.id;
     mockedUseRoute.mockReturnValue({
-      params: { idUsuario: mockId },
+      params: { idPerfil: mockId },
     });
     mockedGetAmigoSecreto.mockRejectedValue(new Error('Erro de rede'));
     mockedStorageService.getItem.mockResolvedValue(participantesMock[0]);
@@ -70,7 +70,7 @@ describe('ViewModel: usePerfilSorteadoViewModel', () => {
   it('deve registrar erro no console caso participante nao seja encontrado e sem cache', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     mockedUseRoute.mockReturnValue({
-      params: { idUsuario: 'invalid-id' },
+      params: { idPerfil: 'invalid-id' },
     });
     mockedGetAmigoSecreto.mockRejectedValue(new Error('Nao encontrado'));
     mockedStorageService.getItem.mockResolvedValue(null);

@@ -1,7 +1,7 @@
-import { Participante } from '../../types/Participante';
+import { PartyParticipant } from '../../types/PartyParticipant';
 
 export interface Props {
-    participante: Participante;
+    participante: PartyParticipant;
 }
 
 export function useParticipanteCardViewModel({ participante }: Props) {

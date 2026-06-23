@@ -39,7 +39,7 @@ export type RootStackParamList = {
   PartyDrawRestrictions: { partyId: string };
   ShakeReveal: undefined;
   RevealResult: undefined;
-  PerfilSorteado: { idUsuario: string };
+  PerfilSorteado: { idPerfil: string };
   Registration: undefined;
   Login: undefined;
   ForgotMyPassword: undefined;

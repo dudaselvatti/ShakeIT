@@ -13,10 +13,11 @@ export const PartyAdminScreen = () => {
     const {
         partyName,
         partyCode,
-        participantes,
+        participants,
         confirmadosCount,
-        participantesTotal,
+        participantsTotal,
         headerTitle,
+        isDrawing,
         handleNavigatePartyDrawRestrictions,
         handleSorteioPress
     } = usePartyAdminViewModel();
@@ -34,18 +35,18 @@ export const PartyAdminScreen = () => {
 
                 <PartyQRCode partyCode={partyCode} />
 
-                <Text style={styles.participantesCount}>
-                    Perfis confirmados ({confirmadosCount}/{participantesTotal})
+                <Text style={styles.participantsCount}>
+                    Perfis confirmados ({confirmadosCount}/{participantsTotal})
                 </Text>
 
                 <View style={styles.flatListContainer}>
                     <FlatList
-                        data={participantes}
+                        data={participants}
                         keyExtractor={(item) => item.usuario.id.toString()}
                         renderItem={({ item }) => (
                             <ParticipanteCard participante={item} />
                         )}
-                        initialNumToRender={participantes.length}
+                        initialNumToRender={participants.length}
                     />
                 </View>
             </View>
@@ -56,8 +57,9 @@ export const PartyAdminScreen = () => {
                     onPress={handleNavigatePartyDrawRestrictions}
                     variant="outline"
                 />
-                <Button style={styles.btnSorteio}
-                    title="Realizar Sorteio" 
+                <Button
+                    title={isDrawing ? "Realizando sorteio..." : "Realizar sorteio"}
+                    disabled={isDrawing}
                     onPress={handleSorteioPress}
                 />
             </View>

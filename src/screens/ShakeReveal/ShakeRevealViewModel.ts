@@ -1,14 +1,39 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Animated, Vibration } from "react-native";
 import { Accelerometer } from "expo-sensors";
-import { participantesMock } from "../../mocks/participantesMock";
+import { useAuth } from "../../contexts/AuthContext/AuthContext";
+import { getDrawResultByGiverProfileId } from "../../services/cloud/DrawResult/DrawResultDb";
+import { getPartyParticipantByUserIdAndPartyId } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
 
-export function useShakeRevealViewModel(navigation: any) {
+export function useShakeRevealViewModel({ route, navigation }: any) {
+  const { partyId } = route.params;
+  const { usuarioAtual } = useAuth();
+
   const shakeAnimation = useRef(new Animated.Value(0)).current;
   const explodeScale = useRef(new Animated.Value(1)).current;
   const explodeOpacity = useRef(new Animated.Value(1)).current;
   
   const [hasShaken, setHasShaken] = useState(false);
+
+  const navigateToDrawnProfile = useCallback(async () => {
+    if (!usuarioAtual?.id) {
+      return;
+    }
+    try {
+      const participant = await getPartyParticipantByUserIdAndPartyId(usuarioAtual.id, partyId.id);
+      if (!participant) {
+        throw new Error("Participante do usuário não encontrado");
+      }
+      const giverProfileId = participant.perfil.id;
+      const drawResult = await getDrawResultByGiverProfileId(partyId, giverProfileId);
+      if (!drawResult) {
+        throw new Error("Resultado do sorteio não encontrado");
+      }
+      navigation.navigate( "PerfilSorteado", { idPerfil: drawResult.receiver_profile_id });
+    } catch (error) {
+      console.error("Erro ao buscar perfil sorteado:", error);
+    }
+  }, [partyId, usuarioAtual, navigation]);
 
   const handleShakeDetected = useCallback(() => {
     setHasShaken(true);
@@ -26,8 +51,7 @@ export function useShakeRevealViewModel(navigation: any) {
         useNativeDriver: true,
       })
     ]).start(() => {
-      const firstParticipantId = participantesMock[0]?.usuario.id || "550e8400-e29b-41d4-a716-446655440001";
-      navigation.navigate("PerfilSorteado", { idUsuario: firstParticipantId });
+      navigateToDrawnProfile();
     });
   }, [explodeScale, explodeOpacity, navigation]);
 
