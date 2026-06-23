@@ -6,6 +6,8 @@ import { AppFooter } from '../../components/AppFooter';
 import { PartyQRCode } from '../../components/PartyQRCode';
 import { Button } from "../../components/Button";
 import { ParticipanteCard } from '../../components/ParticipanteCard';
+import { LoadingScreen } from '../../components/LoadingScreen';
+import { PopupModal } from '../../components/PopupModal';
 import { usePartyAdminViewModel } from './PartyAdminViewModel';
 import { styles } from './styles';
 
@@ -18,8 +20,17 @@ export const PartyAdminScreen = () => {
         participantesTotal,
         headerTitle,
         handleNavigatePartyDrawRestrictions,
-        handleSorteioPress
+        handleSorteioPress,
+        isLoadingSorteio,
+        isErrorModalVisible,
+        errorMessage,
+        handleCloseErrorModal,
     } = usePartyAdminViewModel();
+
+    if (isLoadingSorteio) {
+        return <LoadingScreen />;
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <AppHeader headerTitle={headerTitle} showSettingsIcon={true} />
@@ -63,6 +74,16 @@ export const PartyAdminScreen = () => {
             </View>
 
             <AppFooter />
+
+            <PopupModal
+                visible={isErrorModalVisible}
+                title="Erro no Sorteio"
+                message={errorMessage}
+                onCancel={handleCloseErrorModal}
+                onConfirm={handleCloseErrorModal}
+                cancelText="Fechar"
+                confirmText="OK"
+            />
         </SafeAreaView>
     );
-}
+}

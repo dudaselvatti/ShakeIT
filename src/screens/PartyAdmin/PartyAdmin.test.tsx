@@ -20,6 +20,7 @@ jest.mock('../../components/ParticipanteCard', () => ({
 
 describe('PartyAdminScreen', () => {
   const mockHandleSorteioPress = jest.fn();
+  const mockHandleCloseErrorModal = jest.fn();
   
   const mockData = {
     partyName: 'Festa de Natal',
@@ -32,6 +33,10 @@ describe('PartyAdminScreen', () => {
     participantesTotal: 2,
     headerTitle: 'Painel do Evento',
     handleSorteioPress: mockHandleSorteioPress,
+    isLoadingSorteio: false,
+    isErrorModalVisible: false,
+    errorMessage: '',
+    handleCloseErrorModal: mockHandleCloseErrorModal,
   };
 
   beforeEach(() => {
@@ -74,4 +79,43 @@ describe('PartyAdminScreen', () => {
 
     expect(mockHandleSorteioPress).toHaveBeenCalledTimes(1);
   });
-});
+
+  it('deve exibir a tela de carregamento quando isLoadingSorteio for true', () => {
+    (usePartyAdminViewModel as jest.Mock).mockReturnValue({
+      ...mockData,
+      isLoadingSorteio: true,
+    });
+
+    render(<PartyAdminScreen />);
+    expect(screen.getByText('Preparando tudo para você...')).toBeTruthy();
+  });
+
+  it('deve exibir o PopupModal de erro grave quando isErrorModalVisible for true e errorMessage estiver preenchida', () => {
+    const customErrorMessage = "Impossível realizar o sorteio! Você adicionou tantas restrições...";
+    (usePartyAdminViewModel as jest.Mock).mockReturnValue({
+      ...mockData,
+      isErrorModalVisible: true,
+      errorMessage: customErrorMessage,
+    });
+
+    render(<PartyAdminScreen />);
+    expect(screen.getByText('Erro no Sorteio')).toBeTruthy();
+    expect(screen.getByText(customErrorMessage)).toBeTruthy();
+  });
+
+  it('deve disparar handleCloseErrorModal ao fechar o modal de erro', () => {
+    (usePartyAdminViewModel as jest.Mock).mockReturnValue({
+      ...mockData,
+      isErrorModalVisible: true,
+      errorMessage: 'Mensagem de Erro',
+    });
+
+    render(<PartyAdminScreen />);
+
+    fireEvent.press(screen.getByText('Fechar'));
+    expect(mockHandleCloseErrorModal).toHaveBeenCalledTimes(1);
+
+    fireEvent.press(screen.getByText('OK'));
+    expect(mockHandleCloseErrorModal).toHaveBeenCalledTimes(2);
+  });
+});

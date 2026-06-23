@@ -74,3 +74,9 @@ jest.mock('firebase/storage', () => ({
   uploadBytes: jest.fn(() => Promise.resolve({})),
   getDownloadURL: jest.fn(() => Promise.resolve('https://mock-url.com/image.jpg')),
 }));
+
+jest.mock('firebase/functions', () => ({
+  getFunctions: jest.fn(() => ({})),
+  httpsCallable: jest.fn(() => jest.fn(() => Promise.resolve({ data: {} }))),
+}));
+

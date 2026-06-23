@@ -6,8 +6,9 @@ import {
     updateDoc,
     getDoc,
 } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 import { Party } from "../../../types/Party";
-import { db } from '../../../config/firebase';
+import { db, functions } from '../../../config/firebase';
 import { PartyCreationDTO } from "../../../dto/Party/PartyCreationDTO";
 import { gerarPartyCode } from "../../../utils/PartyCode/gerarPartyCode";
 
@@ -62,3 +63,8 @@ export async function updatePartyDependentDrawFlagInCloud(partyId: string, block
         updated_at: serverTimestamp(),
     });
 }
+
+export async function realizarSorteioNoBackend(partyId: string): Promise<void> {
+    const realizarSorteioFn = httpsCallable(functions, "realizarSorteio");
+    await realizarSorteioFn({ partyId });
+}

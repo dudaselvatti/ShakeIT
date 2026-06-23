@@ -1,6 +1,6 @@
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { participantesMock } from "../../mocks/participantesMock";
-import { getPartyFromCloud } from '../../services/cloud/Party/PartyDb';
+import { getPartyFromCloud, realizarSorteioNoBackend } from '../../services/cloud/Party/PartyDb';
 import { useEffect, useState } from 'react';
 import { Party } from '../../types/Party';
 
@@ -15,6 +15,10 @@ export function usePartyAdminViewModel() {
     const { partyId } = route.params as RouteParams;
 
     const [party, setParty] = useState<Party | null>(null);
+    const [isLoadingSorteio, setIsLoadingSorteio] = useState(false);
+    const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
     const participantes = participantesMock;
     const confirmadosCount = participantes.filter(p => p.perfil.status === 'confirmado').length;
     const participantesTotal = participantes.length;
@@ -45,8 +49,33 @@ export function usePartyAdminViewModel() {
         navigation.navigate("PartyDrawRestrictions", { partyId: partyId })
     }
 
-    const handleSorteioPress = () => {
-        navigation.navigate('ShakeReveal');
+    const handleSorteioPress = async () => {
+        setIsLoadingSorteio(true);
+        try {
+            await realizarSorteioNoBackend(partyId);
+            navigation.navigate('ShakeReveal');
+        } catch (error: any) {
+            console.error("Erro ao realizar sorteio:", error);
+            const isUnsolvable = 
+                error?.code === 'UNSOLVABLE_GRAPH' ||
+                error?.message?.includes('UNSOLVABLE_GRAPH') ||
+                error?.details === 'UNSOLVABLE_GRAPH' ||
+                error?.details?.code === 'UNSOLVABLE_GRAPH';
+            
+            if (isUnsolvable) {
+                setErrorMessage("Impossível realizar o sorteio! Você adicionou tantas restrições que o algoritmo não conseguiu encontrar uma combinação válida. Remova alguns bloqueios e tente novamente.");
+            } else {
+                setErrorMessage(error?.message || "Ocorreu um erro ao realizar o sorteio. Tente novamente.");
+            }
+            setIsErrorModalVisible(true);
+        } finally {
+            setIsLoadingSorteio(false);
+        }
+    };
+
+    const handleCloseErrorModal = () => {
+        setIsErrorModalVisible(false);
+        setErrorMessage("");
     };
 
     return {
@@ -58,5 +87,9 @@ export function usePartyAdminViewModel() {
         headerTitle,
         handleNavigatePartyDrawRestrictions,
         handleSorteioPress,
+        isLoadingSorteio,
+        isErrorModalVisible,
+        errorMessage,
+        handleCloseErrorModal,
     };
-};
+};
