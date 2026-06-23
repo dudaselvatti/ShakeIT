@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { checkFirebaseConnection } from "./src/services/testFirebase";
@@ -23,6 +24,7 @@ import { FormDependenteScreen } from "./src/screens/FormDependente";
 import { Dependent } from "./src/types/Dependent";
 
 import { AuthProvider, useAuth } from "./src/contexts/AuthContext/AuthContext";
+import { ThemeProvider, useAppTheme } from "./src/contexts/ThemeContext";
 import { RegistrationScreen } from "./src/screens/Registration";
 import { LoginScreen } from "./src/screens/Login";
 import { ForgotMyPasswordScreen } from "./src/screens/ForgotMyPassword";
@@ -56,50 +58,77 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const { usuarioAtual, isLoading } = useAuth();
+  const { isDark, theme } = useAppTheme();
 
   if (isLoading) {
     return <LoadingScreen />;
   }
 
+  const customTheme = isDark ? {
+    ...DarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+      background: theme.colors.background,
+      card: theme.colors.surface,
+      text: theme.colors.text,
+      border: theme.colors.border,
+    },
+  } : {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: theme.colors.background,
+      card: theme.colors.surface,
+      text: theme.colors.text,
+      border: theme.colors.border,
+    },
+  };
+
   return (
-      <Stack.Navigator
-        initialRouteName={usuarioAtual ? "Home" : "Welcome"}
-        screenOptions={{
-          headerShown: false,
-          animation: "slide_from_right",
-        }}
-      >
-        <Stack.Screen 
-          name="Home" 
-          component={HomeScreen} 
-          options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_left' })} 
-        />
-        <Stack.Screen name="CreateParty" component={CreatePartyScreen} />
-        <Stack.Screen name="PartyCreated" component={PartyCreatedScreen} />
-        <Stack.Screen name="PartyAdmin" component={PartyAdminScreen} />
-        <Stack.Screen name="PartyDrawRestrictions" component={PartyDrawRestrictionsScreen} />
-        <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
-        <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="Registration" component={RegistrationScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="ForgotMyPassword" component={ForgotMyPasswordScreen} />
-        <Stack.Screen 
-          name="Scan" 
-          component={ScanScreen} 
-          options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_right' })} 
-        />
-        <Stack.Screen name="PartyPreview" component={PartyPreviewScreen} />
-        <Stack.Screen name="ParticipantLobby" component={ParticipantLobbyScreen} />
-        <Stack.Screen 
-          name="MeuPerfil" 
-          component={MeuPerfilScreen} 
-          options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_right' })} 
-        />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen name="GestaoDependentes" component={GestaoDependentesScreen} />
-        <Stack.Screen name="FormDependente" component={FormDependenteScreen} />
-      </Stack.Navigator>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <NavigationContainer theme={customTheme}>
+        <StatusBar style={isDark ? "light" : "dark"} />
+        <Stack.Navigator
+          initialRouteName={usuarioAtual ? "Home" : "Welcome"}
+          screenOptions={{
+            headerShown: false,
+            animation: "slide_from_right",
+            contentStyle: { backgroundColor: theme.colors.background },
+          }}
+        >
+          <Stack.Screen 
+            name="Home" 
+            component={HomeScreen} 
+            options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_left' })} 
+          />
+          <Stack.Screen name="CreateParty" component={CreatePartyScreen} />
+          <Stack.Screen name="PartyCreated" component={PartyCreatedScreen} />
+          <Stack.Screen name="PartyAdmin" component={PartyAdminScreen} />
+          <Stack.Screen name="PartyDrawRestrictions" component={PartyDrawRestrictionsScreen} />
+          <Stack.Screen name="ShakeReveal" component={ShakeRevealScreen} />
+          <Stack.Screen name="PerfilSorteado" component={PerfilSorteadoScreen} />
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen name="Registration" component={RegistrationScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="ForgotMyPassword" component={ForgotMyPasswordScreen} />
+          <Stack.Screen 
+            name="Scan" 
+            component={ScanScreen} 
+            options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_right' })} 
+          />
+          <Stack.Screen name="PartyPreview" component={PartyPreviewScreen} />
+          <Stack.Screen name="ParticipantLobby" component={ParticipantLobbyScreen} />
+          <Stack.Screen 
+            name="MeuPerfil" 
+            component={MeuPerfilScreen} 
+            options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_right' })} 
+          />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen name="GestaoDependentes" component={GestaoDependentesScreen} />
+          <Stack.Screen name="FormDependente" component={FormDependenteScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
   );
 }
 
@@ -110,12 +139,11 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <NavigationContainer>
-          <StatusBar style="dark" />
+      <ThemeProvider>
+        <AuthProvider>
           <RootNavigator />
-        </NavigationContainer>
-      </AuthProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

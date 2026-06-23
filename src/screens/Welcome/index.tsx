@@ -2,11 +2,14 @@ import React from 'react';
 import { View, Text, SafeAreaView } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Button } from '../../components/Button';
-import { styles } from './styles';
+import { createStyles } from './styles';
 import { theme } from '../../styles/theme';
 import { useWelcomeViewModel } from './WelcomeViewModel';
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const WelcomeScreen = () => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const { handleLogin, handleRegister } = useWelcomeViewModel();
 
     return (

@@ -1,10 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, Animated, Easing } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { styles } from './styles';
+import { createStyles } from './styles';
 import { theme } from '../../styles/theme';
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const LoadingScreen = () => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const spinValue = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {

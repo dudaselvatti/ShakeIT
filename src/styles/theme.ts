@@ -1,4 +1,4 @@
-export const theme = {
+export const lightTheme = {
   colors: {
     primary: "#E63946",
     accent: "#FFCA3A",
@@ -18,3 +18,24 @@ export const theme = {
     padding: 16,
   },
 };
+
+export const darkTheme = {
+  colors: {
+    primary: "#E63946",
+    accent: "#FFCA3A",
+    background: "#121212",
+    surface: "#1E1E1E",
+
+    text: "#F4F6F8",
+    textLight: "#A0AAB2",
+    border: "#333333",
+
+    danger: "#CF6679",
+    success: "#03DAC6",
+    warning: "#FFB74D",
+  },
+  metrics: lightTheme.metrics,
+};
+
+export type ThemeType = typeof lightTheme;
+export const theme = lightTheme;

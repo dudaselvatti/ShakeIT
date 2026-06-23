@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
-import { theme } from "../../styles/theme";
+import { ThemeType } from "../../styles/theme";
 
-export const styles = StyleSheet.create({
+export const createStyles = (theme: ThemeType) => StyleSheet.create({
     qrWrapper: {
         width: 150,
         height: 150,

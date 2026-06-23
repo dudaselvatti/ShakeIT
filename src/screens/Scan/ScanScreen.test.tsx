@@ -80,7 +80,7 @@ describe('Tela Scan', () => {
 
     expect(getByTestId('camera-view')).toBeTruthy();
 
-    expect(getByText('Aponte a câmera para o QR Code para entrar na Party')).toBeTruthy();
+    expect(getByText('Aponte a câmera para o QR Code')).toBeTruthy();
     
     expect(queryByText('Acesso à Câmera Necessário')).toBeNull();
   });

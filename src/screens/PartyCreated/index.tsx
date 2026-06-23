@@ -5,10 +5,13 @@ import { Button } from "../../components/Button";
 import { AppHeader } from "../../components/AppHeader";
 import { AppFooter } from "../../components/AppFooter";
 import { Card } from "../../components/Card";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { usePartyCreatedViewModel } from "./PartyCreatedViewModel";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const PartyCreatedScreen = () => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const { party, voltarParaHome } = usePartyCreatedViewModel();
 
   return (

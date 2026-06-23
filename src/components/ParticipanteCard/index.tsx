@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { styles } from './styles';
+import { createStyles } from './styles';
 import { useParticipanteCardViewModel, Props } from "./ParticipanteCardViewModel";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const ParticipanteCard = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const { nome, statusIcon, statusText, isConfirmado } = useParticipanteCardViewModel(props);
     
     return (

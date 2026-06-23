@@ -8,13 +8,16 @@ import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
 import { IconButton } from "../../components/IconButton";
 import { PopupModal } from "../../components/PopupModal";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { theme } from "../../styles/theme";
 import { useGestaoDependentesViewModel } from "./GestaoDependentesViewModel";
 import { formatDate } from "../../utils/Formatting/formatDate";
 import { calcularIdade } from "../../utils/Usuario/calcularIdade";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const GestaoDependentesScreen = ({ navigation }: any) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const {
         dependents,
         isLoading,

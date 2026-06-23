@@ -5,9 +5,12 @@ import { AppHeader } from '../../components/AppHeader';
 import { AppFooter } from '../../components/AppFooter';
 import { ParticipanteCard } from '../../components/ParticipanteCard';
 import { useParticipantLobbyViewModel } from './ParticipantLobbyViewModel';
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const ParticipantLobbyScreen = () => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const { participantes, confirmadosCount, participantesTotal, handleBackPress } = useParticipantLobbyViewModel();
 
     return (

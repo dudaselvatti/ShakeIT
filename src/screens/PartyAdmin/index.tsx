@@ -5,13 +5,17 @@ import { AppHeader } from '../../components/AppHeader';
 import { AppFooter } from '../../components/AppFooter';
 import { PartyQRCode } from '../../components/PartyQRCode';
 import { Button } from "../../components/Button";
+import { IconButton } from '../../components/IconButton';
 import { ParticipanteCard } from '../../components/ParticipanteCard';
 import { LoadingScreen } from '../../components/LoadingScreen';
 import { PopupModal } from '../../components/PopupModal';
 import { usePartyAdminViewModel } from './PartyAdminViewModel';
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const PartyAdminScreen = () => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const {
         partyName,
         partyCode,
@@ -37,7 +41,15 @@ export const PartyAdminScreen = () => {
 
             <View style={styles.contentBody}>
                 <View style={styles.eventInfo}>
-                    <Text style={styles.partyName}>{partyName}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                        <Text style={styles.partyName}>{partyName}</Text>
+                        <IconButton 
+                            iconName="sliders" 
+                            onPress={handleNavigatePartyDrawRestrictions} 
+                            color={theme.colors.textLight} 
+                            size={20}
+                        />
+                    </View>
                     <Text style={styles.codeLabel}>
                         Código: <Text style={styles.codeValue}>{partyCode}</Text>
                     </Text>
@@ -62,11 +74,7 @@ export const PartyAdminScreen = () => {
             </View>
 
             <View style={styles.footer}>
-                <Button 
-                    title="Configurar restrições de sorteio"
-                    onPress={handleNavigatePartyDrawRestrictions}
-                    variant="outline"
-                />
+
                 <Button style={styles.btnSorteio}
                     title="Realizar Sorteio" 
                     onPress={handleSorteioPress}
@@ -86,4 +94,4 @@ export const PartyAdminScreen = () => {
             />
         </SafeAreaView>
     );
-}
+}

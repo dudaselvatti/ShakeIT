@@ -6,13 +6,16 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { DateInput } from "../../components/DateInput";
 import { AppHeader } from "../../components/AppHeader";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 
 import { useRegistrationViewModel } from "./RegistrationViewModel";
 import { ImagePicker } from "../../components/ImagePicker";
 import { SelectInput } from "../../components/SelectInput";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const RegistrationScreen = ({ navigation }: any) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const {
     nomeUsuario,
     updateNomeUsuario,

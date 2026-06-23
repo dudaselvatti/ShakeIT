@@ -3,10 +3,13 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Tag } from "../../components/Tag";
 import { theme } from "../../styles/theme";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { usePartyCardViewModel, Props } from "./PartyCardViewModel";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const PartyCard = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const { title, statusLabel, eventDate, statusIcon, tagColor, onPress } = usePartyCardViewModel(props);
     
     return (

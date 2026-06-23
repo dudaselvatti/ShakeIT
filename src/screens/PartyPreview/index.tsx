@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { usePartyPreviewViewModel } from "./PartyPreviewViewModel";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { Button } from "../../components/Button";
 import { AppHeader } from "../../components/AppHeader";
 import { AppFooter } from "../../components/AppFooter";
@@ -12,8 +12,11 @@ import { PopupModal } from "../../components/PopupModal";
 import { formatCurrency } from "../../utils/Formatting/formatCurrency";
 import { formatDate } from "../../utils/Formatting/formatDate";
 import { theme } from "../../styles/theme";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const PartyPreviewScreen = () => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const { 
     party, 
     isModalVisible,
