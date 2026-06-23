@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { ViewStyle, Platform } from "react-native";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { theme } from "../../styles/theme";
 import { formatDate } from "../../utils/Formatting/formatDate";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export interface Props {
     label: string;
@@ -17,6 +18,8 @@ export interface Props {
 }
 
 export function useDateInputViewModel({ label, display = "default", value, onChangeDate, placeholder = "DD/MM/AAAA", containerStyle, minimumDate, maximumDate, testID}: Props) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const [showPicker, setShowPicker] = useState(false);
 
     const formattedDate = formatDate(value);

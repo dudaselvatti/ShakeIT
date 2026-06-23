@@ -1,11 +1,14 @@
 import React from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { theme } from "../../styles/theme";
 import { useInputViewModel, Props } from "./InputViewModel";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const Input = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const { 
     label, 
     containerStyle, 

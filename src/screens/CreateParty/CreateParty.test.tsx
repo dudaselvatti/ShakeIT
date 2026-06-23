@@ -83,7 +83,7 @@ describe('Tela CreateParty', () => {
   });
 
   it('deve validar os campos vazios, exibir erros vermelhos e não navegar', async () => {
-    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn(), addListener: jest.fn(() => jest.fn()), dispatch: jest.fn() };
     const { getByText, getByPlaceholderText } = render(
       <CreatePartyScreen navigation={mockNavigation} />
     );
@@ -100,7 +100,7 @@ describe('Tela CreateParty', () => {
   });
 
   it('deve instanciar o objeto Party e navegar com sucesso se tudo estiver correto', async () => {
-    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn(), addListener: jest.fn(() => jest.fn()), dispatch: jest.fn() };
     const { getByText, getByPlaceholderText, getByTestId } = render(
       <CreatePartyScreen navigation={mockNavigation} />
     );
@@ -132,7 +132,7 @@ describe('Tela CreateParty', () => {
       usuarioAtual: null,
     });
 
-    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn(), addListener: jest.fn(() => jest.fn()), dispatch: jest.fn() };
     const { getByText, getByPlaceholderText, getByTestId } = render(
       <CreatePartyScreen navigation={mockNavigation} />
     );
@@ -151,7 +151,7 @@ describe('Tela CreateParty', () => {
   });
 
   it('deve voltar à tela anterior ao confirmar a saída no modal', async () => {
-    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn(), addListener: jest.fn(() => jest.fn()), dispatch: jest.fn() };
     const { getByTestId, getByText, getByPlaceholderText } = render(
       <CreatePartyScreen navigation={mockNavigation} />
     );
@@ -167,7 +167,7 @@ describe('Tela CreateParty', () => {
   });
 
   it('deve navegar silenciosamente se não houver alterações', () => {
-    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn(), addListener: jest.fn(() => jest.fn()), dispatch: jest.fn() };
     const { getByTestId } = render(
       <CreatePartyScreen navigation={mockNavigation} />
     );
@@ -177,7 +177,7 @@ describe('Tela CreateParty', () => {
   });
 
   it('deve interceptar navegação do footer e exibir modal se houver alterações', async () => {
-    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+    const mockNavigation = { navigate: jest.fn(), goBack: jest.fn(), addListener: jest.fn(() => jest.fn()), dispatch: jest.fn() };
     const { getByPlaceholderText, getByText } = render(
       <CreatePartyScreen navigation={mockNavigation} />
     );

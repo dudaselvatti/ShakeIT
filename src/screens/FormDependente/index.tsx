@@ -10,10 +10,13 @@ import { SelectInput } from "../../components/SelectInput";
 import { DateInput } from "../../components/DateInput";
 import { Card } from "../../components/Card";
 import { Tag } from "../../components/Tag";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { useFormDependenteViewModel } from "./FormDependenteViewModel";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const FormDependenteScreen = ({ navigation }: any) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const route = useRoute<any>();
     const dependentToEdit = route.params?.dependent;
 

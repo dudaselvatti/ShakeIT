@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import{ usePerfilSorteadoContentViewModel, Props} from './PerfilSorteadoContentViewModel'
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { useAppTheme } from "../../../../contexts/ThemeContext";
 
 export const PerfilSorteadoContent = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const { medidas, preferencias } = usePerfilSorteadoContentViewModel(props);
 
     return (

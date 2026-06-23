@@ -1,6 +1,7 @@
 import { TouchableOpacityProps } from "react-native";
 import { theme } from "../../styles/theme";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export interface Props extends TouchableOpacityProps {
     title: string;
@@ -9,6 +10,8 @@ export interface Props extends TouchableOpacityProps {
     textStyles?: string;
 }
 export function useButtonViewModel({ title, variant = "primary", isLoading = false, style, disabled = false, ...touchableOpacityProps }: Props) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const isDisabled = isLoading || disabled;
 
     const loadingColor =

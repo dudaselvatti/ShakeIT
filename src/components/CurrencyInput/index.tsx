@@ -1,10 +1,13 @@
 import React from "react";
 import { View, Text, TextInput } from "react-native";
 import { useCurrencyInputViewModel, Props } from './CurrencyInputViewModel';
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { theme } from "../../styles/theme";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const CurrencyInput = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const { handleTextChange, label, containerStyle, onChangeText, value, ...textInputProps} = useCurrencyInputViewModel(props);
   
   return (

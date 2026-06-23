@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { TextInputProps, ViewStyle } from "react-native";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export interface Props extends TextInputProps {
   label?: string;
@@ -10,6 +11,8 @@ export interface Props extends TextInputProps {
 }
 
 export function useInputViewModel({ label, containerStyle, inputContainerStyle, style, isPassword, secureTextEntry, ...textInputProps }: Props) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const textInputStyle = [styles.input, style];
     

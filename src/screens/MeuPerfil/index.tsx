@@ -11,13 +11,14 @@ import { Card } from '../../components/Card';
 import { Input } from '../../components/Input';
 import { Tag } from '../../components/Tag';
 import { PopupModal } from '../../components/PopupModal';
-import { styles } from './styles';
+import { createStyles } from './styles';
 import { theme } from '../../styles/theme';
 import { useMeuPerfilViewModel } from './MeuPerfilViewModel';
 import { ImagePicker } from "../../components/ImagePicker";
 import { SelectInput } from "../../components/SelectInput";
 import { DateInput } from "../../components/DateInput";
 import { calcularIdade } from '../../utils/Usuario/calcularIdade';
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 interface SizeCardProps {
     title: string;
@@ -30,6 +31,8 @@ interface SizeCardProps {
 }
 
 const SizeCard = ({ title, emoji, placeholder, selectedValue, onValueChange, options, isEditing }: SizeCardProps) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const renderPlaceholderText = (text: string) => {
         if (!isEditing) return <Text style={styles.dropdownPlaceholderText}>-</Text>;
         if (text.startsWith("Selecione o tamanho")) {
@@ -79,6 +82,8 @@ const SizeCard = ({ title, emoji, placeholder, selectedValue, onValueChange, opt
 };
 
 export const MeuPerfilScreen = () => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const navigation = useNavigation<any>();
     const {
         nome,

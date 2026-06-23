@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { styles } from './styles';
+import { createStyles } from './styles';
 import { useImagePickerViewModel, Props } from './ImagePickerViewModel';
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const ImagePicker = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const { 
         label,
         value,

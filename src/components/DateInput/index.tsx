@@ -1,10 +1,13 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { useDateInputViewModel, Props } from "./DateInputViewModel";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const DateInput = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const { 
     label,
     display,

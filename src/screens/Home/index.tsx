@@ -6,9 +6,12 @@ import { AppFooter } from "../../components/AppFooter";
 import { PartyCard } from "../../components/PartyCard";
 import { IconButton } from "../../components/IconButton";
 import { useHomeViewModel } from "./HomeViewModel";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const HomeScreen = () => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const { parties, handleCardPress, handleCreateParty, userName } = useHomeViewModel();
   const insets = useSafeAreaInsets();
 
