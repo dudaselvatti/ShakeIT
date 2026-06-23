@@ -1,10 +1,13 @@
 import React from "react";
 import { Modal, View, Text } from "react-native";
 import { usePopupModalViewModel, Props } from "./PopupModalViewModel";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { Button } from "../Button";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const PopupModal = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const { 
     visible,
     title,

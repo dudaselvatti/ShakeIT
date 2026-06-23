@@ -56,7 +56,6 @@ describe("PartyDrawRestrictionsScreen", () => {
     handleCreateRestriction: jest.fn(),
     handleDeleteRestriction: jest.fn(),
     blockDependentDraw: false,
-    BlockDependentDrawButtonTitle: "Impedir que Titulares e seus Dependentes se tirem",
     handleToggleBlockDependentDraw: jest.fn(),
   };
 
@@ -71,7 +70,7 @@ describe("PartyDrawRestrictionsScreen", () => {
     expect(getByText("Evite que pessoas específicas se tirem no sorteio (ex: casais).")).toBeTruthy();
     expect(getByText("Não pode tirar")).toBeTruthy();
     expect(getByText("+ Adicionar Regra")).toBeTruthy();
-    expect(getByText("Impedir que Titulares e seus Dependentes se tirem")).toBeTruthy();
+    expect(getByText("Impedir que titulares e dependentes se tirem no sorteio")).toBeTruthy();
     expect(getByText("Regras Ativas")).toBeTruthy();
 
     expect(queryByText("Titulares e dependentes não podem se tirar")).toBeNull();
@@ -96,12 +95,12 @@ describe("PartyDrawRestrictionsScreen", () => {
   });
 
   it("deve chamar handleToggleBlockDependentDraw ao clicar no botão de bloqueio de dependentes", () => {
-    const { getByText } = render(<PartyDrawRestrictionsScreen />);
+    const { getByRole } = render(<PartyDrawRestrictionsScreen />);
     
-    const toggleButton = getByText("Impedir que Titulares e seus Dependentes se tirem");
-    fireEvent.press(toggleButton);
+    const toggleSwitch = getByRole('switch');
+    fireEvent(toggleSwitch, 'valueChange', true);
 
-    expect(defaultViewModelMock.handleToggleBlockDependentDraw).toHaveBeenCalledTimes(1);
+    expect(defaultViewModelMock.handleToggleBlockDependentDraw).toHaveBeenCalledWith(true);
   });
 
   it("deve exibir o aviso se blockDependentDraw for true", () => {

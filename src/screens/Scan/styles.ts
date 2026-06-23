@@ -1,10 +1,10 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { theme } from "../../styles/theme";
+import { ThemeType } from "../../styles/theme";
 
 const { width, height } = Dimensions.get("window");
 const overlayColor = "rgba(0,0,0,0.6)";
 
-export const styles = StyleSheet.create({
+export const createStyles = (theme: ThemeType) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
@@ -40,6 +40,13 @@ export const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "transparent",
   },
+  topInstructionContainer: {
+    position: "absolute",
+    top: 60,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+  },
   bottomInstructionContainer: {
     position: "absolute",
     bottom: 100,
@@ -48,7 +55,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   instructionText: {
-    color: theme.colors.surface,
+    color: "#FFF",
     fontSize: 16,
     fontWeight: "500",
     textAlign: "center",

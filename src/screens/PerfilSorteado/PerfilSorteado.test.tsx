@@ -3,6 +3,12 @@ import { render } from '@testing-library/react-native';
 import { PerfilSorteadoScreen } from './index';
 import { usePerfilSorteadoViewModel } from './PerfilSorteadoViewModel';
 
+jest.mock('expo-screen-capture', () => ({
+  addScreenshotListener: jest.fn(() => ({ remove: jest.fn() })),
+  preventScreenCaptureAsync: jest.fn(),
+  allowScreenCaptureAsync: jest.fn(),
+}));
+
 
 jest.mock('./PerfilSorteadoViewModel');
 

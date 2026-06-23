@@ -2,11 +2,14 @@ import React from "react";
 import { View, Text } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Feather } from "@expo/vector-icons";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { theme } from "../../styles/theme";
 import { useSelectInputViewModel, Props } from "./SelectInputViewModel";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const SelectInput = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const { label, selectedValue, onValueChange, options, style, containerStyle, displayValue, isPlaceholder, testID } = useSelectInputViewModel(props);
 
   return (

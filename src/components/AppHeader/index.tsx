@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { styles } from './styles';
+import { createStyles } from './styles';
 import { useAppHeaderViewModel, Props } from './AppHeaderViewModel';
 import { IconButton } from '../IconButton';
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const AppHeader = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const { 
         title, 
         showBackButton, 

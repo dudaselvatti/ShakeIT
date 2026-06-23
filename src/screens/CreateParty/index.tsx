@@ -8,11 +8,14 @@ import { DateInput } from "../../components/DateInput";
 import { CurrencyInput } from "../../components/CurrencyInput";
 import { AppHeader } from "../../components/AppHeader";
 import { AppFooter } from "../../components/AppFooter";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 
 import { useCreatePartyViewModel } from "./CreatePartyViewModel";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const CreatePartyScreen = ({ navigation }: any) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const {
     nomeParty,
     updateNomeParty,

@@ -1,7 +1,8 @@
 import { TouchableOpacityProps } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { theme } from "../../styles/theme";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export interface Props extends TouchableOpacityProps {
   iconName: keyof typeof Feather.glyphMap;
@@ -11,6 +12,8 @@ export interface Props extends TouchableOpacityProps {
 }
 
 export function useIconButtonViewModel({ iconName, variant = "transparent", color, size, style, ...touchableOpacityProps }: Props) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const defaultColor = variant === "fab" ? theme.colors.surface : theme.colors.text;
 
     const defaultSize = variant === "fab" ? 32 : 24;

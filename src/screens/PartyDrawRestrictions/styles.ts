@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
-import { theme } from "../../styles/theme";
+import { ThemeType } from "../../styles/theme";
 
-export const iconColor = theme.colors.textLight;
 
-export const styles = StyleSheet.create({
+
+export const createStyles = (theme: ThemeType) => StyleSheet.create({
   container: {
     marginTop: 16,
     paddingHorizontal: 20,

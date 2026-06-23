@@ -1,0 +1,207 @@
+
+> shakeit@1.0.0 test
+> jest src/components/Button/ButtonViewModel.test.ts
+
+FAIL src/components/Button/ButtonViewModel.test.ts
+  useButtonViewModel
+    ✓ deve retornar os valores padrão corretamente (33 ms)
+    ✓ deve ficar desabilitado se isLoading for true (2 ms)
+    ✓ deve aplicar a cor de loading correta para variantes "outline" ou "text" (2 ms)
+    ✕ deve compor os estilos corretamente baseados na variante (6 ms)
+    ✓ deve permitir a sobreposição de estilos via props (1 ms)
+    ✓ deve separar as propriedades nativas do TouchableOpacity (2 ms)
+
+  ● useButtonViewModel › deve compor os estilos corretamente baseados na variante
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: {"alignItems": "center", "borderRadius": 8, "height": 50, "justifyContent": "center", "paddingHorizontal": 20, "width": "100%"}
+    Received array: [{"alignItems": "center", "borderRadius": 8, "height": 50, "justifyContent": "center", "paddingHorizontal": 20, "width": "100%"}, {"backgroundColor": "#FFCA3A"}, undefined]
+
+    Looks like you wanted to test for object/array equality with the stricter `toContain` matcher. You probably need to use `toContainEqual` instead.
+
+      45 |     );
+      46 |
+    > 47 |     expect(result.current.touchableOpacityStyles).toContain(styles.base);
+         |                                                   ^
+      48 |     expect(result.current.touchableOpacityStyles).toContain(styles.accent);
+      49 |     
+      50 |     expect(result.current.textStyles).toContain(styles.textBase);
+
+      at Object.toContain (src/components/Button/ButtonViewModel.test.ts:47:51)
+
+---------------------------------------------------------|---------|----------|---------|---------|-------------------
+File                                                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------------------------------------------------|---------|----------|---------|---------|-------------------
+All files                                                |     0.6 |     1.13 |    0.24 |    0.66 |                   
+ components/AppFooter                                    |       0 |        0 |       0 |       0 |                   
+  index.tsx                                              |       0 |        0 |       0 |       0 | 12-57             
+ components/AppHeader                                    |       0 |        0 |       0 |       0 |                   
+  AppHeaderViewModel.ts                                  |       0 |        0 |       0 |       0 | 12-32             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 8-19              
+ components/Button                                       |      70 |    81.81 |      50 |      70 |                   
+  ButtonViewModel.ts                                     |     100 |      100 |     100 |     100 |                   
+  index.tsx                                              |       0 |        0 |       0 |       0 | 9-11              
+ components/Card                                         |       0 |      100 |       0 |       0 |                   
+  index.tsx                                              |       0 |      100 |       0 |       0 | 12-15             
+ components/CurrencyInput                                |       0 |        0 |       0 |       0 |                   
+  CurrencyInputViewModel.ts                              |       0 |        0 |       0 |       0 | 13-21             
+  index.tsx                                              |       0 |      100 |       0 |       0 | 8-13              
+ components/DateInput                                    |       0 |        0 |       0 |       0 |                   
+  DateInputViewModel.ts                                  |       0 |        0 |       0 |       0 | 21-55             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 8-27              
+ components/IconButton                                   |       0 |        0 |       0 |       0 |                   
+  IconButtonViewModel.ts                                 |       0 |        0 |       0 |       0 | 15-27             
+  index.tsx                                              |       0 |      100 |       0 |       0 | 6-9               
+ components/ImagePicker                                  |       0 |        0 |       0 |       0 |                   
+  ImagePickerViewModel.tsx                               |       0 |        0 |       0 |       0 | 13-48             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 7-17              
+ components/Input                                        |       0 |        0 |       0 |       0 |                   
+  InputViewModel.ts                                      |       0 |        0 |       0 |       0 | 14-27             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 9-24              
+ components/LoadingScreen                                |       0 |      100 |       0 |       0 |                   
+  index.tsx                                              |       0 |      100 |       0 |       0 | 8-29              
+ components/ParticipanteCard                             |       0 |        0 |       0 |       0 |                   
+  ParticipanteCardViewModel.ts                           |       0 |        0 |       0 |       0 | 8-16              
+  index.tsx                                              |       0 |        0 |       0 |       0 | 7-12              
+ components/PartyCard                                    |       0 |        0 |       0 |       0 |                   
+  PartyCardViewModel.ts                                  |       0 |        0 |       0 |       0 | 13-28             
+  index.tsx                                              |       0 |      100 |       0 |       0 | 10-15             
+ components/PartyQRCode                                  |       0 |      100 |       0 |       0 |                   
+  PartyQRCodeViewModel.ts                                |       0 |      100 |       0 |       0 | 6-8               
+  index.tsx                                              |       0 |      100 |       0 |       0 | 8-12              
+ components/PopupModal                                   |       0 |        0 |       0 |       0 |                   
+  PopupModalViewModel.ts                                 |       0 |        0 |       0 |       0 | 24                
+  index.tsx                                              |       0 |      100 |       0 |       0 | 8-22              
+ components/RestrictionCard                              |       0 |        0 |       0 |       0 |                   
+  RestrictionCardViewModel.ts                            |       0 |      100 |       0 |       0 | 10-11             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 7-12              
+ components/ScratchCard                                  |       0 |        0 |       0 |       0 |                   
+  index.tsx                                              |       0 |        0 |       0 |       0 | 12-61             
+ components/SelectInput                                  |       0 |        0 |       0 |       0 |                   
+  SelectInputViewModel.ts                                |       0 |        0 |       0 |       0 | 20-25             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 10-36             
+ components/SettingsOption                               |       0 |        0 |       0 |       0 |                   
+  SettingsOptionViewModel.ts                             |       0 |        0 |       0 |       0 | 14                
+  index.tsx                                              |       0 |      100 |       0 |       0 | 8-13              
+ components/Tag                                          |       0 |        0 |       0 |       0 |                   
+  TagViewModel.ts                                        |       0 |        0 |       0 |       0 | 10-13             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 8-13              
+ config                                                  |       0 |        0 |     100 |       0 |                   
+  firebase.ts                                            |       0 |        0 |     100 |       0 | 8-23              
+ contexts                                                |       0 |        0 |       0 |       0 |                   
+  ThemeContext.tsx                                       |       0 |        0 |       0 |       0 | 13-71             
+ contexts/AuthContext                                    |       0 |        0 |       0 |       0 |                   
+  AuthContext.tsx                                        |       0 |        0 |       0 |       0 | 14-62             
+ dto/DrawRestriction                                     |       0 |        0 |       0 |       0 |                   
+  DrawRestrictionCreationDTO.ts                          |       0 |        0 |       0 |       0 |                   
+  DrawRestrictionResponseDTO.ts                          |       0 |        0 |       0 |       0 |                   
+ dto/Party                                               |       0 |        0 |       0 |       0 |                   
+  PartyCreationDTO.ts                                    |       0 |        0 |       0 |       0 |                   
+ dto/User                                                |       0 |        0 |       0 |       0 |                   
+  UserForgotMyPasswordDTO.ts                             |       0 |        0 |       0 |       0 |                   
+  UserLoginDTO.ts                                        |       0 |        0 |       0 |       0 |                   
+  UserRegistrationDTO.ts                                 |       0 |        0 |       0 |       0 |                   
+ mocks                                                   |       0 |        0 |       0 |       0 |                   
+  participantesMock.ts                                   |       0 |        0 |       0 |       0 | 5-10              
+  partiesMock.ts                                         |       0 |      100 |     100 |       0 | 3                 
+  perfisMock.ts                                          |       0 |      100 |     100 |       0 | 3                 
+  usuariosMock.ts                                        |       0 |      100 |     100 |       0 | 3                 
+ screens/CreateParty                                     |       0 |        0 |       0 |       0 |                   
+  CreatePartyViewModel.ts                                |       0 |        0 |       0 |       0 | 7-144             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 16-37             
+ screens/ForgotMyPassword                                |       0 |        0 |       0 |       0 |                   
+  ForgotMyPasswordViewModel.ts                           |       0 |        0 |       0 |       0 | 7-61              
+  index.tsx                                              |       0 |        0 |       0 |       0 | 11-23             
+ screens/FormDependente                                  |       0 |        0 |       0 |       0 |                   
+  FormDependenteViewModel.ts                             |       0 |        0 |       0 |       0 | 8-256             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 17-238            
+ screens/GestaoDependentes                               |       0 |        0 |       0 |       0 |                   
+  GestaoDependentesViewModel.ts                          |       0 |        0 |       0 |       0 | 8-91              
+  index.tsx                                              |       0 |        0 |       0 |       0 | 18-123            
+ screens/Home                                            |       0 |        0 |       0 |       0 |                   
+  HomeViewModel.ts                                       |       0 |        0 |       0 |       0 | 8-35              
+  index.tsx                                              |       0 |      100 |       0 |       0 | 12-38             
+ screens/Login                                           |       0 |        0 |       0 |       0 |                   
+  LoginViewModel.ts                                      |       0 |        0 |       0 |       0 | 7-80              
+  index.tsx                                              |       0 |        0 |       0 |       0 | 12-27             
+ screens/MeuPerfil                                       |       0 |        0 |       0 |       0 |                   
+  MeuPerfilViewModel.ts                                  |       0 |        0 |       0 |       0 | 6-203             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 33-352            
+ screens/ParticipantLobby                                |       0 |      100 |       0 |       0 |                   
+  ParticipantLobbyViewModel.ts                           |       0 |      100 |       0 |       0 | 5-18              
+  index.tsx                                              |       0 |      100 |       0 |       0 | 11-42             
+ screens/PartyAdmin                                      |       0 |        0 |       0 |       0 |                   
+  PartyAdminViewModel.ts                                 |       0 |        0 |       0 |       0 | 12-52             
+  index.tsx                                              |       0 |      100 |       0 |       0 | 14-58             
+ screens/PartyCreated                                    |       0 |      100 |       0 |       0 |                   
+  PartyCreatedViewModel.ts                               |       0 |      100 |       0 |       0 | 5-14              
+  index.tsx                                              |       0 |      100 |       0 |       0 | 12-17             
+ screens/PartyDrawRestrictions                           |       0 |        0 |       0 |       0 |                   
+  PartyDrawRestrictionsViewModel.ts                      |       0 |        0 |       0 |       0 | 30-195            
+  index.tsx                                              |       0 |        0 |       0 |       0 | 12-107            
+ screens/PartyPreview                                    |       0 |        0 |       0 |       0 |                   
+  PartyPreviewViewModel.ts                               |       0 |        0 |       0 |       0 | 6-59              
+  index.tsx                                              |       0 |      100 |       0 |       0 | 17-30             
+ screens/PerfilSorteado                                  |       0 |        0 |       0 |       0 |                   
+  PerfilSorteadoViewModel.ts                             |       0 |        0 |       0 |       0 | 14-41             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 15-59             
+ screens/PerfilSorteado/components/PerfilSorteadoContent |       0 |        0 |       0 |       0 |                   
+  PerfilSorteadoContentViewModel.ts                      |       0 |      100 |       0 |       0 | 9                 
+  index.tsx                                              |       0 |        0 |       0 |       0 | 7-44              
+ screens/PerfilSorteado/components/PerfilSorteadoHeader  |       0 |      100 |       0 |       0 |                   
+  PerfilSorteadoHeaderViewModel.ts                       |       0 |      100 |       0 |       0 | 15-25             
+  index.tsx                                              |       0 |      100 |       0 |       0 | 7-12              
+ screens/Registration                                    |       0 |        0 |       0 |       0 |                   
+  RegistrationViewModel.ts                               |       0 |        0 |       0 |       0 | 7-172             
+  index.tsx                                              |       0 |        0 |       0 |       0 | 16-138            
+ screens/Scan                                            |       0 |        0 |       0 |       0 |                   
+  index.tsx                                              |       0 |        0 |       0 |       0 | 13-123            
+ screens/Settings                                        |       0 |        0 |       0 |       0 |                   
+  SettingsViewModel.ts                                   |       0 |        0 |       0 |       0 | 6-59              
+  index.tsx                                              |       0 |        0 |       0 |       0 | 15-29             
+ screens/ShakeReveal                                     |       0 |        0 |       0 |       0 |                   
+  ShakeRevealViewModel.ts                                |       0 |        0 |       0 |       0 | 7-79              
+  index.tsx                                              |       0 |        0 |       0 |       0 | 9-26              
+ screens/Welcome                                         |       0 |      100 |       0 |       0 |                   
+  WelcomeViewModel.ts                                    |       0 |      100 |       0 |       0 | 4-14              
+  index.tsx                                              |       0 |      100 |       0 |       0 | 10-15             
+ services                                                |       0 |        0 |       0 |       0 |                   
+  storageService.ts                                      |       0 |        0 |       0 |       0 | 3-14              
+  testFirebase.ts                                        |       0 |        0 |       0 |       0 | 4-20              
+ services/cloud/Dependent                                |       0 |        0 |       0 |       0 |                   
+  DependentDb.ts                                         |       0 |        0 |       0 |       0 | 15-95             
+ services/cloud/DrawRestriction                          |       0 |      100 |       0 |       0 |                   
+  DrawRestrictionDb.ts                                   |       0 |      100 |       0 |       0 | 17-60             
+ services/cloud/Party                                    |       0 |        0 |       0 |       0 |                   
+  PartyDb.ts                                             |       0 |        0 |       0 |       0 | 15-60             
+ services/cloud/PartyParticipant                         |       0 |        0 |       0 |       0 |                   
+  PartyParticipantDb.ts                                  |       0 |        0 |       0 |       0 | 4-8               
+ services/cloud/User                                     |       0 |        0 |       0 |       0 |                   
+  UserDb.ts                                              |       0 |        0 |       0 |       0 | 23-103            
+ services/cloud/Wishlist                                 |       0 |        0 |       0 |       0 |                   
+  WishlistDb.ts                                          |       0 |        0 |       0 |       0 | 5-69              
+ styles                                                  |     100 |      100 |     100 |     100 |                   
+  theme.ts                                               |     100 |      100 |     100 |     100 |                   
+ types                                                   |       0 |        0 |       0 |       0 |                   
+  Dependent.ts                                           |       0 |        0 |       0 |       0 |                   
+  DrawRestriction.ts                                     |       0 |        0 |       0 |       0 |                   
+  Participante.ts                                        |       0 |        0 |       0 |       0 |                   
+  Party.ts                                               |       0 |        0 |       0 |       0 |                   
+  Perfil.ts                                              |       0 |        0 |       0 |       0 |                   
+  Usuario.ts                                             |       0 |        0 |       0 |       0 |                   
+  Wishlist.ts                                            |       0 |        0 |       0 |       0 |                   
+ utils/Formatting                                        |       0 |        0 |       0 |       0 |                   
+  formatCurrency.ts                                      |       0 |        0 |       0 |       0 | 2-23              
+  formatDate.ts                                          |       0 |        0 |       0 |       0 | 5-7               
+  isValidEmail.ts                                        |       0 |      100 |       0 |       0 | 2-3               
+ utils/PartyCode                                         |       0 |      100 |       0 |       0 |                   
+  gerarPartyCode.ts                                      |       0 |      100 |       0 |       0 | 1-8               
+ utils/Usuario                                           |       0 |        0 |       0 |       0 |                   
+  calcularIdade.ts                                       |       0 |        0 |       0 |       0 | 2-38              
+---------------------------------------------------------|---------|----------|---------|---------|-------------------
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 5 passed, 6 total
+Snapshots:   0 total
+Time:        3.457 s
+Ran all test suites matching /src\/components\/Button\/ButtonViewModel.test.ts/i.
