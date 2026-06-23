@@ -14,6 +14,7 @@ jest.mock("@react-navigation/native", () => {
     useNavigation: () => ({
       navigate: jest.fn(),
       goBack: jest.fn(),
+      addListener: jest.fn(() => jest.fn()),
     }),
     useRoute: () => ({
       name: 'MockScreen',
@@ -73,4 +74,24 @@ jest.mock('firebase/storage', () => ({
   ref: jest.fn(),
   uploadBytes: jest.fn(() => Promise.resolve({})),
   getDownloadURL: jest.fn(() => Promise.resolve('https://mock-url.com/image.jpg')),
+}));
+
+jest.mock('./src/contexts/ThemeContext', () => {
+  const { lightTheme } = require('./src/styles/theme');
+  return {
+    useAppTheme: jest.fn().mockReturnValue({
+      theme: lightTheme,
+      isDark: false,
+      toggleTheme: jest.fn(),
+      isScratchMode: false,
+      toggleScratchMode: jest.fn(),
+    }),
+    ThemeProvider: ({ children }) => children,
+  };
+});
+
+jest.mock('expo-screen-capture', () => ({
+  addScreenshotListener: jest.fn(() => ({ remove: jest.fn() })),
+  preventScreenCaptureAsync: jest.fn(),
+  allowScreenCaptureAsync: jest.fn(),
 }));

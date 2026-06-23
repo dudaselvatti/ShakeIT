@@ -1,10 +1,7 @@
 import { StyleSheet } from "react-native";
-import { theme } from "../../styles/theme";
+import { ThemeType } from "../../styles/theme";
 
-export const arrowColor = theme.colors.textLight;
-export const xColor = theme.colors.danger;
-
-export const styles = StyleSheet.create({
+export const createStyles = (theme: ThemeType) => StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",

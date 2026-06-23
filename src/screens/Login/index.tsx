@@ -4,11 +4,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { AppHeader } from "../../components/AppHeader";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 
 import { useLoginViewModel } from "./LoginViewModel";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const LoginScreen = ({ navigation }: any) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const {
     email,
     updateEmail,

@@ -2,13 +2,13 @@ import { renderHook } from "@testing-library/react-native";
 import { useInputViewModel, Props } from "./InputViewModel";
 
 jest.mock("./styles", () => ({
-  styles: {
+  createStyles: jest.fn(() => ({
     input: {
       height: 40,
       borderColor: "gray",
       borderWidth: 1,
     },
-  },
+  })),
 }));
 
 describe("useInputViewModel", () => {

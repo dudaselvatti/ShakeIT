@@ -1,10 +1,13 @@
 import React from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
 import { Feather } from "@expo/vector-icons";
-import { styles } from './styles';
+import { createStyles } from './styles';
 import { useSettingsOptionViewModel, Props } from './SettingsOptionViewModel';
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const SettingsOption = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const { title, iconName, iconSize, iconColor, children, ...touchableOpacityProps } = useSettingsOptionViewModel(props)
 
     return (

@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { usePerfilSorteadoHeaderViewModel, Props } from './PerfilSorteadoHeaderViewModel'
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { useAppTheme } from "../../../../contexts/ThemeContext";
 
 export const PerfilSorteadoHeader = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
     const { nome, fotoUrl, idade, genero } = usePerfilSorteadoHeaderViewModel(props);
     
     return (

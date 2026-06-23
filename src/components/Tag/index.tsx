@@ -1,10 +1,13 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
 import { useTagViewModel, Props } from "./TagViewModel";
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export const Tag = (props: Props) => {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
   const { label, onRemove, backgroundColor, textColor } = useTagViewModel(props)
   
   return (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPartyInCloud } from "../../services/cloud/Party/PartyDb";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { PartyCreationDTO } from "../../dto/Party/PartyCreationDTO";
@@ -10,7 +10,7 @@ export function useCreatePartyViewModel(navigation: any) {
   const [valorMinimo, setValorMinimo] = useState("");
   const [valorMaximo, setValorMaximo] = useState("");
   const [errors, setErrors] = useState({ nome: "", data: "", valores: "" });
-  const [pendingRoute, setPendingRoute] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<any>(null);
 
   const { usuarioAtual } = useAuth();
 
@@ -36,27 +36,44 @@ export function useCreatePartyViewModel(navigation: any) {
 
   const hasChanges = nomeParty !== "" || dataRevelacao !== undefined || valorMinimo !== "" || valorMaximo !== "";
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
+      if (!hasChanges) {
+        return;
+      }
+      e.preventDefault();
+      setPendingAction(e.data.action);
+      setModalVisible(true);
+    });
+
+    return unsubscribe;
+  }, [navigation, hasChanges]);
+
   const handleBackPress = () => {
     if (hasChanges) {
-      setPendingRoute(null);
       setModalVisible(true);
     } else {
       navigation.goBack();
     }
   };
+
   const handleFooterNavigate = (route: string) => {
     if (hasChanges) {
-      setPendingRoute(route);
+      setPendingAction(route);
       setModalVisible(true);
     } else {
       navigation.navigate(route);
     }
   };
+
   const cancelExit = () => setModalVisible(false);
+
   const confirmExit = () => {
     setModalVisible(false);
-    if (pendingRoute) {
-      navigation.navigate(pendingRoute);
+    if (typeof pendingAction === 'string') {
+      navigation.navigate(pendingAction);
+    } else if (pendingAction) {
+      navigation.dispatch(pendingAction);
     } else {
       navigation.goBack();
     }

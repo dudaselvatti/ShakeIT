@@ -1,7 +1,9 @@
 import { renderHook } from '@testing-library/react-native';
 import { useButtonViewModel, Props } from './ButtonViewModel';
 import { theme } from "../../styles/theme";
-import { styles } from "./styles";
+import { createStyles } from "./styles";
+const styles = createStyles(theme);
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 describe('useButtonViewModel', () => {
   const defaultProps: Props = {
@@ -42,11 +44,11 @@ describe('useButtonViewModel', () => {
       useButtonViewModel({ ...defaultProps, variant: 'accent' })
     );
 
-    expect(result.current.touchableOpacityStyles).toContain(styles.base);
-    expect(result.current.touchableOpacityStyles).toContain(styles.accent);
+    expect(result.current.touchableOpacityStyles).toContainEqual(styles.base);
+    expect(result.current.touchableOpacityStyles).toContainEqual(styles.accent);
     
-    expect(result.current.textStyles).toContain(styles.textBase);
-    expect(result.current.textStyles).toContain(styles.accentText);
+    expect(result.current.textStyles).toContainEqual(styles.textBase);
+    expect(result.current.textStyles).toContainEqual(styles.accentText);
   });
 
   it('deve permitir a sobreposição de estilos via props', () => {
@@ -55,7 +57,7 @@ describe('useButtonViewModel', () => {
       useButtonViewModel({ ...defaultProps, style: customStyle })
     );
 
-    expect(result.current.touchableOpacityStyles).toContain(customStyle);
+    expect(result.current.touchableOpacityStyles).toContainEqual(customStyle);
   });
 
   it('deve separar as propriedades nativas do TouchableOpacity', () => {

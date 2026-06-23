@@ -3,11 +3,11 @@ import { useIconButtonViewModel, Props } from "./IconButtonViewModel";
 import { theme } from "../../styles/theme";
 
 jest.mock("./styles", () => ({
-  styles: {
+  createStyles: jest.fn(() => ({
     base: { padding: 10 },
     fab: { borderRadius: 50 },
     transparent: { backgroundColor: "transparent" },
-  },
+  })),
 }));
 
 describe("useIconButtonViewModel", () => {
@@ -50,8 +50,8 @@ describe("useIconButtonViewModel", () => {
       useIconButtonViewModel({ ...defaultProps, variant: "fab" })
     );
 
-    expect(result.current.touchableOpacityStyles).toContain(result.current.touchableOpacityStyles[0]);
-    expect(result.current.touchableOpacityStyles).toContain(result.current.touchableOpacityStyles[1]);
+    expect(result.current.touchableOpacityStyles).toContainEqual({ padding: 10 });
+    expect(result.current.touchableOpacityStyles).toContainEqual({ borderRadius: 50 });
   });
 
   it("deve repassar as demais propriedades do TouchableOpacity", () => {

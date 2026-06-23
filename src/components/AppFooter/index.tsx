@@ -2,13 +2,16 @@ import React from 'react';
 import { View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { IconButton } from '../IconButton';
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { useAppTheme } from "../../contexts/ThemeContext";
 
 export interface AppFooterProps {
   onNavigateIntercept?: (screen: string) => void;
 }
 
 export const AppFooter = ({ onNavigateIntercept }: AppFooterProps = {}) => {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
   const navigation = useNavigation<any>();
   const route = useRoute();
 
