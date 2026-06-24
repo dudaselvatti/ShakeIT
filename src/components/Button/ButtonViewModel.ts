@@ -1,4 +1,4 @@
-import { TouchableOpacityProps } from "react-native";
+import { TouchableOpacityProps, TextStyle, StyleProp } from "react-native";
 import { theme } from "../../styles/theme";
 import { createStyles } from "./styles";
 import { useAppTheme } from "../../contexts/ThemeContext";
@@ -7,9 +7,9 @@ export interface Props extends TouchableOpacityProps {
     title: string;
     variant?: "primary" | "accent" | "outline" | "text" | "danger" |"redNoOutline";
     isLoading?: boolean;
-    textStyles?: string;
+    textStyles?: StyleProp<TextStyle>;
 }
-export function useButtonViewModel({ title, variant = "primary", isLoading = false, style, disabled = false, ...touchableOpacityProps }: Props) {
+export function useButtonViewModel({ title, variant = "primary", isLoading = false, style, disabled = false, textStyles: propsTextStyles, ...touchableOpacityProps }: Props) {
     const { theme } = useAppTheme();
     const styles = createStyles(theme);
     const isDisabled = isLoading || disabled;
@@ -27,7 +27,8 @@ export function useButtonViewModel({ title, variant = "primary", isLoading = fal
 
     const textStyles = [
         styles.textBase, 
-        styles[`${variant}Text`]
+        styles[`${variant}Text`],
+        propsTextStyles,
     ];
 
     return {

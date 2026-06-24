@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { ParticipanteCard } from './index';
-import { Participante } from '../../types/Participante';
+import { PartyParticipant } from '../../types/PartyParticipant';
 
-const mockParticipante: Participante = {
+const mockParticipante: PartyParticipant = {
     usuario: {
         id: "550e8400-e29b-41d4-a716-446655440101",
         email: 'zeninguem@email.com',
@@ -61,7 +61,7 @@ describe('ParticipanteCard Component', () => {
     });
 
     it('deve exibir apenas o cadeado fechado quando o participante estiver confirmado', () => {
-        const participanteConfirmado: Participante = {
+        const participanteConfirmado: PartyParticipant = {
             ...mockParticipante,
             perfil: {
                 ...mockParticipante.perfil,

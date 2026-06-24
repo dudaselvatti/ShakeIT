@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act } from '@testing-library/react-native';
+import { render, act, waitFor } from '@testing-library/react-native';
 import { ShakeRevealScreen } from './index';
 import { Vibration } from 'react-native';
 import { participantesMock } from '../../mocks/participantesMock';
@@ -14,6 +14,25 @@ jest.mock('expo-sensors', () => ({
       return { remove: jest.fn() };
     }),
   },
+}));
+
+jest.mock('../../contexts/AuthContext/AuthContext', () => ({
+  useAuth: jest.fn(() => ({
+    usuarioAtual: { id: 'user-A', nome: 'Duda' },
+  })),
+}));
+
+jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
+  getPartyParticipantByUserIdAndPartyId: jest.fn(() => Promise.resolve({
+    perfil: { id: 'profile-A' }
+  })),
+  updatePartyParticipant: jest.fn(() => Promise.resolve()),
+}));
+
+jest.mock('../../services/cloud/DrawResult/DrawResultDb', () => ({
+  getDrawResultByGiverProfileId: jest.fn(() => Promise.resolve({
+    receiver_profile_id: '550e8400-e29b-41d4-a716-446655440001'
+  })),
 }));
 
 jest.spyOn(Vibration, 'vibrate').mockImplementation(() => {});
@@ -31,16 +50,16 @@ describe('Ecrã ShakeReveal (Tela 6)', () => {
   });
 
   it('deve renderizar os textos de instrução visual e a caixa de presente', () => {
-    const { getByText } = render(<ShakeRevealScreen navigation={{}} />);
+    const { getByText } = render(<ShakeRevealScreen route={{ params: { partyId: "party-id" } }} navigation={{}} />);
 
     expect(getByText('O Sorteio realizado!')).toBeTruthy();
     expect(getByText('Chacoalhe o celular para descobrir o seu amigo secreto...')).toBeTruthy();
     expect(getByText('🎁')).toBeTruthy();
   });
 
-  it('deve vibrar, acionar explosao e navegar para a Tela 7 ao detetar shake real pelo sensor', () => {
+  it('deve vibrar, acionar explosao e navegar para a Tela 7 ao detetar shake real pelo sensor', async () => {
     const mockNavigation = { navigate: jest.fn() };
-    const { getByText } = render(<ShakeRevealScreen navigation={mockNavigation} />);
+    const { getByText } = render(<ShakeRevealScreen route={{ params: { partyId: "party-id" } }} navigation={mockNavigation} />);
 
     expect(accelerometerListener).toBeTruthy();
 
@@ -59,6 +78,8 @@ describe('Ecrã ShakeReveal (Tela 6)', () => {
     });
 
     const expectedId = participantesMock[0]?.usuario.id || "550e8400-e29b-41d4-a716-446655440001";
-    expect(mockNavigation.navigate).toHaveBeenCalledWith('PerfilSorteado', { idUsuario: expectedId });
+    await waitFor(() => {
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('PerfilSorteado', { idPerfil: expectedId });
+    });
   });
 });

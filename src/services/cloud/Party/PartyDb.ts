@@ -5,6 +5,9 @@ import {
     doc,
     updateDoc,
     getDoc,
+    getDocs,
+    query,
+    where,
 } from "firebase/firestore";
 import { Party } from "../../../types/Party";
 import { db } from '../../../config/firebase';
@@ -53,6 +56,42 @@ export async function getPartyFromCloud(partyId: string): Promise<Party | null> 
     }
 
     return null;
+}
+
+export async function getPartyByInviteCodeFromCloud(inviteCode: string): Promise<Party | null> {
+    const partiesRef = collection(db, "parties");
+    const q = query(partiesRef, where("invite_code", "==", inviteCode));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+        const docSnap = snapshot.docs[0];
+        return {
+            id: docSnap.id,
+            ...docSnap.data(),
+        } as Party;
+    }
+    return null;
+}
+
+export async function getPartiesByUserId(userId: string): Promise<Party[]> {
+    const participantRef = collection(db, "PARTY_PARTICIPANT");
+    const q = query(participantRef, where("perfil.user_id", "==", userId));
+    const snapshot = await getDocs(q);
+    const partyIds = new Set<string>();
+    snapshot.forEach((document) => {
+        const data = document.data();
+        if (data.perfil?.party_id) {
+            partyIds.add(data.perfil.party_id);
+        }
+    });
+    const parties: Party[] = [];
+    for (const partyId of partyIds) {
+        const party =
+            await getPartyFromCloud(partyId);
+        if (party) {
+            parties.push(party);
+        }
+    }
+    return parties;
 }
 
 export async function updatePartyDependentDrawFlagInCloud(partyId: string, blockDependentDraw: boolean) {

@@ -24,12 +24,12 @@ describe('PartyAdminScreen', () => {
   const mockData = {
     partyName: 'Festa de Natal',
     partyCode: 'XMAS24',
-    participantes: [
+    participants: [
       { usuario: { id: 1, nome: 'Duda' }, perfil: { isConfirmado: true } },
       { usuario: { id: 2, nome: 'João' }, perfil: { isConfirmado: false } },
     ],
     confirmadosCount: 1,
-    participantesTotal: 2,
+    participantsTotal: 2,
     headerTitle: 'Painel do Evento',
     handleSorteioPress: mockHandleSorteioPress,
   };
@@ -69,7 +69,7 @@ describe('PartyAdminScreen', () => {
   it('deve chamar handleSorteioPress ao clicar no botão de sorteio', () => {
     render(<PartyAdminScreen />);
     
-    const botaoSorteio = screen.getByText('Realizar Sorteio');
+    const botaoSorteio = screen.getByText('Realizar sorteio');
     fireEvent.press(botaoSorteio);
 
     expect(mockHandleSorteioPress).toHaveBeenCalledTimes(1);

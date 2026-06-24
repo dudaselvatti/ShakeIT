@@ -13,7 +13,12 @@ export interface Props {
 export function usePerfilSorteadoHeaderViewModel ({fotoUrl, nome, dataDeNascimento, genero }: Props) {
 
     const idade = useMemo(() => {
-        return calcularIdade(dataDeNascimento);
+        try {
+            return calcularIdade(dataDeNascimento);
+        } catch (error) {
+            console.error("Erro ao calcular idade:", error);
+            return 0;
+        }
     }, [dataDeNascimento]);
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();

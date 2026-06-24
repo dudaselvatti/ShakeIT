@@ -39,9 +39,9 @@ export type RootStackParamList = {
   PartyCreated: { party: Party };
   PartyAdmin: { partyId: string };
   PartyDrawRestrictions: { partyId: string };
-  ShakeReveal: undefined;
+  ShakeReveal: { partyId: string };
   RevealResult: undefined;
-  PerfilSorteado: { idUsuario: string };
+  PerfilSorteado: { idPerfil: string };
   Registration: undefined;
   Login: undefined;
   ForgotMyPassword: undefined;

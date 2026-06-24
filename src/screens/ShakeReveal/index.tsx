@@ -6,7 +6,7 @@ import { useAppTheme } from "../../contexts/ThemeContext";
 import { ScratchCard } from "../../components/ScratchCard";
 import { Dimensions } from "react-native";
 
-export const ShakeRevealScreen = ({ navigation }: any) => {
+export const ShakeRevealScreen = ({ route, navigation }: any) => {
     const { theme, isScratchMode } = useAppTheme();
     const styles = createStyles(theme);
     const { 
@@ -15,7 +15,7 @@ export const ShakeRevealScreen = ({ navigation }: any) => {
     explodeOpacity, 
     hasShaken,
     simularShake
-  } = useShakeRevealViewModel(navigation);
+  } = useShakeRevealViewModel({ route, navigation });
   
   const handleRevealScratch = () => {
     // Navigate immediately or call simularShake which handles the navigation logic
@@ -52,7 +52,7 @@ export const ShakeRevealScreen = ({ navigation }: any) => {
             { 
                 opacity: explodeOpacity,
                 transform: [
-                { translateX: hasShaken ? 0 : shakeAnimation },
+                { translateX: shakeAnimation },
                 { scale: explodeScale }
                 ] 
             }

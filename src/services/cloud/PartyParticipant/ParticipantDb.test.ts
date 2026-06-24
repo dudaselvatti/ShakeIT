@@ -3,20 +3,20 @@ import { participantesMock } from "../../../mocks/participantesMock";
 
 describe("ParticipantDb - Testes Unitários", () => {
     
-    it("deve retornar o participante correto quando um idUsuario válido for fornecido", async () => {
+    it("deve retornar o participante correto quando um idPerfil válido for fornecido", async () => {
         const participanteEsperado = participantesMock[0];
-        const idUsuarioValido = participanteEsperado.usuario.id;
+        const idPerfilValido = participanteEsperado.perfil.id;
 
-        const resultado = await getAmigoSecreto(idUsuarioValido);
+        const resultado = await getAmigoSecreto(idPerfilValido);
 
         expect(resultado).toEqual(participanteEsperado);
-        expect(resultado.usuario.id).toBe(idUsuarioValido);
+        expect(resultado.perfil.id).toBe(idPerfilValido);
     });
 
-    it("deve lançar um erro quando o idUsuario não for encontrado no mock", async () => {
-        const idUsuarioInexistente = "00000000-0000-0000-0000-000000000000";
+    it("deve lançar um erro quando o idPerfil não for encontrado no mock", async () => {
+        const idPerfilInexistente = "00000000-0000-0000-0000-000000000000";
 
-        await expect(getAmigoSecreto(idUsuarioInexistente)).rejects.toThrow(
+        await expect(getAmigoSecreto(idPerfilInexistente)).rejects.toThrow(
             "Participante não foi encontrado!"
         );
     });

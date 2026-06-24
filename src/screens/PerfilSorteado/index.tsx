@@ -31,15 +31,29 @@ export const PerfilSorteadoScreen = () => {
     if (isLoading || !participante) {
         return null;
     }
+
     const { usuario, perfil } = participante;
+    const getBirthDateStr = (bd: any) => {
+        if (!bd) return "2000-01-01";
+        if (typeof bd === 'string') return bd;
+        if (bd.toDate) {
+            const date = bd.toDate();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+        return "2000-01-01";
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <AppHeader headerTitle="Perfil Sorteado" showBackButton={true} showSettingsIcon={true} />
             <PerfilSorteadoHeader
-                fotoUrl={usuario.avatar_url}
-                nome={usuario.nome}
-                dataDeNascimento={usuario.birth_date}
-                genero={usuario.genero}
+                fotoUrl={perfil.participant_avatar || usuario?.avatar_url || ''}
+                nome={perfil.participant_name || usuario?.nome || 'Amigo'}
+                dataDeNascimento={getBirthDateStr(perfil.birth_date) !== "2000-01-01" ? getBirthDateStr(perfil.birth_date) : getBirthDateStr(usuario?.birth_date)}
+                genero={perfil.gender || usuario?.genero || "Não informado"}
             />
             <ScrollView>
                 <PerfilSorteadoContent
