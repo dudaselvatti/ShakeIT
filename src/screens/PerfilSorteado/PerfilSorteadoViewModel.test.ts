@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import { usePerfilSorteadoViewModel } from './PerfilSorteadoViewModel';
 import { useRoute } from '@react-navigation/native';
 import { participantesMock } from '../../mocks/participantesMock';
-import { getAmigoSecreto } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
+import { getPartyParticipantByPerfilId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
 import { storageService } from '../../services/storageService';
 
 jest.mock('@react-navigation/native', () => ({
@@ -10,7 +10,7 @@ jest.mock('@react-navigation/native', () => ({
 }));
 
 jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
-  getAmigoSecreto: jest.fn(),
+  getPartyParticipantByPerfilId: jest.fn(),
 }));
 
 jest.mock('../../services/storageService', () => ({
@@ -23,7 +23,7 @@ jest.mock('../../services/storageService', () => ({
 
 describe('ViewModel: usePerfilSorteadoViewModel', () => {
   const mockedUseRoute = useRoute as jest.Mock;
-  const mockedGetAmigoSecreto = getAmigoSecreto as jest.Mock;
+  const mockedGetPartyParticipantByPerfilId = getPartyParticipantByPerfilId as jest.Mock;
   const mockedStorageService = storageService as any;
 
   beforeEach(() => {
@@ -35,7 +35,7 @@ describe('ViewModel: usePerfilSorteadoViewModel', () => {
     mockedUseRoute.mockReturnValue({
       params: { idPerfil: mockId },
     });
-    mockedGetAmigoSecreto.mockResolvedValue(participantesMock[0]);
+    mockedGetPartyParticipantByPerfilId.mockResolvedValue(participantesMock[0]);
 
     const { result } = renderHook(() => usePerfilSorteadoViewModel());
 
@@ -54,7 +54,7 @@ describe('ViewModel: usePerfilSorteadoViewModel', () => {
     mockedUseRoute.mockReturnValue({
       params: { idPerfil: mockId },
     });
-    mockedGetAmigoSecreto.mockRejectedValue(new Error('Erro de rede'));
+    mockedGetPartyParticipantByPerfilId.mockRejectedValue(new Error('Erro de rede'));
     mockedStorageService.getItem.mockResolvedValue(participantesMock[0]);
 
     const { result } = renderHook(() => usePerfilSorteadoViewModel());
@@ -72,7 +72,7 @@ describe('ViewModel: usePerfilSorteadoViewModel', () => {
     mockedUseRoute.mockReturnValue({
       params: { idPerfil: 'invalid-id' },
     });
-    mockedGetAmigoSecreto.mockRejectedValue(new Error('Nao encontrado'));
+    mockedGetPartyParticipantByPerfilId.mockRejectedValue(new Error('Nao encontrado'));
     mockedStorageService.getItem.mockResolvedValue(null);
 
     const { result } = renderHook(() => usePerfilSorteadoViewModel());

@@ -5,6 +5,7 @@ import {
     writeBatch,
     serverTimestamp
 } from "firebase/firestore";
+import axios from "axios";
 import { PartyParticipant } from "../../../types/PartyParticipant";
 import { DrawRestrictionResponseDTO } from "../../../dto/DrawRestriction/DrawRestrictionResponseDTO";
 import { getPartyFromCloud } from "../../cloud/Party/PartyDb";
@@ -199,69 +200,26 @@ export async function executeDraw(partyId: string) {
     }
 
     try {
-        const party = await getPartyFromCloud(partyId);
-
-        if (!party) {
-            throw new Error("Party não encontrada");
-        }
-
-        if (party.status !== "aguardando_sorteio") {
-            throw new Error("Party não está pronta para sorteio");
-        }
-
-        const participants = await getParticipantsByPartyId(partyId);
-
-        if (participants.length < 2) {
-            throw new Error("Poucos participantes para sorteio");
-        }
-
-        const restrictions = await getDrawRestrictionsByPartyFromCloud(partyId);
-
-        const blockMap = buildBlockMap({
-            participants,
-            restrictions,
-            blockDependentDraw: party.block_dependent_draw
-        });
-
-        validatePossibility(participants, blockMap);
-        const pairs = generateDraw(participants, blockMap);
-
-        const batch = writeBatch(db);
-        const drawCollection = collection(db, "DRAW_RESULT");
-
-        for (const pair of pairs) {
-            const ref = doc(drawCollection);
-            batch.set(ref, {
-                id: ref.id,
-                party_id: partyId,
-                giver_profile_id: pair.giver_profile_id,
-                receiver_profile_id: pair.receiver_profile_id,
-                created_at: serverTimestamp(),
-                updated_at: serverTimestamp()
-            });
-        }
-
-        const partyRef = doc(db, "parties", partyId);
-        batch.update(partyRef, {
-            status: "sorteio_realizado",
-            updated_at: serverTimestamp()
-        });
-
-        await batch.commit();
-
-        return {
-            success: true,
-            message: "Sorteio realizado com sucesso",
-            total: pairs.length
-        };
-
+        const baseUrl = process.env.EXPO_PUBLIC_FUNCTION_URL || "https://us-central1-dsmv-shakeit.cloudfunctions.net";
+        const response = await axios.post(`${baseUrl}/executeDraw`, { partyId });
+        return response.data;
     } catch (error: any) {
         console.error("Erro ao executar sorteio:", error);
-        
-        if (error?.name === "UNSOLVABLE_GRAPH" || error?.message === "UNSOLVABLE_GRAPH") {
+
+        const errorData = error?.response?.data;
+        if (
+            errorData === "UNSOLVABLE_GRAPH" ||
+            error?.response?.status === 422 ||
+            (typeof errorData === "object" && errorData?.message === "UNSOLVABLE_GRAPH")
+        ) {
             throw new Error("UNSOLVABLE_GRAPH");
         }
 
-        throw error instanceof Error ? error : new Error(error?.message ?? "Erro ao executar sorteio");
+        throw new Error(
+            error?.response?.data?.message ||
+            error?.response?.data ||
+            error?.message ||
+            "Erro ao executar sorteio"
+        );
     }
 }

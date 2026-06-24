@@ -11,6 +11,7 @@ import {
 import { db } from "../../../config/firebase";
 import { PartyParticipant } from "../../../types/PartyParticipant";
 import { Usuario } from "../../../types/Usuario";
+import { participantesMock } from "../../../mocks/participantesMock";
 
 const PARTY_PARTICIPANT_COLLECTION = "PARTY_PARTICIPANT";
 
@@ -94,4 +95,12 @@ export async function updatePartyParticipant(idPerfil: string, data: Partial<Par
         ...data,
         "perfil.updated_at": new Date().toISOString(),
     });
+}
+
+export async function getAmigoSecreto(id: string): Promise<any> {
+    const participante = participantesMock.find(p => p.usuario.id === id || p.perfil.id === id);
+    if (!participante) {
+        throw new Error("Participante não foi encontrado!");
+    }
+    return participante;
 }

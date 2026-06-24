@@ -20,7 +20,7 @@ export function useShakeRevealViewModel({ route, navigation }: any) {
       return;
     }
     try {
-      const participant = await getPartyParticipantByUserIdAndPartyId(usuarioAtual.id, partyId.id);
+      const participant = await getPartyParticipantByUserIdAndPartyId(usuarioAtual.id, partyId);
       if (!participant) {
         throw new Error("Participante do usuário não encontrado");
       }

@@ -13,6 +13,10 @@ jest.mock('../../contexts/AuthContext/AuthContext', () => ({
   useAuth: jest.fn(),
 }));
 
+jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
+  createPartyParticipant: jest.fn(() => Promise.resolve({})),
+}));
+
 jest.mock("firebase/app", () => ({
   initializeApp: jest.fn(),
   getApps: jest.fn(() => []),
