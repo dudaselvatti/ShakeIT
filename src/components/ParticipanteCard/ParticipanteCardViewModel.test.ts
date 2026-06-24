@@ -1,9 +1,9 @@
 import { renderHook } from "@testing-library/react-native";
 import { useParticipanteCardViewModel, Props } from "./ParticipanteCardViewModel";
-import { Participante } from '../../types/Participante';
+import { PartyParticipant } from '../../types/PartyParticipant';
 
 describe("useParticipanteCardViewModel", () => {
-  const mockParticipanteBase: Participante = {
+  const mockParticipanteBase: PartyParticipant = {
       usuario: {
           id: "550e8400-e29b-41d4-a716-446655440101",
           email: 'zeninguem@email.com',

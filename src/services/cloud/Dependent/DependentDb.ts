@@ -18,7 +18,20 @@ const DEPENDENTS_COLLECTION = "dependents";
 function timestampToString(timestamp: any): string {
     if (!timestamp) return "";
     if (typeof timestamp === "string") return timestamp;
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp.seconds * 1000);
+    
+    let date: Date;
+    if (timestamp instanceof Date) {
+        date = timestamp;
+    } else if (timestamp.toDate) {
+        date = timestamp.toDate();
+    } else if (timestamp.seconds !== undefined) {
+        date = new Date(timestamp.seconds * 1000);
+    } else {
+        return "";
+    }
+
+    if (isNaN(date.getTime())) return "";
+
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');

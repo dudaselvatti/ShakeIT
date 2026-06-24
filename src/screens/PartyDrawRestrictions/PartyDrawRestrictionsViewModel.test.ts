@@ -22,11 +22,11 @@ jest.mock("../../services/cloud/DrawRestriction/DrawRestrictionDb", () => ({
   deleteDrawRestrictionFromCloud: jest.fn(),
 }));
 
-jest.mock("../../mocks/participantesMock", () => ({
-  participantesMock: [
+jest.mock("../../services/cloud/PartyParticipant/PartyParticipantDb", () => ({
+  getParticipantsByPartyId: jest.fn(() => Promise.resolve([
     { perfil: { id: "user-1", participant_name: "Alice" } },
     { perfil: { id: "user-2", participant_name: "Bob" } },
-  ],
+  ])),
 }));
 
 const mockGetPartyFromCloud = getPartyFromCloud as jest.Mock;
@@ -64,17 +64,16 @@ describe("usePartyDrawRestrictionsViewModel", () => {
   it("deve inicializar com os estados corretos e carregar dados assíncronos da nuvem", async () => {
     const { result } = renderHook(() => usePartyDrawRestrictionsViewModel());
 
-    expect(result.current.participantsOptions).toEqual([
-      { key: "Alice", label: "Alice", value: "user-1" },
-      { key: "Bob", label: "Bob", value: "user-2" },
-    ]);
-
     expect(result.current.personA).toBe("");
     expect(result.current.personB).toBe("");
     expect(result.current.restrictionDirection).toBe("one_way");
     expect(result.current.RestrictionDirectionButtonTitle).toBe("Não pode tirar");
 
     await waitFor(() => {
+      expect(result.current.participantsOptions).toEqual([
+        { key: "Alice", label: "Alice", value: "user-1" },
+        { key: "Bob", label: "Bob", value: "user-2" },
+      ]);
       expect(mockGetPartyFromCloud).toHaveBeenCalledWith(mockPartyId);
       expect(mockGetDrawRestrictionsByPartyFromCloud).toHaveBeenCalledWith(mockPartyId);
       expect(result.current.blockDependentDraw).toBe(true);
@@ -145,6 +144,10 @@ describe("usePartyDrawRestrictionsViewModel", () => {
     it("deve criar uma restrição válida na nuvem e limpar os inputs de seleção", async () => {
       const { result } = renderHook(() => usePartyDrawRestrictionsViewModel());
 
+      await waitFor(() => {
+        expect(result.current.participantsOptions).toHaveLength(2);
+      });
+
       act(() => {
         result.current.setPersonA("user-1");
         result.current.setPersonB("user-2");
@@ -161,9 +164,10 @@ describe("usePartyDrawRestrictionsViewModel", () => {
         direction: "one_way",
       });
 
+      expect(result.current.personA).toBe("");
+      expect(result.current.personB).toBe("");
+
       await waitFor(() => {
-        expect(result.current.personA).toBe("");
-        expect(result.current.personB).toBe("");
         expect(result.current.restrictionsList).toHaveLength(2); 
       });
     });

@@ -1,30 +1,30 @@
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { getAmigoSecreto } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
+import { getPartyParticipantByPerfilId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
 import { storageService } from '../../services/storageService';
-import { Participante } from '../../types/Participante';
+import { PartyParticipant } from '../../types/PartyParticipant';
 
 type RootStackParamList = {
-    PerfilSorteado: { idUsuario: string };
+    PerfilSorteado: { idPerfil: string };
 };
 
 type PerfilScreenRouteProp = RouteProp<RootStackParamList, 'PerfilSorteado'>;
 
 export function usePerfilSorteadoViewModel() {
     const route = useRoute<PerfilScreenRouteProp>();
-    const { idUsuario } = route.params;
+    const { idPerfil } = route.params;
 
-    const [participante, setParticipante] = useState<Participante | null>(null);
+    const [participante, setParticipante] = useState<PartyParticipant | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchAmigo = async () => {
             try {
-                const data = await getAmigoSecreto(idUsuario);
+                const data = await getPartyParticipantByPerfilId(idPerfil);
                 setParticipante(data);
-                await storageService.setItem(`amigo_secreto_${idUsuario}`, data);
+                await storageService.setItem(`amigo_secreto_${idPerfil}`, data);
             } catch (error) {
-                const cachedData = await storageService.getItem<Participante>(`amigo_secreto_${idUsuario}`);
+                const cachedData = await storageService.getItem<PartyParticipant>(`amigo_secreto_${idPerfil}`);
                 if (cachedData) {
                     setParticipante(cachedData);
                 } else {
@@ -36,7 +36,7 @@ export function usePerfilSorteadoViewModel() {
         };
 
         fetchAmigo();
-    }, [idUsuario]);
+    }, [idPerfil]);
 
     return {
         participante,

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createPartyInCloud } from "../../services/cloud/Party/PartyDb";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { PartyCreationDTO } from "../../dto/Party/PartyCreationDTO";
+import { createPartyParticipant } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
 
 export function useCreatePartyViewModel(navigation: any) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -11,6 +12,7 @@ export function useCreatePartyViewModel(navigation: any) {
   const [valorMaximo, setValorMaximo] = useState("");
   const [errors, setErrors] = useState({ nome: "", data: "", valores: "" });
   const [pendingAction, setPendingAction] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { usuarioAtual } = useAuth();
 
@@ -111,7 +113,9 @@ export function useCreatePartyViewModel(navigation: any) {
 
     setErrors(newErrors);
 
-    if (!isValid || !usuarioAtual) return;
+    if (!isValid || !usuarioAtual || isLoading) return;
+
+    setIsLoading(true);
 
     const novaParty: PartyCreationDTO = {
       name: nomeParty,
@@ -123,12 +127,12 @@ export function useCreatePartyViewModel(navigation: any) {
 
     try {
       const createdParty = await createPartyInCloud(novaParty);
-
       console.log("Party criada no Firebase:", createdParty);
 
-      navigation.navigate("PartyCreated", {
-        party: createdParty,
-      });
+      const partyCreatorParticipant = await createPartyParticipant(createdParty.id, usuarioAtual, "confirmado");
+      console.log("Criador da party registrado como participante:", partyCreatorParticipant);
+
+      navigation.navigate("PartyCreated", { party: createdParty, });
 
     } catch (error) {
       console.error("Erro ao criar Party no Firebase:", error);
@@ -136,6 +140,8 @@ export function useCreatePartyViewModel(navigation: any) {
         ...prev,
         nome: "Erro ao criar a Party. Tente novamente.",
       }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -155,5 +161,6 @@ export function useCreatePartyViewModel(navigation: any) {
     handleFooterNavigate,
     confirmExit,
     handleCriarParty,
+    isLoading,
   };
 };

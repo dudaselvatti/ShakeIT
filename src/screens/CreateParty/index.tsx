@@ -32,6 +32,7 @@ export const CreatePartyScreen = ({ navigation }: any) => {
     handleFooterNavigate,
     confirmExit,
     handleCriarParty,
+    isLoading,
   } = useCreatePartyViewModel(navigation);
 
   return (
@@ -96,7 +97,8 @@ export const CreatePartyScreen = ({ navigation }: any) => {
         <Button
           title="Criar Party"
           onPress={handleCriarParty}
-          disabled={!nomeParty} 
+          disabled={!nomeParty || isLoading}
+          isLoading={isLoading}
         />
         </View>
       </KeyboardAvoidingView>

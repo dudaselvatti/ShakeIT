@@ -28,7 +28,7 @@ export const createStyles = (theme: ThemeType) => StyleSheet.create({
         fontWeight: 'bold',
         color: '#1D3557',
     },
-    participantesCount: {
+    participantsCount: {
         fontSize: 15,
         fontWeight: 'bold',
         color: theme.colors.text,

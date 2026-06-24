@@ -16,14 +16,28 @@ export const createStyles = (theme: ThemeType) => StyleSheet.create({
     fontWeight: "bold",
     color: theme.colors.text,
   },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 24,
+    marginBottom: 16,
+  },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
     color: theme.colors.textLight,
-    marginBottom: 16,
-    paddingHorizontal: 24,
     textTransform: "uppercase",
     letterSpacing: 1,
+  },
+  switchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  switchLabel: {
+    color: theme.colors.textLight,
+    fontSize: 14,
+    marginRight: 8,
   },
   listContent: {
     paddingBottom: 100,
