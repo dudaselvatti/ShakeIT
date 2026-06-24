@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../PixelIcon";
 import { createStyles } from './styles';
 import { useSettingsOptionViewModel, Props } from './SettingsOptionViewModel';
 import { useAppTheme } from "../../contexts/ThemeContext";

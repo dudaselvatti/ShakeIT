@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "../../components/Button";
@@ -22,7 +22,17 @@ export const LoginScreen = ({ navigation }: any) => {
     handleRegistrationNavigate,
     handleForgotMyPasswordNavigate,
     handleAutenticarUsuario,
+    isLoading,
   } = useLoginViewModel(navigation);
+
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const onLoginPress = async () => {
+    const result = await handleAutenticarUsuario();
+    if (result && !result.success) {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    }
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
@@ -33,9 +43,9 @@ export const LoginScreen = ({ navigation }: any) => {
           onBackPress={handleBackPress}
         />
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView ref={scrollViewRef} style={styles.content} showsVerticalScrollIndicator={false}>
         <Input
-          label="Email"
+          label="Email *"
           placeholder="Email"
           value={email}
           onChangeText={updateEmail}
@@ -45,7 +55,7 @@ export const LoginScreen = ({ navigation }: any) => {
         />
         {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
         <Input
-          label="Senha"
+          label="Senha *"
           placeholder="Senha"
           value={senha}
           onChangeText={updateSenha}
@@ -61,7 +71,8 @@ export const LoginScreen = ({ navigation }: any) => {
       <View style={styles.buttonsView}>
         <Button
           title="Entrar"
-          onPress={handleAutenticarUsuario}
+          onPress={onLoginPress}
+          isLoading={isLoading}
         />
         <Button
           title="Criar Conta"

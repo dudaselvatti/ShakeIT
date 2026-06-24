@@ -58,6 +58,7 @@ export const SettingsScreen = ({ navigation }: any) => {
 
                         <SettingsOption
                             title="Alterar Senha"
+                            iconName="lock"
                             onPress={handleAlterarSenha}
                         >
                             {errors.passwordReset ? <Text style={styles.errorText}>{errors.passwordReset}</Text> : null}

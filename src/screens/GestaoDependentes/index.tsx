@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, ScrollView, ActivityIndicator, Pressable, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../../components/PixelIcon";
 import { AppHeader } from "../../components/AppHeader";
 import { AppFooter } from "../../components/AppFooter";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
-import { IconButton } from "../../components/IconButton";
+import { TouchableOpacity } from "react-native";
 import { PopupModal } from "../../components/PopupModal";
 import { createStyles } from "./styles";
 import { theme } from "../../styles/theme";
@@ -106,54 +106,47 @@ export const GestaoDependentesScreen = ({ navigation }: any) => {
                             return (
                                 <Card key={item.id} style={styles.card} testID={`dependent-card-${item.id}`}>
                                     <View style={styles.cardHeader}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, flexWrap: 'wrap' }}>
-                                            <Text style={[styles.dependentName, { marginRight: 12, marginBottom: 4 }]}>{item.name}</Text>
-                                            <View style={[styles.typeTag, tagStyles.tag, { paddingVertical: 4, paddingHorizontal: 8, marginVertical: 0, marginBottom: 4, flexDirection: 'row', alignItems: 'center' }]}>
-                                                <Image 
-                                                    source={item.dependent_type === "child" ? require('../../../assets/crianca.png') : require('../../../assets/pet.png')} 
-                                                    style={{ width: 24, height: 24, marginRight: 6 }} 
-                                                />
-                                                <Text style={[styles.typeTagText, tagStyles.text, { fontSize: 12 }]}>
-                                                    {getDependentTypeLabel(item.dependent_type).toUpperCase()}
-                                                </Text>
-                                            </View>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                                            <Image 
+                                                source={item.dependent_type === "child" ? require('../../../assets/crianca.png') : item.dependent_type === "pet" ? require('../../../assets/pet.png') : require('../../../assets/interrogacao.png')} 
+                                                style={{ width: 40, height: 40, marginRight: 12, resizeMode: 'contain' }} 
+                                            />
+                                            <Text style={styles.dependentName}>{item.name}</Text>
                                         </View>
-                                        <View style={styles.actionsRow}>
-                                            <IconButton
-                                                iconName="edit-2"
-                                                size={18}
-                                                color={theme.colors.text}
+                                        <View style={[styles.actionsRow, { alignItems: 'center' }]}>
+                                            <TouchableOpacity 
                                                 onPress={() => handleEditDependent(item)}
-                                                style={styles.actionButton}
+                                                style={{ padding: 8 }}
                                                 testID={`edit-button-${item.id}`}
-                                            />
-                                            <IconButton
-                                                iconName="trash-2"
-                                                size={18}
-                                                color={theme.colors.danger}
+                                            >
+                                                <Image source={require('../../../assets/lapis.png')} style={{ width: 24, height: 24, resizeMode: 'contain' }} />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity 
                                                 onPress={() => confirmDeleteDependent(item.id)}
-                                                style={styles.actionButton}
+                                                style={{ padding: 8 }}
                                                 testID={`delete-button-${item.id}`}
-                                            />
+                                            >
+                                                <Image source={require('../../../assets/lixeira.png')} style={{ width: 24, height: 24, resizeMode: 'contain' }} />
+                                            </TouchableOpacity>
                                         </View>
                                     </View>
 
                                     <View style={styles.cardContent}>
                                         <View style={styles.detailRow}>
-                                            <Feather name="calendar" size={14} color={theme.colors.textLight} />
+                                            <Image source={require('../../../assets/calendario.png')} style={{ width: 20, height: 20, marginRight: 8, resizeMode: 'contain' }} />
                                             <Text style={styles.detailText}>
                                                 Nascimento: {formatDate(item.birth_date)} ({getAgeText(item.birth_date)})
                                             </Text>
                                         </View>
                                         {item.gender ? (
                                             <View style={styles.detailRow}>
-                                                <Feather name="user" size={14} color={theme.colors.textLight} />
+                                                <Image source={require('../../../assets/interrogacao.png')} style={{ width: 20, height: 20, marginRight: 8, resizeMode: 'contain' }} />
                                                 <Text style={styles.detailText}>Gênero: {item.gender}</Text>
                                             </View>
                                         ) : null}
                                         {item.bio ? (
                                             <View style={styles.detailRow}>
-                                                <Feather name="info" size={14} color={theme.colors.textLight} />
+                                                <Image source={require('../../../assets/interrogacao.png')} style={{ width: 20, height: 20, marginRight: 8, resizeMode: 'contain' }} />
                                                 <Text style={styles.detailText} numberOfLines={2}>{item.bio}</Text>
                                             </View>
                                         ) : null}

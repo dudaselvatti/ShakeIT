@@ -16,7 +16,7 @@ export const ParticipanteCard = (props: Props) => {
                 <Text style={styles.nome}>{nome}</Text>
             </View>
             <View style={styles.statusContainer}>
-                <Text style={{ fontSize: 14, marginRight: 5 }}>{statusIcon}</Text>
+                <Image source={statusIcon} style={{ width: 16, height: 16, marginRight: 5 }} resizeMode="contain" />
                 {!isConfirmado && (<Text style={styles.statusText}>{statusText}</Text>)}
                 {showRemoveIcon && (
                     <View style={{ marginLeft: 10 }}>

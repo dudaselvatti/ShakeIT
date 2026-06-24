@@ -149,27 +149,11 @@ describe("RegistrationScreen", () => {
     expect(getByText("Criar Conta")).toBeTruthy();
   });
 
-  it("deve desabilitar o botão 'Criar Conta' se os campos obrigatórios estiverem vazios", () => {
+  it("deve permitir clicar no botão 'Criar Conta' mesmo com campos vazios (para exibir erros)", () => {
     const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
     const button = getByTestId("custom-button");
     
-    expect(button).toBeDisabled(); 
-  });
-
-  it("deve habilitar o botão 'Criar Conta' quando todos os campos obrigatórios estiverem preenchidos", () => {
-    (useRegistrationViewModel as jest.Mock).mockReturnValue({
-      ...currentViewModelMock,
-      nomeUsuario: "John Doe",
-      email: "john@example.com",
-      senha: "Password123",
-      genero: "Masculino",
-      dataNascimento: new Date("2000-01-01"),
-    });
-
-    const { getByTestId } = render(<RegistrationScreen navigation={mockNavigation} />);
-    const button = getByTestId("custom-button");
-
-    expect(button).toBeEnabled();
+    expect(button).not.toBeDisabled(); 
   });
 
   it("deve chamar updateNomeUsuario ao digitar no campo correspondente", () => {
@@ -197,6 +181,7 @@ describe("RegistrationScreen", () => {
         senha: "",
         genero: "",
         data: "",
+        firebase: "Erro Firebase",
       },
     });
 
@@ -204,6 +189,7 @@ describe("RegistrationScreen", () => {
 
     expect(getByText("Nome inválido")).toBeTruthy();
     expect(getByText("Email já cadastrado")).toBeTruthy();
+    expect(getByText("Erro Firebase")).toBeTruthy();
   });
 
   it("deve chamar handleCadastrarUsuario ao clicar no botão Criar Conta", () => {

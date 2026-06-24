@@ -44,7 +44,10 @@ export const PerfilSorteadoContent = (props: Props) => {
                     <Text style={styles.heading}>Minhas Preferências</Text>
                     {preferencias.coisasQueAmo && preferencias.coisasQueAmo.length > 0 && (
                         <>
-                            <Text style={styles.preferenciasTitle}>Coisas que eu amo:</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                                <Image source={require('../../../../../assets/coracao.png')} style={{ width: 24, height: 24, marginRight: 8, resizeMode: 'contain' }} />
+                                <Text style={styles.preferenciasTitle}>Coisas que eu amo:</Text>
+                            </View>
                             <View style={styles.preferenciasList}>
                                 {preferencias.coisasQueAmo.map((item, index) => (
                                     <Text key={index} style={styles.preferenciasCoisasQueAmoItem}>
@@ -56,7 +59,10 @@ export const PerfilSorteadoContent = (props: Props) => {
                     )}
                     {preferencias.melhorEvitar && preferencias.melhorEvitar.length > 0 && (
                         <>
-                            <Text style={styles.preferenciasTitle}>Melhor evitar:</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                                <Image source={require('../../../../../assets/coracao-partido.png')} style={{ width: 24, height: 24, marginRight: 8, resizeMode: 'contain' }} />
+                                <Text style={styles.preferenciasTitle}>Melhor evitar:</Text>
+                            </View>
                             <View style={styles.preferenciasList}>
                                 {preferencias.melhorEvitar.map((item, index) => (
                                     <Text key={index} style={styles.preferenciasMelhorEvitarItem}>

@@ -7,6 +7,7 @@ export function useLoginViewModel(navigation: any) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [errors, setErrors] = useState({ email: "", senha: "", firebase: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
   const updateEmail = (text: string) => {
     setEmail(text);
@@ -47,8 +48,9 @@ export function useLoginViewModel(navigation: any) {
     
     setErrors(newErrors);
 
-    if (!isValid) return;
+    if (!isValid) return { success: false };
 
+    setIsLoading(true);
     try {
       const userLoginDTO: UserLoginDTO = {
         email: email,
@@ -57,9 +59,10 @@ export function useLoginViewModel(navigation: any) {
       const loggedUser = await userLogin(userLoginDTO);
       if (loggedUser) {
         navigation.replace("Home"); 
+        return { success: true };
       }
     } catch (error: any) {
-      console.error("Erro ao autenticar no Firebase:", error);
+      console.log("Erro ao autenticar no Firebase:", error.code);
       
       switch (error.code) {
         case "auth/invalid-credential":
@@ -74,7 +77,10 @@ export function useLoginViewModel(navigation: any) {
           newErrors.firebase = "Ocorreu um erro ao fazer login. Tente novamente."
       }
       setErrors(newErrors);
-    } 
+      return { success: false };
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {
@@ -87,5 +93,6 @@ export function useLoginViewModel(navigation: any) {
     handleRegistrationNavigate,
     handleForgotMyPasswordNavigate,
     handleAutenticarUsuario,
+    isLoading,
   };
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { IconButton } from '../IconButton';
+import { TouchableOpacity, Image } from 'react-native';
 import { createStyles } from './styles';
 import { useAppTheme } from "../../contexts/ThemeContext";
 
@@ -38,24 +38,45 @@ export const AppFooter = ({ onNavigateIntercept }: AppFooterProps = {}) => {
   return (
     <View style={styles.container}>
       <View style={styles.actionContainer}>
-        <IconButton
-          iconName="home"
-          onPress={() => handleNavigate('Home')}
-        />
+        <TouchableOpacity testID="icon-button-home" onPress={() => handleNavigate('Home')} style={{ alignItems: 'center', padding: 8 }}>
+          <Image 
+            source={require('../../../assets/casa.png')} 
+            style={{ 
+              width: 28, 
+              height: 28, 
+              opacity: route.name === 'Home' ? 1 : 0.5 
+            }} 
+            resizeMode="contain" 
+          />
+        </TouchableOpacity>
       </View>
       
       <View style={styles.actionContainer}>
-        <IconButton
-          iconName="maximize"
-          onPress={() => handleNavigate('Scan')}
-        />
+        <TouchableOpacity testID="icon-button-maximize" onPress={() => handleNavigate('Scan')} style={{ alignItems: 'center', padding: 8 }}>
+          <Image 
+            source={require('../../../assets/scaner-qrcode.png')} 
+            style={{ 
+              width: 28, 
+              height: 28, 
+              opacity: route.name === 'Scan' ? 1 : 0.5 
+            }} 
+            resizeMode="contain" 
+          />
+        </TouchableOpacity>
       </View>
       
       <View style={styles.actionContainer}>
-        <IconButton
-          iconName="user"
-          onPress={() => handleNavigate('MeuPerfil')}
-        />
+        <TouchableOpacity testID="icon-button-user" onPress={() => handleNavigate('MeuPerfil')} style={{ alignItems: 'center', padding: 8 }}>
+          <Image 
+            source={require('../../../assets/perfil-padrao.png')} 
+            style={{ 
+              width: 28, 
+              height: 28, 
+              opacity: route.name === 'MeuPerfil' ? 1 : 0.5 
+            }} 
+            resizeMode="contain" 
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );

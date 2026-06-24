@@ -1,5 +1,5 @@
 import { TouchableOpacityProps } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../PixelIcon";
 import { theme } from "../../styles/theme";
 import { createStyles } from "./styles";
 import { useAppTheme } from "../../contexts/ThemeContext";

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, SafeAreaView, Image } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { PixelIcon as Feather } from "../../components/PixelIcon";
 import { Button } from '../../components/Button';
 import { createStyles } from './styles';
 import { theme } from '../../styles/theme';
@@ -19,10 +19,10 @@ export const WelcomeScreen = () => {
                     <Image source={require('../../../assets/logo-pixel.png')} style={{ width: 150, height: 150, resizeMode: 'contain' }} />
                 </View>
                 
-                <Text style={styles.title}>Bem vindo ao ShakeIT</Text>
+                <Text style={styles.title}>Bem-vindo(a) ao ShakeIT!</Text>
                 
                 <Text style={styles.description}>
-                    A forma mais fácil e divertida de organizar sorteios e compartilhar suas listas de desejos com amigos e familiares!
+                    A magia do Amigo Secreto na palma da sua mão! Crie eventos, adicione suas listas de desejos e sorteie com um chacoalhar!
                 </Text>
             </View>
 

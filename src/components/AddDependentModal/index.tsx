@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, View, Text, FlatList, TouchableWithoutFeedback } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../PixelIcon";
 import { Button } from "../Button";
 import { IconButton } from "../IconButton";
 import { useAppTheme } from "../../contexts/ThemeContext";

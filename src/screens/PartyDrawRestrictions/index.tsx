@@ -2,7 +2,7 @@ import { useAppTheme } from "../../contexts/ThemeContext";
 import { createStyles } from "./styles";
 import { View, Text, FlatList, Switch } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../../components/PixelIcon";
 import { AppHeader } from "../../components/AppHeader";
 import { Button } from '../../components/Button';
 import { SelectInput } from '../../components/SelectInput';

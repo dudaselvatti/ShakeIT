@@ -13,17 +13,7 @@ jest.mock('@react-navigation/native', () => ({
   }),
 }));
 
-jest.mock('../IconButton', () => ({
-  IconButton: ({ iconName, onPress }: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { TouchableOpacity, Text } = require('react-native');
-    return (
-      <TouchableOpacity onPress={onPress} testID={`icon-${iconName}`}>
-        <Text>{iconName}</Text>
-      </TouchableOpacity>
-    );
-  }
-}));
+
 
 describe('Componente: AppFooter', () => {
   beforeEach(() => {
@@ -32,19 +22,19 @@ describe('Componente: AppFooter', () => {
 
   it('deve navegar para a Home quando clicar em Parties (home)', () => {
     const { getByTestId } = render(<AppFooter />);
-    fireEvent.press(getByTestId('icon-home'));
+    fireEvent.press(getByTestId('icon-button-home'));
     expect(mockNavigate).toHaveBeenCalledWith('Home', { animation: 'slide_from_right' });
   });
 
   it('deve navegar para Scan quando clicar no ícone correspondente', () => {
     const { getByTestId } = render(<AppFooter />);
-    fireEvent.press(getByTestId('icon-maximize'));
+    fireEvent.press(getByTestId('icon-button-maximize'));
     expect(mockNavigate).toHaveBeenCalledWith('Scan', { animation: 'slide_from_right' });
   });
 
   it('deve navegar para MeuPerfil quando clicar no ícone de usuário', () => {
     const { getByTestId } = render(<AppFooter />);
-    fireEvent.press(getByTestId('icon-user'));
+    fireEvent.press(getByTestId('icon-button-user'));
     expect(mockNavigate).toHaveBeenCalledWith('MeuPerfil', { animation: 'slide_from_right' });
   });
 });

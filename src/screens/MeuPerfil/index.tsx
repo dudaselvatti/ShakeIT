@@ -2,13 +2,14 @@ import React, { useRef, useEffect, useState } from 'react';
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform, Pressable, Animated, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Feather } from '@expo/vector-icons';
+import { PixelIcon as Feather } from "../../components/PixelIcon";
 import { Picker } from '@react-native-picker/picker';
 import { AppHeader } from '../../components/AppHeader';
 import { AppFooter } from '../../components/AppFooter';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Input } from '../../components/Input';
+import { IconButton } from '../../components/IconButton';
 import { Tag } from '../../components/Tag';
 import { PopupModal } from '../../components/PopupModal';
 import { createStyles } from './styles';
@@ -250,7 +251,10 @@ export const MeuPerfilScreen = () => {
                         />
                     </View>
 
-                    <Text style={styles.sectionTitle}>Coisas que você gosta:</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
+                        <Image source={require("../../../assets/coracao.png")} style={{ width: 24, height: 24, marginRight: 8, resizeMode: 'contain' }} />
+                        <Text style={[styles.sectionTitle, { marginTop: 0 }]}>Coisas que você gosta:</Text>
+                    </View>
                     <Card style={styles.interestsCard}>
                         <View style={styles.interestsContainer}>
                             {gostos.map((item) => (
@@ -275,16 +279,20 @@ export const MeuPerfilScreen = () => {
                                     containerStyle={{ flex: 1, marginBottom: 0, marginRight: 8 }}
                                     testID="gostos-input"
                                 />
-                                <Button
-                                    title="+"
+                                <IconButton
+                                    iconName="plus"
                                     onPress={handleAddGosto}
-                                    style={{ width: 48, height: 48 }}
+                                    variant="solid"
+                                    size={24}
                                 />
                             </View>
                         )}
                     </Card>
 
-                    <Text style={styles.sectionTitle}>Coisas para evitar:</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
+                        <Image source={require("../../../assets/coracao-partido.png")} style={{ width: 24, height: 24, marginRight: 8, resizeMode: 'contain' }} />
+                        <Text style={[styles.sectionTitle, { marginTop: 0 }]}>Coisas para evitar:</Text>
+                    </View>
                     <Card style={styles.interestsCard}>
                         <View style={styles.interestsContainer}>
                             {evitar.map((item) => (
@@ -309,10 +317,11 @@ export const MeuPerfilScreen = () => {
                                     containerStyle={{ flex: 1, marginBottom: 0, marginRight: 8 }}
                                     testID="evitar-input"
                                 />
-                                <Button
-                                    title="+"
+                                <IconButton
+                                    iconName="plus"
                                     onPress={handleAddEvitar}
-                                    style={{ width: 48, height: 48 }}
+                                    variant="solid"
+                                    size={24}
                                 />
                             </View>
                         )}

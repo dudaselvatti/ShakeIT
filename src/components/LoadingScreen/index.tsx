@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, Animated, Easing } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { PixelIcon as Feather } from "../PixelIcon";
 import { createStyles } from './styles';
 import { theme } from '../../styles/theme';
 import { useAppTheme } from "../../contexts/ThemeContext";

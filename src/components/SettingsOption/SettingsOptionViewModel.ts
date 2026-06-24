@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { TouchableOpacityProps } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../PixelIcon";
 
 export interface Props extends TouchableOpacityProps {
     title: string;

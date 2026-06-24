@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { createStyles } from './styles';
 import { useAppHeaderViewModel, Props } from './AppHeaderViewModel';
 import { IconButton } from '../IconButton';
@@ -28,7 +28,13 @@ export const AppHeader = (props: Props) => {
 
             <View style={styles.rightContainer}>
                 {showSettingsIcon && (
-                    <IconButton iconName="settings" onPress={handleSettingsPress} />
+                    <TouchableOpacity testID="icon-button-settings" onPress={handleSettingsPress} style={{ padding: 4 }}>
+                        <Image 
+                            source={require('../../../assets/config.png')} 
+                            style={{ width: 24, height: 24 }}
+                            resizeMode="contain" 
+                        />
+                    </TouchableOpacity>
                 )}
             </View>
         </View>

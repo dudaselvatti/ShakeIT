@@ -50,7 +50,7 @@ describe('Ecrã ShakeReveal (Tela 6)', () => {
   });
 
   it('deve renderizar os textos de instrução visual e a caixa de presente', () => {
-    const { getByText } = render(<ShakeRevealScreen route={{ params: { partyId: "party-id" } }} navigation={{}} />);
+    const { getByText, getByTestId } = render(<ShakeRevealScreen route={{ params: { partyId: "party-id" } }} navigation={{}} />);
 
     expect(getByText('O Sorteio realizado!')).toBeTruthy();
     expect(getByText('Chacoalhe o celular para descobrir o seu amigo secreto...')).toBeTruthy();

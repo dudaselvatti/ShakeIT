@@ -43,7 +43,7 @@ export const PartyAdminScreen = () => {
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                         <Text style={styles.partyName}>{partyName}</Text>
                         <IconButton 
-                            iconName="sliders" 
+                            iconName="settings" 
                             onPress={handleNavigatePartyDrawRestrictions} 
                             color={theme.colors.textLight} 
                             size={20}

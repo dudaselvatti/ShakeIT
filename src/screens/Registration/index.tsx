@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PopupModal } from "../../components/PopupModal";
@@ -43,7 +43,17 @@ export const RegistrationScreen = ({ navigation }: any) => {
     handleBackPress,
     confirmExit,
     handleCadastrarUsuario,
+    isLoading,
   } = useRegistrationViewModel(navigation);
+
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const onRegisterPress = async () => {
+    const result = await handleCadastrarUsuario();
+    if (result && !result.success) {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    }
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
@@ -54,7 +64,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
           onBackPress={handleBackPress}
         />
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView ref={scrollViewRef} style={styles.content} showsVerticalScrollIndicator={false}>
 
         <Input
           label="Nome de usuário *"
@@ -139,13 +149,14 @@ export const RegistrationScreen = ({ navigation }: any) => {
           options={calcadoOptions}
         />
 
+        {errors.firebase ? <Text style={[styles.firebaseErrorText]}>{errors.firebase}</Text> : null}
       </ScrollView>
 
       <View style={styles.footer}>
         <Button
           title="Criar Conta"
-          onPress={handleCadastrarUsuario}
-          disabled={!nomeUsuario || !email || !senha || !genero || !dataNascimento}
+          onPress={onRegisterPress}
+          isLoading={isLoading}
         />
       </View>
 

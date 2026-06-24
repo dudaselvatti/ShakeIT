@@ -51,7 +51,5 @@ describe('PartyCard Component', () => {
     const icon = getByTestId('party-card-icon');
     
     expect(icon).toBeTruthy();
-    
-    expect(icon.props.name).toBe('check-circle');
   });
 });

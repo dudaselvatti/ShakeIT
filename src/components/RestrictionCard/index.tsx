@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../PixelIcon";
 import { useRestrictionCardViewModel, Props } from "./RestrictionCardViewModel";
 import { createStyles } from "./styles";
 import { useAppTheme } from "../../contexts/ThemeContext";

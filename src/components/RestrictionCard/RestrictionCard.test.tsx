@@ -3,18 +3,16 @@ import { render, fireEvent } from "@testing-library/react-native";
 import { RestrictionCard } from "./index";
 import { useRestrictionCardViewModel } from "./RestrictionCardViewModel";
 
-const { Feather } = jest.requireMock("@expo/vector-icons");
-
 jest.mock("./RestrictionCardViewModel", () => ({
   useRestrictionCardViewModel: jest.fn(),
 }));
 
-jest.mock("@expo/vector-icons", () => {
-  const actualReact = jest.requireActual("react");
-  return {
-    Feather: (props: any) => actualReact.createElement("Feather", props),
-  };
-});
+jest.mock("../../components/PixelIcon", () => ({
+  PixelIcon: (props: any) => {
+    const actualReact = jest.requireActual("react");
+    return actualReact.createElement("PixelIcon", props);
+  }
+}));
 
 describe("RestrictionCard Component", () => {
   const mockOnPress = jest.fn();
@@ -42,7 +40,7 @@ describe("RestrictionCard Component", () => {
   it("deve renderizar apenas a seta para a direita quando a restrição for unidirecional ('one_way')", () => {
     const { UNSAFE_getAllByType } = render(<RestrictionCard {...mockProps} />);
 
-    const icons = UNSAFE_getAllByType(Feather);
+    const icons = UNSAFE_getAllByType("PixelIcon");
     const iconNames = icons.map(icon => icon.props.name);
 
     expect(iconNames).toContain("arrow-right");
@@ -58,7 +56,7 @@ describe("RestrictionCard Component", () => {
 
     const { UNSAFE_getAllByType } = render(<RestrictionCard {...mockProps} />);
 
-    const icons = UNSAFE_getAllByType(Feather);
+    const icons = UNSAFE_getAllByType("PixelIcon");
     const iconNames = icons.map(icon => icon.props.name);
 
     expect(iconNames).toContain("arrow-right");
