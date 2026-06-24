@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { Image } from 'react-native';
 import { ParticipanteCard } from './index';
 import { Participante } from '../../types/Participante';
 
@@ -51,13 +52,13 @@ describe('ParticipanteCard Component', () => {
     });
 
     it('deve exibir o status "pendente" e o cadeado aberto quando não estiver confirmado', () => {
-        const { getByText, queryByText } = render(
+        const { getByText, UNSAFE_getByType } = render(
             <ParticipanteCard participante={mockParticipante} />
         );
 
         expect(getByText('pendente')).toBeTruthy();
-        expect(getByText('🔓')).toBeTruthy();
-        expect(queryByText('🔒')).toBeNull();
+        const image = UNSAFE_getByType(Image);
+        expect(image.props.source).toEqual(require('../../../assets/cadeado-aberto.png'));
     });
 
     it('deve exibir apenas o cadeado fechado quando o participante estiver confirmado', () => {
@@ -69,12 +70,12 @@ describe('ParticipanteCard Component', () => {
             },
         };
 
-        const { getByText, queryByText } = render(
+        const { queryByText, UNSAFE_getByType } = render(
             <ParticipanteCard participante={participanteConfirmado} />
         );
 
-        expect(getByText('🔒')).toBeTruthy();
+        const image = UNSAFE_getByType(Image);
+        expect(image.props.source).toEqual(require('../../../assets/cadeado-fechado.png'));
         expect(queryByText('pendente')).toBeNull();
-        expect(queryByText('🔓')).toBeNull();
     });
 });

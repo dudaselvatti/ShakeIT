@@ -9,7 +9,7 @@ export function useParticipanteCardViewModel({ participante }: Props) {
 
     const isConfirmado = participante.perfil.status === 'confirmado';
 
-    const statusIcon = isConfirmado ? "🔒" : "🔓";
+    const statusIcon = isConfirmado ? require('../../../assets/cadeado-fechado.png') : require('../../../assets/cadeado-aberto.png');
 
     const statusText = isConfirmado ? "" : participante.perfil.status;
 

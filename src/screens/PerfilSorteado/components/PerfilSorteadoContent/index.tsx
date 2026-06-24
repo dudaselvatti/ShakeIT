@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import{ usePerfilSorteadoContentViewModel, Props} from './PerfilSorteadoContentViewModel'
 import { createStyles } from './styles';
 import { useAppTheme } from "../../../../contexts/ThemeContext";
@@ -15,9 +15,27 @@ export const PerfilSorteadoContent = (props: Props) => {
                 <View style={styles.medidasContainer}>
                     <Text style={styles.heading}>Minhas Medidas</Text>
                     <View style={styles.medidasList}>
-                        {medidas.camisa && <Text style={styles.medidasItem}>Camisa: {medidas.camisa}</Text>}
-                        {medidas.calca && <Text style={styles.medidasItem}>Calça: {medidas.calca}</Text>}
-                        {medidas.calcado && <Text style={styles.medidasItem}>Calçado: {medidas.calcado}</Text>}
+                        {medidas.camisa && (
+                            <View style={styles.medidaCard}>
+                                <Image source={require('../../../../../assets/camisa.png')} style={{ width: 48, height: 48, resizeMode: 'contain' }} />
+                                <Text style={styles.medidaLabel}>Camisa</Text>
+                                <Text style={styles.medidaValue}>{medidas.camisa}</Text>
+                            </View>
+                        )}
+                        {medidas.calca && (
+                            <View style={styles.medidaCard}>
+                                <Image source={require('../../../../../assets/calca.png')} style={{ width: 48, height: 48, resizeMode: 'contain' }} />
+                                <Text style={styles.medidaLabel}>Calça</Text>
+                                <Text style={styles.medidaValue}>{medidas.calca}</Text>
+                            </View>
+                        )}
+                        {medidas.calcado && (
+                            <View style={styles.medidaCard}>
+                                <Image source={require('../../../../../assets/tenis.png')} style={{ width: 48, height: 48, resizeMode: 'contain' }} />
+                                <Text style={styles.medidaLabel}>Calçado</Text>
+                                <Text style={styles.medidaValue}>{medidas.calcado}</Text>
+                            </View>
+                        )}
                     </View>
                 </View>
             )}

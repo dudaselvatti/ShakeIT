@@ -31,11 +31,11 @@ describe('Ecrã ShakeReveal (Tela 6)', () => {
   });
 
   it('deve renderizar os textos de instrução visual e a caixa de presente', () => {
-    const { getByText } = render(<ShakeRevealScreen navigation={{}} />);
+    const { getByText, getByTestId } = render(<ShakeRevealScreen navigation={{}} />);
 
     expect(getByText('O Sorteio realizado!')).toBeTruthy();
     expect(getByText('Chacoalhe o celular para descobrir o seu amigo secreto...')).toBeTruthy();
-    expect(getByText('🎁')).toBeTruthy();
+    expect(getByTestId('present-image')).toBeTruthy();
   });
 
   it('deve vibrar, acionar explosao e navegar para a Tela 7 ao detetar shake real pelo sensor', () => {

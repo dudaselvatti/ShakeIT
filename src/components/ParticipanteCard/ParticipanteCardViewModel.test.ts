@@ -59,7 +59,7 @@ describe("useParticipanteCardViewModel", () => {
     );
 
     expect(result.current.isConfirmado).toBe(false);
-    expect(result.current.statusIcon).toBe("🔓");
+    expect(result.current.statusIcon).toEqual(require('../../../assets/cadeado-aberto.png'));
     expect(result.current.statusText).toBe("pendente");
   });
 
@@ -74,7 +74,7 @@ describe("useParticipanteCardViewModel", () => {
     );
 
     expect(result.current.isConfirmado).toBe(true);
-    expect(result.current.statusIcon).toBe("🔒");
+    expect(result.current.statusIcon).toEqual(require('../../../assets/cadeado-fechado.png'));
     expect(result.current.statusText).toBe("");
   });
 
@@ -97,6 +97,6 @@ describe("useParticipanteCardViewModel", () => {
     });
 
     expect(result.current.isConfirmado).toBe(true);
-    expect(result.current.statusIcon).toBe("🔒");
+    expect(result.current.statusIcon).toEqual(require('../../../assets/cadeado-fechado.png'));
   });
 });

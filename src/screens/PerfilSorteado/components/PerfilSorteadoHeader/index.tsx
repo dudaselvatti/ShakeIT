@@ -14,7 +14,7 @@ export const PerfilSorteadoHeader = (props: Props) => {
             <View style={styles.contentContainer}>
                 <Image
                     testID="profile-image"
-                    source={{ uri: fotoUrl }}
+                    source={fotoUrl && !fotoUrl.includes('gravatar') ? { uri: fotoUrl } : require('../../../../../assets/perfil-padrao.png')}
                     style={styles.profileImage}
                     />
                 <View style={styles.infoContainer}>

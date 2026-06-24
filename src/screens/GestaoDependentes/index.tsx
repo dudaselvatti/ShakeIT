@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ScrollView, ActivityIndicator, Pressable } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { AppHeader } from "../../components/AppHeader";
@@ -106,7 +106,18 @@ export const GestaoDependentesScreen = ({ navigation }: any) => {
                             return (
                                 <Card key={item.id} style={styles.card} testID={`dependent-card-${item.id}`}>
                                     <View style={styles.cardHeader}>
-                                        <Text style={styles.dependentName}>{item.name}</Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, flexWrap: 'wrap' }}>
+                                            <Text style={[styles.dependentName, { marginRight: 12, marginBottom: 4 }]}>{item.name}</Text>
+                                            <View style={[styles.typeTag, tagStyles.tag, { paddingVertical: 4, paddingHorizontal: 8, marginVertical: 0, marginBottom: 4, flexDirection: 'row', alignItems: 'center' }]}>
+                                                <Image 
+                                                    source={item.dependent_type === "child" ? require('../../../assets/crianca.png') : require('../../../assets/pet.png')} 
+                                                    style={{ width: 24, height: 24, marginRight: 6 }} 
+                                                />
+                                                <Text style={[styles.typeTagText, tagStyles.text, { fontSize: 12 }]}>
+                                                    {getDependentTypeLabel(item.dependent_type).toUpperCase()}
+                                                </Text>
+                                            </View>
+                                        </View>
                                         <View style={styles.actionsRow}>
                                             <IconButton
                                                 iconName="edit-2"
@@ -148,23 +159,17 @@ export const GestaoDependentesScreen = ({ navigation }: any) => {
                                         ) : null}
                                         {item.gostos && item.gostos.length > 0 ? (
                                             <View style={styles.detailRow}>
-                                                <Feather name="heart" size={14} color={theme.colors.success} />
+                                                <Image source={require('../../../assets/coracao.png')} style={{ width: 20, height: 20, marginRight: 8 }} />
                                                 <Text style={styles.detailText}>Gosta de: {item.gostos.join(", ")}</Text>
                                             </View>
                                         ) : null}
                                         {item.evitar && item.evitar.length > 0 ? (
                                             <View style={styles.detailRow}>
-                                                <Feather name="x-circle" size={14} color={theme.colors.danger} />
+                                                <Image source={require('../../../assets/coracao-partido.png')} style={{ width: 20, height: 20, marginRight: 8 }} />
                                                 <Text style={styles.detailText}>Evitar: {item.evitar.join(", ")}</Text>
                                             </View>
                                         ) : null}
 
-                                        <View style={[styles.typeTag, tagStyles.tag]}>
-                                            <Text style={[styles.typeTagText, tagStyles.text]}>
-                                                {item.dependent_type === "child" ? "👶 " : "🐶 "}
-                                                {getDependentTypeLabel(item.dependent_type).toUpperCase()}
-                                            </Text>
-                                        </View>
                                     </View>
                                 </Card>
                             );

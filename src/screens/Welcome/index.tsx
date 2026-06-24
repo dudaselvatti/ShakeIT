@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, Text, SafeAreaView, Image } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Button } from '../../components/Button';
 import { createStyles } from './styles';
@@ -16,7 +16,7 @@ export const WelcomeScreen = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.content}>
                 <View style={styles.iconWrapper}>
-                    <Feather name="gift" size={56} color={theme.colors.primary} />
+                    <Image source={require('../../../assets/logo-pixel.png')} style={{ width: 150, height: 150, resizeMode: 'contain' }} />
                 </View>
                 
                 <Text style={styles.title}>Bem vindo ao ShakeIT</Text>

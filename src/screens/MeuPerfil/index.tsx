@@ -22,7 +22,7 @@ import { useAppTheme } from "../../contexts/ThemeContext";
 
 interface SizeCardProps {
     title: string;
-    emoji: string;
+    imageSource: any;
     placeholder: string;
     selectedValue: string;
     onValueChange: (val: string) => void;
@@ -30,7 +30,7 @@ interface SizeCardProps {
     isEditing: boolean;
 }
 
-const SizeCard = ({ title, emoji, placeholder, selectedValue, onValueChange, options, isEditing }: SizeCardProps) => {
+const SizeCard = ({ title, imageSource, placeholder, selectedValue, onValueChange, options, isEditing }: SizeCardProps) => {
     const { theme } = useAppTheme();
     const styles = createStyles(theme);
     const renderPlaceholderText = (text: string) => {
@@ -49,7 +49,7 @@ const SizeCard = ({ title, emoji, placeholder, selectedValue, onValueChange, opt
     return (
         <Card style={styles.card}>
             <View style={styles.cardIconContainer}>
-                <Text style={styles.cardEmoji}>{emoji}</Text>
+                <Image source={imageSource} style={{ width: 56, height: 56, resizeMode: 'contain' }} />
             </View>
             <Text style={styles.cardTitle}>{title}</Text>
             <View style={styles.dropdownContainer}>
@@ -167,7 +167,7 @@ export const MeuPerfilScreen = () => {
 
                     {!isEditing ? (
                         <View style={{ alignItems: 'center', marginBottom: 24, marginTop: 16 }}>
-                            <Image source={{ uri: avatarUrl || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y' }} style={{ width: 100, height: 100, borderRadius: 50, marginBottom: 16 }} />
+                            <Image source={avatarUrl ? { uri: avatarUrl } : require('../../../assets/perfil-padrao.png')} style={{ width: 100, height: 100, borderRadius: 50, marginBottom: 16 }} />
                             <Text style={{ fontSize: 24, fontWeight: 'bold', color: theme.colors.text }}>{nome}</Text>
                             <Text style={{ fontSize: 16, color: theme.colors.textLight, marginTop: 4 }}>
                                 {genero} • {dataNascimento ? `${calcularIdade(dataNascimento.toISOString().split('T')[0])} anos` : 'Data de nascimento não informada'}
@@ -221,7 +221,7 @@ export const MeuPerfilScreen = () => {
                     <View style={styles.sizesRow}>
                         <SizeCard
                             title="Tamanho de Camisa"
-                            emoji="👕"
+                            imageSource={require('../../../assets/camisa.png')}
                             placeholder="Selecione o tamanho (ex: P, M, G)"
                             selectedValue={camisa}
                             onValueChange={setCamisa}
@@ -231,7 +231,7 @@ export const MeuPerfilScreen = () => {
 
                         <SizeCard
                             title="Tamanho de Calça"
-                            emoji="👖"
+                            imageSource={require('../../../assets/calca.png')}
                             placeholder="Selecione o tamanho (ex: 38, 40, 42)"
                             selectedValue={calca}
                             onValueChange={setCalca}
@@ -241,7 +241,7 @@ export const MeuPerfilScreen = () => {
 
                         <SizeCard
                             title="Tamanho de Calçado"
-                            emoji="👟"
+                            imageSource={require('../../../assets/tenis.png')}
                             placeholder="Selecione o tamanho (ex: 39, 40, 41)"
                             selectedValue={calcado}
                             onValueChange={setCalcado}
