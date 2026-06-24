@@ -5,6 +5,8 @@ import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { getDrawResultByGiverProfileId } from "../../services/cloud/DrawResult/DrawResultDb";
 import { getPartyParticipantByUserIdAndPartyId } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
 
+import { updatePartyParticipant } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
+
 export function useShakeRevealViewModel({ route, navigation }: any) {
   const { partyId } = route.params;
   const { usuarioAtual } = useAuth();
@@ -24,6 +26,15 @@ export function useShakeRevealViewModel({ route, navigation }: any) {
       if (!participant) {
         throw new Error("Participante do usuário não encontrado");
       }
+      
+      // Update has_revealed_draw
+      if (!participant.perfil.has_revealed_draw) {
+        await updatePartyParticipant(participant.perfil.id, {
+          "perfil.has_revealed_draw": true,
+          "has_revealed_draw": true
+        } as any);
+      }
+
       const giverProfileId = participant.perfil.id;
       const drawResult = await getDrawResultByGiverProfileId(partyId, giverProfileId);
       if (!drawResult) {

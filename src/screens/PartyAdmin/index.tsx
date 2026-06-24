@@ -7,6 +7,7 @@ import { PartyQRCode } from '../../components/PartyQRCode';
 import { Button } from "../../components/Button";
 import { IconButton } from '../../components/IconButton';
 import { ParticipanteCard } from '../../components/ParticipanteCard';
+import { AddDependentModal } from '../../components/AddDependentModal';
 import { usePartyAdminViewModel } from './PartyAdminViewModel';
 import { createStyles } from './styles';
 import { useAppTheme } from "../../contexts/ThemeContext";
@@ -22,8 +23,16 @@ export const PartyAdminScreen = () => {
         participantsTotal,
         headerTitle,
         isDrawing,
+        isAddDependentVisible,
+        setAddDependentVisible,
+        handleRemoveParticipant,
+        handleAddDependent,
+        handleDependentAdded,
         handleNavigatePartyDrawRestrictions,
-        handleSorteioPress
+        handleSorteioPress,
+        usuarioAtual,
+        partyId,
+        handleNavigateToCreateDependent
     } = usePartyAdminViewModel();
     return (
         <SafeAreaView style={styles.container}>
@@ -54,11 +63,27 @@ export const PartyAdminScreen = () => {
                 <View style={styles.flatListContainer}>
                     <FlatList
                         data={participants}
-                        keyExtractor={(item) => item.usuario.id.toString()}
-                        renderItem={({ item }) => (
-                            <ParticipanteCard participante={item} />
-                        )}
+                        keyExtractor={(item) => item.perfil.id}
+                        renderItem={({ item }) => {
+                            // O adm pode remover qualquer um, exceto ele mesmo
+                            const isCurrentUser = item.perfil.user_id === usuarioAtual?.id && item.perfil.participant_type === 'user';
+                            return (
+                                <ParticipanteCard 
+                                    participante={item} 
+                                    onRemove={handleRemoveParticipant}
+                                    showRemoveIcon={!isCurrentUser} // admin can remove anyone except themselves
+                                />
+                            );
+                        }}
                         initialNumToRender={participants.length}
+                        ListFooterComponent={() => (
+                            <Button 
+                                title="+ Adicionar Dependente" 
+                                variant="outline" 
+                                onPress={handleAddDependent} 
+                                style={{ marginTop: 16, marginBottom: 30 }}
+                            />
+                        )}
                     />
                 </View>
             </View>
@@ -72,6 +97,16 @@ export const PartyAdminScreen = () => {
             </View>
 
             <AppFooter />
+            <AddDependentModal 
+                visible={isAddDependentVisible}
+                partyId={partyId}
+                onClose={() => setAddDependentVisible(false)}
+                onDependentAdded={() => {
+                    setAddDependentVisible(false);
+                    handleDependentAdded();
+                }}
+                onNavigateToCreate={handleNavigateToCreateDependent}
+            />
         </SafeAreaView>
     );
 }

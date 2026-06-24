@@ -9,7 +9,7 @@ import { PartyParticipant } from "../../../types/PartyParticipant";
 describe("DrawAlgorithm Unit Tests", () => {
     const participants: PartyParticipant[] = [
         {
-            usuario: { id: "user-A", nome: "Ana", email: "ana@test.com" },
+            usuario: { id: "user-A", nome: "Ana", email: "ana@test.com" } as any,
             perfil: {
                 id: "profile-A",
                 user_id: "user-A",
@@ -25,7 +25,7 @@ describe("DrawAlgorithm Unit Tests", () => {
             has_revealed_draw: false
         },
         {
-            usuario: { id: "user-B", nome: "Bruno", email: "bruno@test.com" },
+            usuario: { id: "user-B", nome: "Bruno", email: "bruno@test.com" } as any,
             perfil: {
                 id: "profile-B",
                 user_id: "user-B",
@@ -41,7 +41,7 @@ describe("DrawAlgorithm Unit Tests", () => {
             has_revealed_draw: false
         },
         {
-            usuario: { id: "user-C", nome: "Carlos", email: "carlos@test.com" },
+            usuario: { id: "user-C", nome: "Carlos", email: "carlos@test.com" } as any,
             perfil: {
                 id: "profile-C",
                 user_id: "user-C",

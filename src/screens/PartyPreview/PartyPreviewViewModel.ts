@@ -1,30 +1,40 @@
-import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useState, useEffect } from "react";
 import { Party } from "../../types/Party";
+import { getPartyByInviteCodeFromCloud } from "../../services/cloud/Party/PartyDb";
+import { createPartyParticipant, getPartyParticipantByUserIdAndPartyId } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
+import { useAuth } from "../../contexts/AuthContext/AuthContext";
 
-// Mock data to simulate the party fetched via code
-const MOCK_PARTY: Party = {
-  id: "mock1",
-  name: "Firma 2026",
-  min_value: 50,
-  max_value: 100,
-  admin_id: "550e8400-e29b-41d4-a716-446655440001",
-  invite_code: "#NATAL55",
-  event_date: "2026-12-20T00:00:00.000Z",
-  status: "aguardando_sorteio",
-  block_dependent_draw: false,
-  allow_wishlist_changes_after_draw: true,
-  created_at: "2024-01-10T10:00:00Z",
-  updated_at: "2024-01-10T10:00:00Z"
+type RouteParams = {
+  partyCode: string;
 };
 
 export function usePartyPreviewViewModel() {
+  const route = useRoute();
   const navigation = useNavigation<any>();
+  const { usuarioAtual } = useAuth();
+  const { partyCode } = route.params as RouteParams;
   
   const [isModalVisible, setModalVisible] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
-  
-  const party = MOCK_PARTY;
+  const [party, setParty] = useState<Party | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadParty() {
+      if (partyCode) {
+        try {
+          const fetchedParty = await getPartyByInviteCodeFromCloud(partyCode);
+          setParty(fetchedParty);
+        } catch (error) {
+          console.error("Erro ao carregar party:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    }
+    loadParty();
+  }, [partyCode]);
 
   const handleBackPress = () => {
     setPendingRoute(null);
@@ -42,7 +52,6 @@ export function usePartyPreviewViewModel() {
 
   const handleConfirmModal = () => {
     setModalVisible(false);
-    // Aguarda o modal nativo desmontar antes de navegar para não travar os toques na Home
     setTimeout(() => {
       if (pendingRoute) {
         navigation.navigate(pendingRoute);
@@ -52,12 +61,26 @@ export function usePartyPreviewViewModel() {
     }, 100);
   };
 
-  const handleReady = () => {
-    navigation.navigate("ParticipantLobby", { partyId: party.id });
+  const handleReady = async () => {
+    if (!party || !usuarioAtual) return;
+    
+    setIsLoading(true);
+    try {
+      const existing = await getPartyParticipantByUserIdAndPartyId(usuarioAtual.id, party.id);
+      if (!existing) {
+        await createPartyParticipant(party.id, usuarioAtual, "pendente");
+      }
+      navigation.navigate("ParticipantLobby", { partyId: party.id });
+    } catch (error) {
+      console.error("Erro ao entrar na party:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {
     party,
+    isLoading,
     isModalVisible,
     handleBackPress,
     handleFooterNavigate,

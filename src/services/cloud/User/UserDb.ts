@@ -39,7 +39,19 @@ export async function getUserById(id: string): Promise<Usuario | null> {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-        return docSnap.data() as Usuario;
+        const data = docSnap.data();
+        let birthDateStr = data.birth_date;
+        if (birthDateStr && typeof birthDateStr !== 'string' && birthDateStr.toDate) {
+            const date = birthDateStr.toDate();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            birthDateStr = `${year}-${month}-${day}`;
+        }
+        return {
+            ...data,
+            birth_date: birthDateStr
+        } as Usuario;
     }
     return null;
 }

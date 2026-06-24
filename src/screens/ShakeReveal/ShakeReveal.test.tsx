@@ -26,6 +26,7 @@ jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
   getPartyParticipantByUserIdAndPartyId: jest.fn(() => Promise.resolve({
     perfil: { id: 'profile-A' }
   })),
+  updatePartyParticipant: jest.fn(() => Promise.resolve()),
 }));
 
 jest.mock('../../services/cloud/DrawResult/DrawResultDb', () => ({

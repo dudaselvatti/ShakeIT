@@ -200,26 +200,65 @@ export async function executeDraw(partyId: string) {
     }
 
     try {
-        const baseUrl = process.env.EXPO_PUBLIC_FUNCTION_URL || "https://us-central1-dsmv-shakeit.cloudfunctions.net";
-        const response = await axios.post(`${baseUrl}/executeDraw`, { partyId });
-        return response.data;
+        const party = await getPartyFromCloud(partyId);
+        if (!party) {
+            throw new Error("Party não encontrada");
+        }
+        if (party.status !== "aguardando_sorteio") {
+            throw new Error("Party não está pronta para sorteio");
+        }
+
+        const allParticipants = await getParticipantsByPartyId(partyId);
+        const participants = allParticipants.filter(p => p.perfil.status === "confirmado");
+        
+        if (participants.length < 2) {
+            throw new Error("Poucos participantes para sorteio");
+        }
+        if (participants.length > 100) {
+            throw new Error("Limite de 100 participantes excedido");
+        }
+
+        const restrictions = await getDrawRestrictionsByPartyFromCloud(partyId);
+        const blockDependentDraw = party.block_dependent_draw || false;
+
+        const blockMap = buildBlockMap({ participants, restrictions, blockDependentDraw });
+        validatePossibility(participants, blockMap);
+        const pairs = generateDraw(participants, blockMap);
+
+        const batch = writeBatch(db);
+
+        const drawCollection = collection(db, "DRAW_RESULT");
+        for (const pair of pairs) {
+            const newDrawRef = doc(drawCollection);
+            batch.set(newDrawRef, {
+                id: newDrawRef.id,
+                party_id: partyId,
+                giver_profile_id: pair.giver_profile_id,
+                receiver_profile_id: pair.receiver_profile_id,
+                created_at: serverTimestamp(),
+                updated_at: serverTimestamp()
+            });
+        }
+
+        const partyRef = doc(db, "parties", partyId);
+        batch.update(partyRef, {
+            status: "sorteio_realizado",
+            updated_at: serverTimestamp()
+        });
+
+        await batch.commit();
+
+        return {
+            success: true,
+            message: "Sorteio realizado com sucesso localmente"
+        };
     } catch (error: any) {
         console.error("Erro ao executar sorteio:", error);
 
-        const errorData = error?.response?.data;
-        if (
-            errorData === "UNSOLVABLE_GRAPH" ||
-            error?.response?.status === 422 ||
-            (typeof errorData === "object" && errorData?.message === "UNSOLVABLE_GRAPH")
-        ) {
+        if (error instanceof UnsolvableGraphError || error.message === "UNSOLVABLE_GRAPH") {
             throw new Error("UNSOLVABLE_GRAPH");
         }
 
-        throw new Error(
-            error?.response?.data?.message ||
-            error?.response?.data ||
-            error?.message ||
-            "Erro ao executar sorteio"
-        );
+        throw new Error(error?.message || "Erro ao executar sorteio");
     }
 }

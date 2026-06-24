@@ -20,6 +20,8 @@ export interface Perfil {
     participant_type: "user" | "dependent";
     participant_name: string;
     participant_avatar: string;
+    birth_date?: string;
+    gender?: string;
     wishlist_id?: string;
     status: ParticipantStatus;
     has_revealed_draw: boolean;

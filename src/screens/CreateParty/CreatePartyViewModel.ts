@@ -12,6 +12,7 @@ export function useCreatePartyViewModel(navigation: any) {
   const [valorMaximo, setValorMaximo] = useState("");
   const [errors, setErrors] = useState({ nome: "", data: "", valores: "" });
   const [pendingAction, setPendingAction] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { usuarioAtual } = useAuth();
 
@@ -112,7 +113,9 @@ export function useCreatePartyViewModel(navigation: any) {
 
     setErrors(newErrors);
 
-    if (!isValid || !usuarioAtual) return;
+    if (!isValid || !usuarioAtual || isLoading) return;
+
+    setIsLoading(true);
 
     const novaParty: PartyCreationDTO = {
       name: nomeParty,
@@ -126,7 +129,7 @@ export function useCreatePartyViewModel(navigation: any) {
       const createdParty = await createPartyInCloud(novaParty);
       console.log("Party criada no Firebase:", createdParty);
 
-      const partyCreatorParticipant = await createPartyParticipant(createdParty.id, usuarioAtual);
+      const partyCreatorParticipant = await createPartyParticipant(createdParty.id, usuarioAtual, "confirmado");
       console.log("Criador da party registrado como participante:", partyCreatorParticipant);
 
       navigation.navigate("PartyCreated", { party: createdParty, });
@@ -137,6 +140,8 @@ export function useCreatePartyViewModel(navigation: any) {
         ...prev,
         nome: "Erro ao criar a Party. Tente novamente.",
       }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -156,5 +161,6 @@ export function useCreatePartyViewModel(navigation: any) {
     handleFooterNavigate,
     confirmExit,
     handleCriarParty,
+    isLoading,
   };
 };

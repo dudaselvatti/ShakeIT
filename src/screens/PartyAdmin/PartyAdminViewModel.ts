@@ -2,10 +2,12 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { participantesMock } from "../../mocks/participantesMock";
 import { getPartyFromCloud } from '../../services/cloud/Party/PartyDb';
 import { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 import { Party } from '../../types/Party';
 import { executeDraw } from '../../services/cloud/DrawAlgorithm/DrawAlgorithm';
 import { PartyParticipant } from '../../types/PartyParticipant';
-import { getParticipantsByPartyId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
+import { getParticipantsByPartyId, updatePartyParticipant } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
+import { useAuth } from '../../contexts/AuthContext/AuthContext';
 
 type RouteParams = {
   partyId: string;
@@ -14,6 +16,7 @@ type RouteParams = {
 export function usePartyAdminViewModel() {
     const route = useRoute();
     const navigation = useNavigation<any>();
+    const { usuarioAtual } = useAuth();
 
     const { partyId } = route.params as RouteParams;
 
@@ -65,6 +68,21 @@ export function usePartyAdminViewModel() {
         navigation.navigate("PartyDrawRestrictions", { partyId: partyId })
     }
 
+    const [isAddDependentVisible, setAddDependentVisible] = useState(false);
+
+    const handleRemoveParticipant = async (participant: PartyParticipant) => {
+        try {
+            await updatePartyParticipant(participant.perfil.id, { 'perfil.status': 'removido' } as any);
+            setParticipants(prev => prev.filter(p => p.perfil.id !== participant.perfil.id));
+        } catch (error) {
+            console.error("Erro ao remover participante:", error);
+        }
+    };
+
+    const handleAddDependent = () => {
+        setAddDependentVisible(true);
+    };
+
     const handleSorteioPress = async () => {
         try {
             setIsDrawing(true);
@@ -72,18 +90,32 @@ export function usePartyAdminViewModel() {
             console.log("Sucesso", result.message ?? "Sorteio realizado com sucesso.");
             navigation.navigate("ShakeReveal", { partyId });
         } catch (error: any) {
-            const errorMessage = error?.message ?? "";
-            if (errorMessage.includes("UNSOLVABLE_GRAPH")) {
-                console.error("Sorteio matematicamente impossível: ", error)
-                return;
+            console.error("Erro no sorteio:", error);
+            if (error.message === "UNSOLVABLE_GRAPH") {
+                Alert.alert(
+                    "Sorteio Impossível",
+                    "Não há combinações possíveis para este sorteio devido às restrições configuradas (ou por ter apenas participantes do mesmo grupo familiar). Adicione mais pessoas ou remova restrições."
+                );
+            } else {
+                Alert.alert("Erro", error.message || "Ocorreu um erro ao realizar o sorteio.");
             }
-            console.error(error);
         } finally {
             setIsDrawing(false);
         }
     };
 
+    const handleDependentAdded = () => {
+        // Refresh participants
+        getParticipantsByPartyId(partyId).then(setParticipants);
+    };
+
+    const handleNavigateToCreateDependent = () => {
+        navigation.navigate('FormDependente');
+    };
+
     return {
+        usuarioAtual,
+        partyId,
         partyName,
         partyCode,
         participants,
@@ -91,6 +123,12 @@ export function usePartyAdminViewModel() {
         participantsTotal,
         headerTitle,
         isDrawing,
+        isAddDependentVisible,
+        setAddDependentVisible,
+        handleRemoveParticipant,
+        handleAddDependent,
+        handleDependentAdded,
+        handleNavigateToCreateDependent,
         handleNavigatePartyDrawRestrictions,
         handleSorteioPress,
     };

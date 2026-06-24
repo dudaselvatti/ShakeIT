@@ -11,11 +11,12 @@ import {
 import { db } from "../../../config/firebase";
 import { PartyParticipant } from "../../../types/PartyParticipant";
 import { Usuario } from "../../../types/Usuario";
+import { Dependent } from "../../../types/Dependent";
 import { participantesMock } from "../../../mocks/participantesMock";
 
 const PARTY_PARTICIPANT_COLLECTION = "PARTY_PARTICIPANT";
 
-export async function createPartyParticipant(partyId: string, usuario: Usuario): Promise<PartyParticipant> {
+export async function createPartyParticipant(partyId: string, usuario: Usuario, initialStatus: "pendente" | "confirmado" = "pendente"): Promise<PartyParticipant> {
     const participantCollectionRef = collection(db, PARTY_PARTICIPANT_COLLECTION);
     const newParticipantDocRef = doc(participantCollectionRef); // Gera ID único para o perfil
 
@@ -28,12 +29,46 @@ export async function createPartyParticipant(partyId: string, usuario: Usuario):
             participant_type: "user",
             participant_name: usuario.nome,
             participant_avatar: usuario.avatar_url,
-            status: "confirmado",
+            birth_date: usuario.birth_date,
+            gender: usuario.genero,
+            status: initialStatus,
             has_revealed_draw: false,
             sizes: usuario.sizes || {},
             preferencias: {
                 coisasQueAmo: usuario.interesses || [],
                 melhorEvitar: usuario.evitar || []
+            },
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+        },
+        has_revealed_draw: false
+    };
+
+    await setDoc(newParticipantDocRef, novoParticipante);
+    return novoParticipante;
+}
+
+export async function createDependentPartyParticipant(partyId: string, usuario: Usuario, dependent: Dependent, gostos: string[], evitar: string[]): Promise<PartyParticipant> {
+    const participantCollectionRef = collection(db, PARTY_PARTICIPANT_COLLECTION);
+    const newParticipantDocRef = doc(participantCollectionRef);
+
+    const novoParticipante: PartyParticipant = {
+        usuario: usuario,
+        perfil: {
+            id: newParticipantDocRef.id,
+            user_id: usuario.id,
+            party_id: partyId,
+            participant_type: "dependent",
+            participant_name: dependent.name,
+            participant_avatar: dependent.avatar_url || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+            birth_date: dependent.birth_date,
+            gender: dependent.gender,
+            status: "confirmado",
+            has_revealed_draw: false,
+            sizes: dependent.sizes || {},
+            preferencias: {
+                coisasQueAmo: gostos,
+                melhorEvitar: evitar
             },
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
@@ -103,4 +138,20 @@ export async function getAmigoSecreto(id: string): Promise<any> {
         throw new Error("Participante não foi encontrado!");
     }
     return participante;
+}
+
+export async function confirmPresenceInParty(partyId: string, usuario: Usuario): Promise<void> {
+    const userParticipant = await getPartyParticipantByUserIdAndPartyId(usuario.id, partyId);
+    if (!userParticipant) return;
+    
+    await updatePartyParticipant(userParticipant.perfil.id, {
+        "perfil.status": "confirmado",
+        "perfil.sizes": usuario.sizes || {},
+        "perfil.preferencias.coisasQueAmo": usuario.interesses || [],
+        "perfil.preferencias.melhorEvitar": usuario.evitar || []
+    } as any);
+
+    // Se quisermos atualizar os dependentes, podemos fazer aqui futuramente.
+    // Atualmente createDependentPartyParticipant já puxa os dados do momento e deixa como confirmado,
+    // então a garantia de snapshot funciona.
 }

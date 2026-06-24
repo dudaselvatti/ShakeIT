@@ -19,6 +19,7 @@ export const PartyPreviewScreen = () => {
     const styles = createStyles(theme);
   const { 
     party, 
+    isLoading,
     isModalVisible,
     handleBackPress, 
     handleFooterNavigate,
@@ -26,6 +27,17 @@ export const PartyPreviewScreen = () => {
     handleConfirmModal,
     handleReady 
   } = usePartyPreviewViewModel();
+
+  if (isLoading || !party) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <AppHeader headerTitle="Carregando..." showBackButton={true} onBackPress={handleBackPress} />
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ color: theme.colors.text }}>Carregando dados da party...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>

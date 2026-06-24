@@ -58,6 +58,20 @@ export async function getPartyFromCloud(partyId: string): Promise<Party | null> 
     return null;
 }
 
+export async function getPartyByInviteCodeFromCloud(inviteCode: string): Promise<Party | null> {
+    const partiesRef = collection(db, "parties");
+    const q = query(partiesRef, where("invite_code", "==", inviteCode));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+        const docSnap = snapshot.docs[0];
+        return {
+            id: docSnap.id,
+            ...docSnap.data(),
+        } as Party;
+    }
+    return null;
+}
+
 export async function getPartiesByUserId(userId: string): Promise<Party[]> {
     const participantRef = collection(db, "PARTY_PARTICIPANT");
     const q = query(participantRef, where("perfil.user_id", "==", userId));

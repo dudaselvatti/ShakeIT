@@ -52,7 +52,7 @@ export const ShakeRevealScreen = ({ route, navigation }: any) => {
             { 
                 opacity: explodeOpacity,
                 transform: [
-                { translateX: hasShaken ? 0 : shakeAnimation },
+                { translateX: shakeAnimation },
                 { scale: explodeScale }
                 ] 
             }
