@@ -5,12 +5,12 @@ import { partiesMock } from '../../mocks/partiesMock';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
-jest.mock('@react-navigation/native', () => {
-  return {
-    ...jest.requireActual('@react-navigation/native'),
-    useNavigation: jest.fn(),
-  };
-});
+jest.mock('@react-navigation/native', () => ({
+  ...jest.requireActual('@react-navigation/native'),
+  useNavigation: jest.fn(),
+  useRoute: jest.fn(() => ({ params: {} })),
+  useFocusEffect: jest.fn(),
+}));
 
 jest.mock('../../mocks/partiesMock', () => ({
   partiesMock: [
