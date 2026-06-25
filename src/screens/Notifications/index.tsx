@@ -10,7 +10,7 @@ import { createStyles } from './styles';
 export const NotificationsScreen = () => {
     const { theme } = useAppTheme();
     const styles = createStyles(theme);
-    const { notifications, handleNotificationPress, handleMarkAllAsRead } = useNotificationsViewModel();
+    const { notifications, handleNotificationPress, handleMarkAllAsRead, handleClearAll } = useNotificationsViewModel();
 
     const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -23,15 +23,23 @@ export const NotificationsScreen = () => {
                 contentContainerStyle={styles.listContent}
                 ListHeaderComponent={
                     notifications.length > 0 ? (
-                        <View style={styles.headerContainer}>
-                            <Text style={{ color: theme.colors.textLight }}>
-                                {unreadCount} não lida{unreadCount !== 1 ? 's' : ''}
-                            </Text>
+                        <View style={[styles.headerContainer, { flexDirection: 'column', alignItems: 'stretch' }]}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                                <Text style={{ color: theme.colors.textLight }}>
+                                    {unreadCount} não lida{unreadCount !== 1 ? 's' : ''}
+                                </Text>
+                                <Button 
+                                    title="Limpar Notificações" 
+                                    onPress={handleClearAll} 
+                                    variant="text" 
+                                    style={{ paddingVertical: 0 }}
+                                />
+                            </View>
                             {unreadCount > 0 && (
                                 <Button 
                                     title="Marcar todas como lidas" 
                                     onPress={handleMarkAllAsRead} 
-                                    variant="text" 
+                                    variant="outline" 
                                 />
                             )}
                         </View>

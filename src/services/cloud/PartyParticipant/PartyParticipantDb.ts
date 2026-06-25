@@ -51,7 +51,7 @@ export async function createPartyParticipant(partyId: string, usuario: Usuario, 
     return novoParticipante;
 }
 
-export async function createDependentPartyParticipant(partyId: string, usuario: Usuario, dependent: Dependent, gostos: string[], evitar: string[]): Promise<PartyParticipant> {
+export async function createDependentPartyParticipant(partyId: string, usuario: Usuario, dependent: Dependent, gostos: string[], evitar: string[], status: "pendente" | "confirmado" = "pendente"): Promise<PartyParticipant> {
     const participantCollectionRef = collection(db, PARTY_PARTICIPANT_COLLECTION);
     const newParticipantDocRef = doc(participantCollectionRef);
 
@@ -67,7 +67,7 @@ export async function createDependentPartyParticipant(partyId: string, usuario: 
             birth_date: dependent.birth_date,
             gender: dependent.gender,
             dependent_type: dependent.dependent_type,
-            status: "confirmado",
+            status: status,
             has_revealed_draw: false,
             bio: dependent.bio || "",
             sizes: dependent.sizes || {},
@@ -166,7 +166,11 @@ export async function confirmPresenceInParty(partyId: string, usuario: Usuario):
         "perfil.preferencias.melhorEvitar": usuario.evitar || []
     } as any);
 
-    // Se quisermos atualizar os dependentes, podemos fazer aqui futuramente.
-    // Atualmente createDependentPartyParticipant já puxa os dados do momento e deixa como confirmado,
-    // então a garantia de snapshot funciona.
+    const participants = await getParticipantsByPartyId(partyId);
+    const dependents = participants.filter(p => p.perfil.user_id === usuario.id && p.perfil.participant_type === "dependent");
+    for (const dep of dependents) {
+        await updatePartyParticipant(dep.perfil.id, {
+            "perfil.status": "confirmado"
+        } as any);
+    }
 }

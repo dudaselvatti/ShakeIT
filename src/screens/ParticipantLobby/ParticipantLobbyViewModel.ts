@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { PartyParticipant } from '../../types/PartyParticipant';
 import { getParticipantsByPartyId, updatePartyParticipant, confirmPresenceInParty, listenToParticipantsByPartyId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
 import { getPartyFromCloud, listenToParty } from '../../services/cloud/Party/PartyDb';
+import { createNotification } from '../../services/cloud/Notification/NotificationDb';
 import { Party } from '../../types/Party';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 
@@ -20,6 +21,7 @@ export function useParticipantLobbyViewModel() {
     const [participantes, setParticipantes] = useState<PartyParticipant[]>([]);
     const [isAddDependentVisible, setAddDependentVisible] = useState(false);
     const [isConfirmModalVisible, setConfirmModalVisible] = useState(false);
+    const [isLeaveModalVisible, setLeaveModalVisible] = useState(false);
     const [isConfirming, setIsConfirming] = useState(false);
     const [errorModalVisible, setErrorModalVisible] = useState(false);
     const [errorModalMessage, setErrorModalMessage] = useState('');
@@ -42,6 +44,23 @@ export function useParticipantLobbyViewModel() {
         };
     }, [partyId]);
 
+    // Auto-navigate if party status changes to drawn or revealed
+    useEffect(() => {
+        if (party && participantes.length > 0) {
+            if (party.status === 'sorteio_realizado' || party.status === 'sorteio_revelado') {
+                const userParticipant = participantes.find(p => p.perfil.user_id === usuarioAtual?.id && p.perfil.participant_type === 'user');
+                
+                if (party.status === 'sorteio_revelado') {
+                    navigation.replace("PerfilSorteado", { partyId: party.id });
+                } else if (!userParticipant?.perfil.has_revealed_draw && !userParticipant?.has_revealed_draw) {
+                    navigation.replace("ShakeReveal", { partyId: party.id });
+                } else {
+                    navigation.replace("PerfilSorteado", { partyId: party.id });
+                }
+            }
+        }
+    }, [party?.status, participantes.length]);
+
     const currentUserParticipant = participantes.find(
         (p) => p.perfil.user_id === usuarioAtual?.id && p.perfil.participant_type === "user"
     );
@@ -53,6 +72,16 @@ export function useParticipantLobbyViewModel() {
         try {
             await confirmPresenceInParty(partyId, usuarioAtual);
             setConfirmModalVisible(false);
+            
+            if (party && party.admin_id !== usuarioAtual.id) {
+                createNotification({
+                    user_id: party.admin_id,
+                    title: "Presença confirmada!",
+                    message: `${usuarioAtual.nome} confirmou presença no evento ${party.name}`,
+                    type: 'system',
+                    related_party_id: party.id
+                }).catch(console.error);
+            }
         } catch (error) {
             console.error("Erro ao confirmar presença:", error);
             setErrorModalMessage("Falha ao confirmar presença.");
@@ -76,6 +105,25 @@ export function useParticipantLobbyViewModel() {
         }
     };
 
+    const handleLeaveEvent = async () => {
+        if (!usuarioAtual) return;
+        setIsConfirming(true);
+        try {
+            const myParticipants = participantes.filter(p => p.perfil.user_id === usuarioAtual.id);
+            for (const p of myParticipants) {
+                await updatePartyParticipant(p.perfil.id, { 'perfil.status': 'removido' } as any);
+            }
+            setLeaveModalVisible(false);
+            navigation.navigate('Home');
+        } catch (error) {
+            console.error("Erro ao sair do evento:", error);
+            setErrorModalMessage("Falha ao sair do evento.");
+            setErrorModalVisible(true);
+        } finally {
+            setIsConfirming(false);
+        }
+    };
+
     const handleAddDependent = () => {
         setAddDependentVisible(true);
     };
@@ -86,6 +134,17 @@ export function useParticipantLobbyViewModel() {
 
     const handleNavigateToCreateDependent = () => {
         navigation.navigate('FormDependente');
+    };
+
+    const handleNavigateToResults = () => {
+        if (!party) return;
+        const userParticipant = participantes.find(p => p.perfil.user_id === usuarioAtual?.id && p.perfil.participant_type === 'user');
+        
+        if (party.status === 'sorteio_realizado' && !userParticipant?.perfil.has_revealed_draw && !userParticipant?.has_revealed_draw) {
+            navigation.navigate("ShakeReveal", { partyId: party.id });
+        } else {
+            navigation.navigate("PerfilSorteado", { partyId: party.id });
+        }
     };
 
     const confirmadosCount = participantes.filter(p => p.perfil.status === 'confirmado').length;
@@ -128,7 +187,11 @@ export function useParticipantLobbyViewModel() {
         setConfirmModalVisible,
         isConfirming,
         handleConfirmPresence,
+        isLeaveModalVisible,
+        setLeaveModalVisible,
+        handleLeaveEvent,
         handleNavigateToCreateDependent,
+        handleNavigateToResults,
         errorModalVisible,
         errorModalMessage,
         setErrorModalVisible,

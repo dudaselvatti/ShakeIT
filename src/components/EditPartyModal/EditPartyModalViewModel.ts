@@ -60,6 +60,14 @@ export function useEditPartyModalViewModel(props: Props) {
         return parseFloat(value.replace(/\./g, "").replace(",", "."));
     };
 
+    const initialDateStr = new Date(props.initialData.event_date).toISOString().split('T')[0];
+    const currentDataStr = dataRevelacao ? dataRevelacao.toISOString().split('T')[0] : "";
+    
+    const hasChanges = nomeParty !== props.initialData.name ||
+        currentDataStr !== initialDateStr ||
+        parseCurrency(valorMinimo) !== props.initialData.min_value ||
+        parseCurrency(valorMaximo) !== props.initialData.max_value;
+
     const handleSalvar = async () => {
         let isValid = true;
         let newErrors = { nome: "", data: "", valores: "" };
@@ -123,6 +131,7 @@ export function useEditPartyModalViewModel(props: Props) {
         updateValorMaximo,
         errors,
         handleSalvar,
-        isLoading
+        isLoading,
+        hasChanges
     };
 }

@@ -68,6 +68,7 @@ export const FormDependenteScreen = ({ navigation }: any) => {
     isErrorModalVisible,
     errorModalMessage,
     closeErrorModal,
+    hasChanges,
   } = useFormDependenteViewModel(navigation, dependentToEdit);
 
   const getTypeValue = (type: string) => {
@@ -330,12 +331,14 @@ export const FormDependenteScreen = ({ navigation }: any) => {
         </ScrollView>
 
         <View style={styles.footer}>
-          <Button
-            title={dependentToEdit ? "Salvar Alterações" : "Cadastrar"}
-            onPress={handleSave}
-            isLoading={isSaving}
-            testID="btn-salvar"
-          />
+          {dependentToEdit && !hasChanges ? null : (
+            <Button
+              title={dependentToEdit ? "Salvar Alterações" : "Cadastrar"}
+              onPress={handleSave}
+              isLoading={isSaving}
+              testID="btn-salvar"
+            />
+          )}
         </View>
       </KeyboardAvoidingView>
 
