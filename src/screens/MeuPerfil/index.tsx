@@ -58,6 +58,7 @@ export const MeuPerfilScreen = () => {
         isSaving,
         successMessage,
         errorMessage,
+        handleSalvar,
         clearMessages,
         isEditing,
         setIsEditing,
