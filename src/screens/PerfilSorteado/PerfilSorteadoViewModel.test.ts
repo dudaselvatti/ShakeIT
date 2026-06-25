@@ -1,41 +1,50 @@
 import { renderHook, waitFor } from '@testing-library/react-native';
 import { usePerfilSorteadoViewModel } from './PerfilSorteadoViewModel';
 import { useRoute } from '@react-navigation/native';
-import { participantesMock } from '../../mocks/participantesMock';
-import { getPartyParticipantByPerfilId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
-import { storageService } from '../../services/storageService';
+import { getPartyFromCloud } from '../../services/cloud/Party/PartyDb';
+import { getParticipantsByPartyId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
+import { getDrawResultByGiverProfileId, getAllDrawResultsByPartyId } from '../../services/cloud/DrawResult/DrawResultDb';
+import { useAuth } from '../../contexts/AuthContext/AuthContext';
 
 jest.mock('@react-navigation/native', () => ({
   useRoute: jest.fn(),
 }));
 
-jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
-  getPartyParticipantByPerfilId: jest.fn(),
+jest.mock('../../services/cloud/Party/PartyDb', () => ({
+  getPartyFromCloud: jest.fn(),
 }));
 
-jest.mock('../../services/storageService', () => ({
-  storageService: {
-    setItem: jest.fn(() => Promise.resolve()),
-    getItem: jest.fn(() => Promise.resolve(null)),
-    removeItem: jest.fn(() => Promise.resolve()),
-  }
+jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
+  getParticipantsByPartyId: jest.fn(),
+}));
+
+jest.mock('../../services/cloud/DrawResult/DrawResultDb', () => ({
+  getDrawResultByGiverProfileId: jest.fn(),
+  getAllDrawResultsByPartyId: jest.fn(),
+}));
+
+jest.mock('../../contexts/AuthContext/AuthContext', () => ({
+  useAuth: jest.fn(),
 }));
 
 describe('ViewModel: usePerfilSorteadoViewModel', () => {
   const mockedUseRoute = useRoute as jest.Mock;
-  const mockedGetPartyParticipantByPerfilId = getPartyParticipantByPerfilId as jest.Mock;
-  const mockedStorageService = storageService as any;
+  const mockedGetPartyFromCloud = getPartyFromCloud as jest.Mock;
+  const mockedGetParticipantsByPartyId = getParticipantsByPartyId as jest.Mock;
+  const mockedUseAuth = useAuth as jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('deve retornar o participante correto baseado no idPerfil da rota', async () => {
-    const mockId = participantesMock[0].perfil.id;
-    mockedUseRoute.mockReturnValue({
-      params: { idPerfil: mockId },
-    });
-    mockedGetPartyParticipantByPerfilId.mockResolvedValue(participantesMock[0]);
+  it('deve carregar as abas corretamente e finalizar o loading', async () => {
+    mockedUseRoute.mockReturnValue({ params: { partyId: 'party-1' } });
+    mockedUseAuth.mockReturnValue({ usuarioAtual: { id: 'user-1' } });
+    
+    mockedGetPartyFromCloud.mockResolvedValue({ id: 'party-1', name: 'Festa Mock' });
+    mockedGetParticipantsByPartyId.mockResolvedValue([
+      { perfil: { id: 'prof-1', user_id: 'user-1', status: 'confirmado' } }
+    ]);
 
     const { result } = renderHook(() => usePerfilSorteadoViewModel());
 
@@ -43,46 +52,85 @@ describe('ViewModel: usePerfilSorteadoViewModel', () => {
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.participante).toEqual(participantesMock[0]);
+      expect(result.current.tabs.length).toBeGreaterThan(0);
     });
-
-    expect(mockedStorageService.setItem).toHaveBeenCalledWith(`amigo_secreto_${mockId}`, participantesMock[0]);
   });
 
-  it('deve recuperar do cache quando a requisicao online falhar', async () => {
-    const mockId = participantesMock[0].usuario.id;
-    mockedUseRoute.mockReturnValue({
-      params: { idPerfil: mockId },
+  it('deve ordenar as abas corretamente (Eu, Alfabética, Evento)', async () => {
+    mockedUseRoute.mockReturnValue({ params: { partyId: 'party-1' } });
+    mockedUseAuth.mockReturnValue({ usuarioAtual: { id: 'user-1' } });
+    mockedGetPartyFromCloud.mockResolvedValue({ id: 'party-1', name: 'Festa Mock', status: 'sorteio_realizado' });
+    
+    mockedGetParticipantsByPartyId.mockResolvedValue([
+      { perfil: { id: 'prof-eu', user_id: 'user-1', status: 'confirmado', participant_type: 'user', participant_name: 'Ana' } },
+      { perfil: { id: 'prof-depB', user_id: 'user-1', status: 'confirmado', participant_type: 'dependent', participant_name: 'Zebra' } },
+      { perfil: { id: 'prof-depA', user_id: 'user-1', status: 'confirmado', participant_type: 'dependent', participant_name: 'Bolinha' } },
+      { perfil: { id: 'prof-receiver-eu', user_id: 'other', status: 'confirmado' } },
+      { perfil: { id: 'prof-receiver-b', user_id: 'other', status: 'confirmado' } },
+      { perfil: { id: 'prof-receiver-a', user_id: 'other', status: 'confirmado' } }
+    ]);
+
+    const mockGetDrawResultByGiverProfileId = require('../../services/cloud/DrawResult/DrawResultDb').getDrawResultByGiverProfileId;
+    mockGetDrawResultByGiverProfileId.mockImplementation((partyId: string, giverId: string) => {
+        if (giverId === 'prof-eu') return Promise.resolve({ receiver_profile_id: 'prof-receiver-eu' });
+        if (giverId === 'prof-depB') return Promise.resolve({ receiver_profile_id: 'prof-receiver-b' });
+        if (giverId === 'prof-depA') return Promise.resolve({ receiver_profile_id: 'prof-receiver-a' });
+        return Promise.resolve(null);
     });
-    mockedGetPartyParticipantByPerfilId.mockRejectedValue(new Error('Erro de rede'));
-    mockedStorageService.getItem.mockResolvedValue(participantesMock[0]);
 
     const { result } = renderHook(() => usePerfilSorteadoViewModel());
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.participante).toEqual(participantesMock[0]);
     });
 
-    expect(mockedStorageService.getItem).toHaveBeenCalledWith(`amigo_secreto_${mockId}`);
+    const tabs = result.current.tabs;
+    expect(tabs.length).toBe(4);
+    expect(tabs[0].label).toBe("Eu");
+    expect(tabs[1].label).toBe("Bolinha"); // Ordem alfabética
+    expect(tabs[2].label).toBe("Zebra");
+    expect(tabs[3].label).toBe("Evento"); // Evento por último
   });
 
-  it('deve registrar erro no console caso participante nao seja encontrado e sem cache', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    mockedUseRoute.mockReturnValue({
-      params: { idPerfil: 'invalid-id' },
-    });
-    mockedGetPartyParticipantByPerfilId.mockRejectedValue(new Error('Nao encontrado'));
-    mockedStorageService.getItem.mockResolvedValue(null);
+  it('deve retornar falso em handleRevealAll se o dia do evento for hoje ou no futuro', async () => {
+    mockedUseRoute.mockReturnValue({ params: { partyId: 'party-1' } });
+    mockedUseAuth.mockReturnValue({ usuarioAtual: { id: 'user-1' } });
+    
+    // Configura a data para daqui a 10 dias
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 10);
+    const dateString = futureDate.toISOString().split('T')[0];
+
+    mockedGetPartyFromCloud.mockResolvedValue({ id: 'party-1', name: 'Festa Mock', event_date: dateString });
+    mockedGetParticipantsByPartyId.mockResolvedValue([]);
 
     const { result } = renderHook(() => usePerfilSorteadoViewModel());
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.participante).toBeNull();
     });
 
-    expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
+    expect(result.current.handleRevealAll()).toBe(false);
+  });
+
+  it('deve retornar verdadeiro em handleRevealAll se a data do evento já passou', async () => {
+    mockedUseRoute.mockReturnValue({ params: { partyId: 'party-1' } });
+    mockedUseAuth.mockReturnValue({ usuarioAtual: { id: 'user-1' } });
+    
+    // Configura a data para 10 dias atrás
+    const pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 10);
+    const dateString = pastDate.toISOString().split('T')[0];
+
+    mockedGetPartyFromCloud.mockResolvedValue({ id: 'party-1', name: 'Festa Mock', event_date: dateString });
+    mockedGetParticipantsByPartyId.mockResolvedValue([]);
+
+    const { result } = renderHook(() => usePerfilSorteadoViewModel());
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    expect(result.current.handleRevealAll()).toBe(true);
   });
 });

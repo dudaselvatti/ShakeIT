@@ -2,6 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { RestrictionCard } from "./index";
 import { useRestrictionCardViewModel } from "./RestrictionCardViewModel";
+import { PixelIcon } from "../../components/PixelIcon";
 
 jest.mock("./RestrictionCardViewModel", () => ({
   useRestrictionCardViewModel: jest.fn(),
@@ -40,7 +41,7 @@ describe("RestrictionCard Component", () => {
   it("deve renderizar apenas a seta para a direita quando a restrição for unidirecional ('one_way')", () => {
     const { UNSAFE_getAllByType } = render(<RestrictionCard {...mockProps} />);
 
-    const icons = UNSAFE_getAllByType("PixelIcon");
+    const icons = UNSAFE_getAllByType(PixelIcon);
     const iconNames = icons.map(icon => icon.props.name);
 
     expect(iconNames).toContain("arrow-right");
@@ -56,7 +57,7 @@ describe("RestrictionCard Component", () => {
 
     const { UNSAFE_getAllByType } = render(<RestrictionCard {...mockProps} />);
 
-    const icons = UNSAFE_getAllByType("PixelIcon");
+    const icons = UNSAFE_getAllByType(PixelIcon);
     const iconNames = icons.map(icon => icon.props.name);
 
     expect(iconNames).toContain("arrow-right");

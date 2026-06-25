@@ -52,13 +52,13 @@ describe('ParticipanteCard Component', () => {
     });
 
     it('deve exibir o status "pendente" e o cadeado aberto quando não estiver confirmado', () => {
-        const { getByText, UNSAFE_getByType } = render(
+        const { getByText, UNSAFE_getAllByType } = render(
             <ParticipanteCard participante={mockParticipante} />
         );
 
         expect(getByText('pendente')).toBeTruthy();
-        const image = UNSAFE_getByType(Image);
-        expect(image.props.source).toEqual(require('../../../assets/cadeado-aberto.png'));
+        const images = UNSAFE_getAllByType(Image);
+        expect(images[1].props.source).toEqual(require('../../../assets/cadeado-aberto.png'));
     });
 
     it('deve exibir apenas o cadeado fechado quando o participante estiver confirmado', () => {
@@ -70,12 +70,12 @@ describe('ParticipanteCard Component', () => {
             },
         };
 
-        const { queryByText, UNSAFE_getByType } = render(
+        const { queryByText, UNSAFE_getAllByType } = render(
             <ParticipanteCard participante={participanteConfirmado} />
         );
 
-        const image = UNSAFE_getByType(Image);
-        expect(image.props.source).toEqual(require('../../../assets/cadeado-fechado.png'));
+        const images = UNSAFE_getAllByType(Image);
+        expect(images[1].props.source).toEqual(require('../../../assets/cadeado-fechado.png'));
         expect(queryByText('pendente')).toBeNull();
     });
 });

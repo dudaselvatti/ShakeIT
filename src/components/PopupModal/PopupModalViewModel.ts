@@ -3,6 +3,7 @@ import { ModalProps } from "react-native";
 export interface Props extends ModalProps {
     visible: boolean;
     title: string;
+    iconName?: string;
     message: string;
     cancelText?: string;
     confirmText?: string;
@@ -13,6 +14,7 @@ export interface Props extends ModalProps {
 export function usePopupModalViewModel({
     visible,
     title,
+    iconName,
     message,
     cancelText = "Cancelar",
     confirmText = "OK",
@@ -24,6 +26,7 @@ export function usePopupModalViewModel({
     return {
         visible,
         title,
+        iconName,
         message,
         cancelText,
         confirmText,

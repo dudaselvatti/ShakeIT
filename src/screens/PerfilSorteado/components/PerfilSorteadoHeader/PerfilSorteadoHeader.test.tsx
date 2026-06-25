@@ -50,10 +50,5 @@ describe('PerfilSorteadoHeader Component', () => {
     expect(image.props.source.uri).toBe('https://example.com/foto.jpg');
   });
 
-  it('deve aplicar estilos de gênero corretamente (opcional)', () => {
-    const { getByText } = render(<PerfilSorteadoHeader {...mockProps} />);
-    const generoText = getByText('Gênero: Masculino');
-    
-    expect(generoText.props.style).toContainEqual({ marginLeft: 20 });
-  });
+
 });

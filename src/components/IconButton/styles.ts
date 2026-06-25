@@ -22,4 +22,9 @@ export const createStyles = (theme: ThemeType) => StyleSheet.create({
     padding: 8,
     borderRadius: 8,
   },
+  solid: {
+    backgroundColor: theme.colors.primary,
+    padding: 12,
+    borderRadius: theme.metrics.borderRadius,
+  },
 });

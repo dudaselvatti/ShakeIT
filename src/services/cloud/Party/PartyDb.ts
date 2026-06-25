@@ -101,3 +101,11 @@ export async function updatePartyDependentDrawFlagInCloud(partyId: string, block
         updated_at: serverTimestamp(),
     });
 }
+
+export async function updateParty(partyId: string, updates: Partial<Party>) {
+    const partyDocRef = doc(db, "parties", partyId);
+    await updateDoc(partyDocRef, {
+        ...updates,
+        updated_at: serverTimestamp(),
+    });
+}

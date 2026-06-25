@@ -1,88 +1,20 @@
-import { renderHook, waitFor } from '@testing-library/react-native';
-import { usePerfilSorteadoViewModel } from '../PerfilSorteado/PerfilSorteadoViewModel';
+import { renderHook } from '@testing-library/react-native';
+import { useShakeRevealViewModel } from './ShakeRevealViewModel';
 import { useRoute } from '@react-navigation/native';
-import { participantesMock } from '../../mocks/participantesMock';
-import { getPartyParticipantByPerfilId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
-import { storageService } from '../../services/storageService';
 
 jest.mock('@react-navigation/native', () => ({
   useRoute: jest.fn(),
 }));
-
-jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
-  getPartyParticipantByPerfilId: jest.fn(),
+jest.mock('../../contexts/AuthContext/AuthContext', () => ({
+  useAuth: jest.fn(() => ({ usuarioAtual: { id: 'test' } })),
 }));
+jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({}));
+jest.mock('../../services/cloud/DrawResult/DrawResultDb', () => ({}));
 
-jest.mock('../../services/storageService', () => ({
-  storageService: {
-    setItem: jest.fn(() => Promise.resolve()),
-    getItem: jest.fn(() => Promise.resolve(null)),
-    removeItem: jest.fn(() => Promise.resolve()),
-  }
-}));
-
-describe('usePerfilSorteadoViewModel', () => {
-  const mockedUseRoute = useRoute as jest.Mock;
-  const mockedGetPartyParticipantByPerfilId = getPartyParticipantByPerfilId as jest.Mock;
-  const mockedStorageService = storageService as any;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('deve retornar o participante correto baseado no idPerfil da rota', async () => {
-    const mockId = participantesMock[0].usuario.id;
-    mockedUseRoute.mockReturnValue({
-      params: { idPerfil: mockId },
-    });
-    mockedGetPartyParticipantByPerfilId.mockResolvedValue(participantesMock[0]);
-
-    const { result } = renderHook(() => usePerfilSorteadoViewModel());
-
-    expect(result.current.isLoading).toBe(true);
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.participante).toEqual(participantesMock[0]);
-    });
-
-    expect(mockedStorageService.setItem).toHaveBeenCalledWith(`amigo_secreto_${mockId}`, participantesMock[0]);
-  });
-
-  it('deve recuperar do cache quando a requisicao online falhar', async () => {
-    const mockId = participantesMock[0].usuario.id;
-    mockedUseRoute.mockReturnValue({
-      params: { idPerfil: mockId },
-    });
-    mockedGetPartyParticipantByPerfilId.mockRejectedValue(new Error('Erro de rede'));
-    mockedStorageService.getItem.mockResolvedValue(participantesMock[0]);
-
-    const { result } = renderHook(() => usePerfilSorteadoViewModel());
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.participante).toEqual(participantesMock[0]);
-    });
-
-    expect(mockedStorageService.getItem).toHaveBeenCalledWith(`amigo_secreto_${mockId}`);
-  });
-
-  it('deve registrar erro no console caso participante nao seja encontrado e sem cache', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    mockedUseRoute.mockReturnValue({
-      params: { idPerfil: 'invalid-id' },
-    });
-    mockedGetPartyParticipantByPerfilId.mockRejectedValue(new Error('Nao encontrado'));
-    mockedStorageService.getItem.mockResolvedValue(null);
-
-    const { result } = renderHook(() => usePerfilSorteadoViewModel());
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.participante).toBeNull();
-    });
-
-    expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
+describe('useShakeRevealViewModel', () => {
+  it('should initialize correctly', () => {
+    (useRoute as jest.Mock).mockReturnValue({ params: { partyId: '1' } });
+    const { result } = renderHook(() => useShakeRevealViewModel({ route: { params: { partyId: '1' } }, navigation: {} }));
+    expect(result.current.hasShaken).toBe(false);
   });
 });

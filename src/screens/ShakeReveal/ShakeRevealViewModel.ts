@@ -40,7 +40,7 @@ export function useShakeRevealViewModel({ route, navigation }: any) {
       if (!drawResult) {
         throw new Error("Resultado do sorteio não encontrado");
       }
-      navigation.navigate( "PerfilSorteado", { idPerfil: drawResult.receiver_profile_id });
+      navigation.navigate("PerfilSorteado", { partyId });
     } catch (error) {
       console.error("Erro ao buscar perfil sorteado:", error);
     }
@@ -77,7 +77,12 @@ export function useShakeRevealViewModel({ route, navigation }: any) {
       Animated.delay(1500),
     ]);
 
-    Animated.loop(shakeSequence).start();
+    const loop = Animated.loop(shakeSequence);
+    loop.start();
+
+    return () => {
+      loop.stop();
+    };
   }, [shakeAnimation, hasShaken]);
 
   useEffect(() => {

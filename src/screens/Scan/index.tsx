@@ -90,10 +90,10 @@ export const ScanScreen = ({ navigation }: any) => {
               </View>
               <View style={styles.bottomInstructionContainer} pointerEvents="box-none">
                 <Button
-                  title="Digitar Código Manualmente"
+                  title="Digitar Código"
                   onPress={() => setIsManualEntry(true)}
                   variant="outline"
-                  style={{ backgroundColor: theme.colors.surface }}
+                  style={{ backgroundColor: theme.colors.surface, alignSelf: 'center', paddingHorizontal: 24, paddingVertical: 8, height: 'auto' }}
                 />
               </View>
             </View>

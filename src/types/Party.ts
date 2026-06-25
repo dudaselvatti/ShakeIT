@@ -1,7 +1,8 @@
 export type PartyStatus =
   | "aguardando_pessoas"
   | "aguardando_sorteio"
-  | "sorteio_realizado";
+  | "sorteio_realizado"
+  | "sorteio_revelado";
 
 export interface Party {
   id: string;

@@ -17,6 +17,7 @@ import { SelectInput } from "../../components/SelectInput";
 import { DateInput } from "../../components/DateInput";
 import { Card } from "../../components/Card";
 import { Tag } from "../../components/Tag";
+import { SizeCard } from "../../components/SizeCard";
 import { createStyles } from "./styles";
 import { useFormDependenteViewModel } from "./FormDependenteViewModel";
 import { useAppTheme } from "../../contexts/ThemeContext";
@@ -52,6 +53,12 @@ export const FormDependenteScreen = ({ navigation }: any) => {
     updateCustomGender,
     updateRelationship,
     setBio,
+    tamanhoCamisa,
+    setTamanhoCamisa,
+    tamanhoCalca,
+    setTamanhoCalca,
+    tamanhoCalcado,
+    setTamanhoCalcado,
     handleAddGosto,
     handleRemoveGosto,
     handleAddEvitar,
@@ -217,6 +224,37 @@ export const FormDependenteScreen = ({ navigation }: any) => {
             numberOfLines={3}
             testID="input-bio"
           />
+
+          <Text style={styles.sectionTitle}>Medidas (Opcional)</Text>
+          <View style={[styles.row, { flexWrap: 'wrap', justifyContent: 'space-between' }]}>
+              <SizeCard
+                  title="Camisa"
+                  imageSource={require('../../../assets/camisa.png')}
+                  placeholder="Selecione (ex: P, M)"
+                  selectedValue={tamanhoCamisa}
+                  onValueChange={setTamanhoCamisa}
+                  options={['2 anos', '4 anos', '6 anos', '8 anos', '10 anos', '12 anos', '14 anos', '16 anos', 'PP', 'P', 'M', 'G', 'GG', 'XGG']}
+                  isEditing={true}
+              />
+              <SizeCard
+                  title="Calça"
+                  imageSource={require('../../../assets/calca.png')}
+                  placeholder="Selecione (ex: 38)"
+                  selectedValue={tamanhoCalca}
+                  onValueChange={setTamanhoCalca}
+                  options={['2 anos', '4 anos', '6 anos', '8 anos', '10 anos', '12 anos', '14 anos', '16 anos', '34', '36', '38', '40', '42', '44', '46', '48', '50', '52', '54']}
+                  isEditing={true}
+              />
+              <SizeCard
+                  title="Calçado"
+                  imageSource={require('../../../assets/tenis.png')}
+                  placeholder="Selecione (ex: 39)"
+                  selectedValue={tamanhoCalcado}
+                  onValueChange={setTamanhoCalcado}
+                  options={['16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46']}
+                  isEditing={true}
+              />
+          </View>
 
           <Text style={styles.sectionTitle}>O que gosta? (Opcional)</Text>
           <Card style={styles.interestsCard}>

@@ -108,8 +108,13 @@ export const GestaoDependentesScreen = ({ navigation }: any) => {
                                     <View style={styles.cardHeader}>
                                         <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                                             <Image 
-                                                source={item.dependent_type === "child" ? require('../../../assets/crianca.png') : item.dependent_type === "pet" ? require('../../../assets/pet.png') : require('../../../assets/interrogacao.png')} 
-                                                style={{ width: 40, height: 40, marginRight: 12, resizeMode: 'contain' }} 
+                                                source={
+                                                    (item.avatar_url && !item.avatar_url.includes('gravatar')) ? { uri: item.avatar_url } 
+                                                    : item.dependent_type === "child" ? require('../../../assets/crianca.png') 
+                                                    : item.dependent_type === "pet" ? require('../../../assets/pet.png') 
+                                                    : require('../../../assets/perfil-padrao.png')
+                                                } 
+                                                style={{ width: 40, height: 40, marginRight: 12, borderRadius: 20, resizeMode: 'cover' }} 
                                             />
                                             <Text style={styles.dependentName}>{item.name}</Text>
                                         </View>
@@ -140,13 +145,13 @@ export const GestaoDependentesScreen = ({ navigation }: any) => {
                                         </View>
                                         {item.gender ? (
                                             <View style={styles.detailRow}>
-                                                <Image source={require('../../../assets/interrogacao.png')} style={{ width: 20, height: 20, marginRight: 8, resizeMode: 'contain' }} />
+                                                <Image source={require('../../../assets/genero.png')} style={{ width: 20, height: 20, marginRight: 8, resizeMode: 'contain' }} />
                                                 <Text style={styles.detailText}>Gênero: {item.gender}</Text>
                                             </View>
                                         ) : null}
                                         {item.bio ? (
                                             <View style={styles.detailRow}>
-                                                <Image source={require('../../../assets/interrogacao.png')} style={{ width: 20, height: 20, marginRight: 8, resizeMode: 'contain' }} />
+                                                <Image source={require('../../../assets/info.png')} style={{ width: 20, height: 20, marginRight: 8, resizeMode: 'contain' }} />
                                                 <Text style={styles.detailText} numberOfLines={2}>{item.bio}</Text>
                                             </View>
                                         ) : null}

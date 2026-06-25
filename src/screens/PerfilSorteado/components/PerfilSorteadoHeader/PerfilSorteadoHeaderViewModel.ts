@@ -8,9 +8,11 @@ export interface Props {
     nome: string;
     dataDeNascimento: string;
     genero: string;
+    participantType?: string;
+    dependentType?: string;
 }
 
-export function usePerfilSorteadoHeaderViewModel ({fotoUrl, nome, dataDeNascimento, genero }: Props) {
+export function usePerfilSorteadoHeaderViewModel ({fotoUrl, nome, dataDeNascimento, genero, participantType, dependentType }: Props) {
 
     const idade = useMemo(() => {
         try {
@@ -32,6 +34,8 @@ export function usePerfilSorteadoHeaderViewModel ({fotoUrl, nome, dataDeNascimen
         nome,
         idade,
         genero,
+        participantType,
+        dependentType,
         handleReturnHome,
     };
 };

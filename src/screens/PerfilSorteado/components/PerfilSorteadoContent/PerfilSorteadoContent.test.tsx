@@ -19,8 +19,8 @@ describe('PerfilSorteadoContent Component', () => {
       <PerfilSorteadoContent medidas={mockMedidas} preferencias={mockPreferencias} />
     );
 
-    expect(getByText('Minhas Medidas')).toBeTruthy();
-    expect(getByText('Minhas Preferências')).toBeTruthy();
+    expect(getByText('Medidas')).toBeTruthy();
+    expect(getByText('Preferências')).toBeTruthy();
   });
 
   it('deve renderizar as medidas do usuário corretamente', () => {

@@ -8,6 +8,7 @@ jest.mock('./PartyCardViewModel');
 const mockProps = {
   id: '1',
   name: 'Natal 1959',
+  adminName: 'Ana',
   eventDate: '1959-05-20',
   status: 'aguardando_sorteio' as const,
   onPress: jest.fn(),

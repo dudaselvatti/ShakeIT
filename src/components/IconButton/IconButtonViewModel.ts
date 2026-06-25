@@ -5,8 +5,8 @@ import { createStyles } from "./styles";
 import { useAppTheme } from "../../contexts/ThemeContext";
 
 export interface Props extends TouchableOpacityProps {
-  iconName: keyof typeof Feather.glyphMap;
-  variant?: "fab" | "transparent";
+  iconName: string;
+  variant?: "fab" | "transparent" | "solid";
   color?: string;
   size?: number;
 }

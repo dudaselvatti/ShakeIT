@@ -34,6 +34,10 @@ export const PixelIcon = ({ name, size = 24, style, testID }: PixelIconProps) =>
         return require('../../../assets/scaner-qrcode.png');
       case 'gift':
         return require('../../../assets/presente.png');
+      case 'dollar-sign':
+        return require('../../../assets/dinheiro.png');
+      case 'gender':
+        return require('../../../assets/genero.png');
       case 'alert-triangle':
         return require('../../../assets/alerta.png');
       case 'x':

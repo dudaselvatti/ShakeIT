@@ -21,66 +21,7 @@ import { DateInput } from "../../components/DateInput";
 import { calcularIdade } from '../../utils/Usuario/calcularIdade';
 import { useAppTheme } from "../../contexts/ThemeContext";
 
-interface SizeCardProps {
-    title: string;
-    imageSource: any;
-    placeholder: string;
-    selectedValue: string;
-    onValueChange: (val: string) => void;
-    options: string[];
-    isEditing: boolean;
-}
-
-const SizeCard = ({ title, imageSource, placeholder, selectedValue, onValueChange, options, isEditing }: SizeCardProps) => {
-    const { theme } = useAppTheme();
-    const styles = createStyles(theme);
-    const renderPlaceholderText = (text: string) => {
-        if (!isEditing) return <Text style={styles.dropdownPlaceholderText}>-</Text>;
-        if (text.startsWith("Selecione o tamanho")) {
-            const example = text.substring("Selecione o tamanho".length).trim();
-            return (
-                <Text style={styles.dropdownPlaceholderText}>
-                    {"Selecione o\ntamanho\n" + example}
-                </Text>
-            );
-        }
-        return <Text style={styles.dropdownPlaceholderText}>{text}</Text>;
-    };
-
-    return (
-        <Card style={styles.card}>
-            <View style={styles.cardIconContainer}>
-                <Image source={imageSource} style={{ width: 56, height: 56, resizeMode: 'contain' }} />
-            </View>
-            <Text style={styles.cardTitle}>{title}</Text>
-            <View style={styles.dropdownContainer}>
-                <View style={styles.dropdownVisual}>
-                    <View style={styles.dropdownTextWrapper}>
-                        {selectedValue ? (
-                            <Text style={styles.dropdownValueText}>{selectedValue}</Text>
-                        ) : (
-                            renderPlaceholderText(placeholder)
-                        )}
-                    </View>
-                    {isEditing && <Feather name="chevron-down" size={14} color={theme.colors.textLight} style={styles.chevron} />}
-                </View>
-                {isEditing && (
-                    <Picker
-                        selectedValue={selectedValue}
-                        onValueChange={onValueChange}
-                        style={styles.picker}
-                        mode="dropdown"
-                    >
-                        <Picker.Item label={placeholder} value="" />
-                        {options.map((option) => (
-                            <Picker.Item key={option} label={option} value={option} />
-                        ))}
-                    </Picker>
-                )}
-            </View>
-        </Card>
-    );
-};
+import { SizeCard } from '../../components/SizeCard';
 
 export const MeuPerfilScreen = () => {
     const { theme } = useAppTheme();

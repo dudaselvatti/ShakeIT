@@ -2,16 +2,21 @@ import { useNavigation } from "@react-navigation/native";
 import { Party } from "../../types/Party";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { useEffect, useState } from "react";
+import { Alert } from "react-native";
 import { getDrawResultByGiverProfileId } from "../../services/cloud/DrawResult/DrawResultDb";
 import { getPartyParticipantByUserIdAndPartyId } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
 import { getPartiesByUserId } from "../../services/cloud/Party/PartyDb";
+import { getUserById } from "../../services/cloud/User/UserDb";
+
+export type PartyWithAdmin = Party & { adminName: string };
 
 export function useHomeViewModel() {
   const navigation = useNavigation<any>();
   const { usuarioAtual } = useAuth();
-  const [parties, setParties] = useState<Party[]>([]);
+  const [parties, setParties] = useState<PartyWithAdmin[]>([]);
 
   const [hideFinished, setHideFinished] = useState(false);
+  const [filterType, setFilterType] = useState<"todos" | "meus" | "outros">("todos");
 
   useEffect(() => {
     async function loadParties() {
@@ -20,7 +25,36 @@ export function useHomeViewModel() {
       }
       try {
         const result = await getPartiesByUserId(usuarioAtual.id);
-        const sortedParties = result.sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
+        
+        const partiesWithAdmin: PartyWithAdmin[] = await Promise.all(
+          result.map(async (party) => {
+            if (party.admin_id === usuarioAtual.id) {
+              return { ...party, adminName: "Você" };
+            } else {
+              const adminUser = await getUserById(party.admin_id);
+              return { ...party, adminName: adminUser?.nome || "Outro" };
+            }
+          })
+        );
+
+        const getStatusRank = (status: string) => {
+          if (status === "aguardando_pessoas") return 1;
+          if (status === "aguardando_sorteio") return 2;
+          return 3;
+        };
+
+        const sortedParties = partiesWithAdmin.sort((a, b) => {
+          const isA_Admin = a.admin_id === usuarioAtual.id ? 0 : 1;
+          const isB_Admin = b.admin_id === usuarioAtual.id ? 0 : 1;
+          if (isA_Admin !== isB_Admin) return isA_Admin - isB_Admin;
+
+          const statusA = getStatusRank(a.status);
+          const statusB = getStatusRank(b.status);
+          if (statusA !== statusB) return statusA - statusB;
+
+          return new Date(a.event_date).getTime() - new Date(b.event_date).getTime();
+        });
+
         setParties(sortedParties);
       } catch (error) {
         console.error("Erro ao carregar parties:", error);
@@ -29,9 +63,20 @@ export function useHomeViewModel() {
     loadParties();
   }, [usuarioAtual]);
 
-  const visibleParties = hideFinished
-    ? parties.filter(party => new Date(party.event_date).getTime() >= Date.now())
-    : parties;
+  let visibleParties = parties;
+  if (hideFinished) {
+    visibleParties = visibleParties.filter(party => {
+      const eventDate = new Date(party.event_date + "T00:00:00");
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return eventDate.getTime() >= today.getTime();
+    });
+  }
+  if (filterType === "meus") {
+    visibleParties = visibleParties.filter(party => party.admin_id === usuarioAtual?.id);
+  } else if (filterType === "outros") {
+    visibleParties = visibleParties.filter(party => party.admin_id !== usuarioAtual?.id);
+  }
 
   const handleCardPress = async (party: Party) => {
     switch (party.status) {
@@ -47,7 +92,9 @@ export function useHomeViewModel() {
         }
         break;
       case "sorteio_realizado":
+      case "sorteio_revelado":
         try {
+
           if (!usuarioAtual?.id) {
             return;
           }
@@ -63,7 +110,7 @@ export function useHomeViewModel() {
             if (!draw) {
               throw new Error("Sorteio não encontrado");
             }
-            navigation.navigate("PerfilSorteado", { idPerfil: draw.receiver_profile_id });
+            navigation.navigate("PerfilSorteado", { partyId: party.id });
           }
         } catch (error) {
           console.error("Erro ao abrir sorteado:", error);
@@ -86,6 +133,8 @@ export function useHomeViewModel() {
     parties: visibleParties,
     hideFinished,
     setHideFinished,
+    filterType,
+    setFilterType,
     handleCardPress,
     handleCreateParty,
     handleScanPress,
