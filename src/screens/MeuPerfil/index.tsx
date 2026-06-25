@@ -95,21 +95,17 @@ export const MeuPerfilScreen = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 64}
             >
-                <ScrollView style={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-                    {errorMessage ? (
-                        <Animated.View style={{ opacity: opacityAnim }}>
-                            <Pressable onPress={handleDismiss} testID="error-toast">
-                                <View style={styles.errorBanner}>
-                                    <Feather name="alert-triangle" size={16} color={theme.colors.danger} style={{ marginRight: 8 }} />
-                                    <Text style={styles.errorBannerText} testID="error-message">{errorMessage}</Text>
-                                </View>
-                            </Pressable>
-                        </Animated.View>
-                    ) : null}
+                <ScrollView 
+                    style={styles.content} 
+                    contentContainerStyle={{ paddingBottom: 150 }}
+                    showsVerticalScrollIndicator={false} 
+                    keyboardShouldPersistTaps="handled"
+                >
+
 
                     {!isEditing ? (
                         <View style={{ alignItems: 'center', marginBottom: 24, marginTop: 16 }}>
-                            <Image source={avatarUrl ? { uri: avatarUrl } : require('../../../assets/perfil-padrao.png')} style={{ width: 100, height: 100, borderRadius: 50, marginBottom: 16 }} />
+                            <Image source={avatarUrl && avatarUrl !== "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" ? { uri: avatarUrl } : require('../../../assets/perfil-padrao.png')} style={{ width: 100, height: 100, borderRadius: 50, marginBottom: 16 }} />
                             <Text style={{ fontSize: 24, fontWeight: 'bold', color: theme.colors.text }}>{nome}</Text>
                             <Text style={{ fontSize: 16, color: theme.colors.textLight, marginTop: 4 }}>
                                 {genero} • {dataNascimento ? `${calcularIdade(dataNascimento.toISOString().split('T')[0])} anos` : 'Data de nascimento não informada'}
@@ -194,7 +190,7 @@ export const MeuPerfilScreen = () => {
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
                         <Image source={require("../../../assets/coracao.png")} style={{ width: 24, height: 24, marginRight: 8, resizeMode: 'contain' }} />
-                        <Text style={[styles.sectionTitle, { marginTop: 0 }]}>Coisas que você gosta:</Text>
+                        <Text style={[styles.sectionTitle, { marginTop: 0, marginBottom: 0 }]}>Coisas que você gosta:</Text>
                     </View>
                     <Card style={styles.interestsCard}>
                         <View style={styles.interestsContainer}>
@@ -232,7 +228,7 @@ export const MeuPerfilScreen = () => {
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
                         <Image source={require("../../../assets/coracao-partido.png")} style={{ width: 24, height: 24, marginRight: 8, resizeMode: 'contain' }} />
-                        <Text style={[styles.sectionTitle, { marginTop: 0 }]}>Coisas para evitar:</Text>
+                        <Text style={[styles.sectionTitle, { marginTop: 0, marginBottom: 0 }]}>Coisas para evitar:</Text>
                     </View>
                     <Card style={styles.interestsCard}>
                         <View style={styles.interestsContainer}>
@@ -310,19 +306,22 @@ export const MeuPerfilScreen = () => {
                 visible={!!successMessage}
                 title="Sucesso!"
                 message={successMessage}
-                cancelText="Fechar"
                 confirmText="OK"
+                hideCancelButton={true}
                 onCancel={handleDismiss}
                 onConfirm={handleDismiss}
             />
 
-            {errorMessage ? (
-                <Pressable
-                    style={styles.backdrop}
-                    onPress={handleDismiss}
-                    testID="message-backdrop"
-                />
-            ) : null}
+            <PopupModal
+                visible={!!errorMessage}
+                title="Alerta"
+                imageSource={require("../../../assets/alerta.png")}
+                message={errorMessage}
+                confirmText="Entendi"
+                hideCancelButton={true}
+                onConfirm={handleDismiss}
+                onCancel={handleDismiss}
+            />
         </SafeAreaView>
     );
 };

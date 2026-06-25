@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, View, Text } from "react-native";
+import { Modal, View, Text, Image } from "react-native";
 import { usePopupModalViewModel, Props } from "./PopupModalViewModel";
 import { createStyles } from "./styles";
 import { Button } from "../Button";
@@ -13,11 +13,13 @@ export const PopupModal = (props: Props) => {
     visible,
     title,
     iconName,
+    imageSource,
     message,
     cancelText,
     confirmText,
     onCancel,
     onConfirm,
+    hideCancelButton,
     ...modalProps 
   } = usePopupModalViewModel(props)
 
@@ -26,18 +28,21 @@ export const PopupModal = (props: Props) => {
       <View style={styles.overlay}>
         <View style={styles.container}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-            {iconName && <PixelIcon name={iconName} size={28} style={{ marginRight: 8 }} />}
+            {imageSource && <Image source={imageSource} style={{ width: 28, height: 28, marginRight: 8, resizeMode: 'contain' }} />}
+            {iconName && !imageSource && <PixelIcon name={iconName} size={28} style={{ marginRight: 8 }} />}
             <Text style={[styles.title, { marginBottom: 0 }]}>{title}</Text>
           </View>
           <Text style={styles.message}>{message}</Text>
 
           <View style={styles.buttonRow}>
-            <Button
-              title={cancelText}
-              variant="text"
-              onPress={onCancel}
-              style={styles.modalButton}
-            />
+            {!hideCancelButton && (
+                <Button
+                  title={cancelText}
+                  variant="text"
+                  onPress={onCancel}
+                  style={styles.modalButton}
+                />
+            )}
             <Button
               title={confirmText}
               variant="primary"

@@ -1,3 +1,5 @@
+import Toast from 'react-native-toast-message';
+import { Alert } from 'react-native';
 import { useEffect, useMemo, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import { PartyParticipant } from "../../types/PartyParticipant";
@@ -36,7 +38,8 @@ export function usePartyDrawRestrictionsViewModel() {
   const [personA, setPersonA] = useState("");
   const [personB, setPersonB] = useState("");
   const [restrictionDirection, setRestrictionDirection] = useState<RestrictionDirection>("one_way");
-  const [blockDependentDraw, setBlockDependentDraw] = useState(true);
+  const [blockDependentDraw, setBlockDependentDraw] = useState(false);
+  const [isClearModalVisible, setClearModalVisible] = useState(false);
 
   useEffect(() => {
     async function fetchParty() {
@@ -49,6 +52,7 @@ export function usePartyDrawRestrictionsViewModel() {
         }
       } catch (error) {
         console.error("Erro ao buscar a festa no Firestore:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
       }
     }
 
@@ -64,6 +68,7 @@ export function usePartyDrawRestrictionsViewModel() {
         setParticipants(partyParticipants);
       } catch (error) {
         console.error("Erro ao buscar participantes no Firestore:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
       }
     }
 
@@ -113,6 +118,7 @@ export function usePartyDrawRestrictionsViewModel() {
         setRestrictionsList(formattedRestrictions);
       } catch (error) {
         console.error("Erro ao carregar restrições da nuvem:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
       }
     }
 
@@ -158,6 +164,7 @@ export function usePartyDrawRestrictionsViewModel() {
       setPersonB("");
     } catch (error) {
       console.error("Erro ao salvar restrição manual:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
     }
   }
 
@@ -167,8 +174,39 @@ export function usePartyDrawRestrictionsViewModel() {
       setRestrictionsList((prev) => prev.filter((item) => item.id !== RestrictionId));
     } catch (error) {
       console.error("Erro ao deletar restrição na nuvem:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
     }
   }
+
+  const handleClearAllRestrictions = () => {
+    setClearModalVisible(true);
+  };
+
+  const cancelClearAll = () => {
+    setClearModalVisible(false);
+  };
+
+  const confirmClearAll = async () => {
+    setClearModalVisible(false);
+    try {
+      // Deletar todas as restrições individuais
+      for (const restriction of restrictionsList) {
+        await deleteDrawRestrictionFromCloud(restriction.id);
+      }
+      
+      // Limpar a flag de dependentes (se estiver ativa)
+      if (blockDependentDraw) {
+        await updatePartyDependentDrawFlagInCloud(partyId, false);
+        setBlockDependentDraw(false);
+      }
+
+      setRestrictionsList([]);
+      Toast.show({ type: "success", text1: "Sucesso", text2: "Todas as restrições foram limpas." });
+    } catch (error) {
+      console.error("Erro ao limpar restrições na nuvem:", error);
+      Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
+    }
+  };
 
   useEffect(() => {
     if (party) {
@@ -192,6 +230,7 @@ export function usePartyDrawRestrictionsViewModel() {
     });
   } catch (error) {
     console.error("Erro ao atualizar a flag global de dependentes na nuvem:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
   }
 }
 
@@ -217,5 +256,9 @@ export function usePartyDrawRestrictionsViewModel() {
     blockDependentDraw,
     BlockDependentDrawButtonTitle,
     handleToggleBlockDependentDraw,
+    isClearModalVisible,
+    handleClearAllRestrictions,
+    cancelClearAll,
+    confirmClearAll,
   };
 }

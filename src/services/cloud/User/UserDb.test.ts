@@ -182,7 +182,7 @@ describe("UserDb - Testes Unitários", () => {
             expect(setDoc).toHaveBeenCalledWith(
                 expect.any(Object),
                 expect.objectContaining({
-                    avatar_url: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                    avatar_url: ""
                 })
             );
         });

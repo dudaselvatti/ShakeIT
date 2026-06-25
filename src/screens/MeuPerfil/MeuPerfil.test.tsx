@@ -49,10 +49,10 @@ jest.mock('../../components/AppFooter', () => {
 jest.mock('../../components/PopupModal', () => {
     const ReactNative = jest.requireActual('react-native');
     return {
-        PopupModal: ({ visible, onCancel, message, testID }: any) => visible ? (
-            <ReactNative.View testID={testID || "success-modal"}>
-                <ReactNative.Text testID="success-message">{message}</ReactNative.Text>
-                <ReactNative.Pressable onPress={onCancel} testID="success-toast">
+        PopupModal: ({ visible, onConfirm, onCancel, message, title, testID }: any) => visible ? (
+            <ReactNative.View testID={testID || "popup-modal"}>
+                <ReactNative.Text testID={title === "Sucesso!" ? "success-message" : "error-message"}>{message}</ReactNative.Text>
+                <ReactNative.Pressable onPress={onConfirm || onCancel} testID={title === "Sucesso!" ? "success-toast" : "error-toast"}>
                     <ReactNative.Text>Fechar</ReactNative.Text>
                 </ReactNative.Pressable>
             </ReactNative.View>
@@ -454,5 +454,9 @@ describe('MeuPerfilScreen e ViewModel', () => {
         const successToast = getByTestId('success-toast');
         fireEvent.press(successToast);
         expect(mockClearMessages).toHaveBeenCalledTimes(1);
+        
+        const errorToast = getByTestId('error-toast');
+        fireEvent.press(errorToast);
+        expect(mockClearMessages).toHaveBeenCalledTimes(2);
     });
 });

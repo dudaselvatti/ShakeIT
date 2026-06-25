@@ -12,31 +12,15 @@ describe('useSettingsOptionViewModel', () => {
     expect(result.current.title).toBe('Segurança');
   });
 
-  it('deve aplicar os valores padrão (default/fallback) quando as propriedades opcionais não forem informadas', () => {
+  it('deve repassar a propriedade rightElement corretamente', () => {
     const mockProps: Props = {
       title: 'Notificações',
+      rightElement: 'SwitchMock',
     };
 
     const { result } = renderHook(() => useSettingsOptionViewModel(mockProps));
 
-    expect(result.current.iconName).toBe('chevron-right');
-    expect(result.current.iconSize).toBeUndefined();
-    expect(result.current.iconColor).toBeUndefined();
-  });
-
-  it('deve sobrescrever os valores padrão quando propriedades opcionais forem fornecidas', () => {
-    const mockProps: Props = {
-      title: 'Privacidade',
-      iconName: 'lock',
-      iconSize: 20,
-      iconColor: '#FF0000',
-    };
-
-    const { result } = renderHook(() => useSettingsOptionViewModel(mockProps));
-
-    expect(result.current.iconName).toBe('lock');
-    expect(result.current.iconSize).toBe(20);
-    expect(result.current.iconColor).toBe('#FF0000');
+    expect(result.current.rightElement).toBe('SwitchMock');
   });
 
   it('deve repassar a propriedade children corretamente', () => {

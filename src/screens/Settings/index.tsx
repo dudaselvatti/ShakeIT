@@ -10,77 +10,126 @@ import { PopupModal } from '../../components/PopupModal';
 import { SettingsOption } from '../../components/SettingsOption';
 
 import { useAppTheme } from '../../contexts/ThemeContext';
-import { Switch } from 'react-native';
+import { Switch, ScrollView } from 'react-native';
 
 export const SettingsScreen = ({ navigation }: any) => {
     const { theme } = useAppTheme();
     const styles = createStyles(theme);
     const {
-        isModalVisible,
+        modalConfig,
         errors,
         success,
         handleAlterarSenha,
+        handleAlterarEmail,
+        handleSuporte,
+        handleTermosUso,
+        handlePrivacidade,
+        handleExcluirConta,
         handleLogout,
-        cancelLogout,
-        confirmLogout,
+        cancelModal,
+        confirmModal,
+        isLoggedIn,
     } = useSettingsViewModel(navigation);
     const { isDark, toggleTheme, isScratchMode, toggleScratchMode } = useAppTheme();
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <AppHeader headerTitle="Configurações" showBackButton />
-                <View style={styles.content}>
+                <ScrollView 
+                    style={styles.content}
+                    contentContainerStyle={{ paddingBottom: 100 }}
+                    showsVerticalScrollIndicator={false}
+                >
                     <Text style={[styles.heading, { color: theme.colors.text }]}>Aparência</Text>
                     <View style={styles.optionsList}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: theme.colors.border }}>
-                            <Text style={{ fontSize: 16, color: theme.colors.text, fontWeight: '500' }}>Raspadinha (Sem acelerômetro)</Text>
-                            <Switch 
-                                value={isScratchMode} 
-                                onValueChange={toggleScratchMode} 
-                                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
-                                thumbColor={theme.colors.surface}
-                            />
-                        </View>
-
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: theme.colors.border }}>
-                            <Text style={{ fontSize: 16, color: theme.colors.text, fontWeight: '500' }}>Modo Escuro</Text>
-                            <Switch 
-                                value={isDark} 
-                                onValueChange={toggleTheme} 
-                                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
-                                thumbColor={isDark ? theme.colors.surface : theme.colors.surface}
-                            />
-                        </View>
-                    </View>
-
-                    <Text style={[styles.heading, { color: theme.colors.text, marginTop: 24 }]}>Conta</Text>
-                    <View style={styles.optionsList}>
-
                         <SettingsOption
-                            title="Alterar Senha"
-                            iconName="lock"
-                            onPress={handleAlterarSenha}
-                        >
-                            {errors.passwordReset ? <Text style={styles.errorText}>{errors.passwordReset}</Text> : null}
-                            {success.passwordReset ? <Text style={styles.successText}>{success.passwordReset}</Text> : null}
-                        </SettingsOption>
+                            title="Modo Escuro"
+                            activeOpacity={1}
+                            rightElement={
+                                <Switch 
+                                    value={isDark} 
+                                    onValueChange={toggleTheme} 
+                                    trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                                    thumbColor={isDark ? theme.colors.surface : theme.colors.surface}
+                                />
+                            }
+                        />
                     </View>
-                </View>
-                <View style={styles.footer}>
-                    <Button
-                        title="Sair da Conta"
-                        onPress={handleLogout}
-                        variant="danger"
-                    />
-                </View>
+
+                    <Text style={[styles.heading, { color: theme.colors.text, marginTop: 24 }]}>Geral</Text>
+                    <View style={styles.optionsList}>
+                        <SettingsOption
+                            title="Raspadinha (Sem acelerômetro)"
+                            activeOpacity={1}
+                            rightElement={
+                                <Switch 
+                                    value={isScratchMode} 
+                                    onValueChange={toggleScratchMode} 
+                                    trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                                    thumbColor={theme.colors.surface}
+                                />
+                            }
+                        />
+                        <SettingsOption
+                            title="Falar com o Suporte"
+                            onPress={handleSuporte}
+                        />
+                        <SettingsOption
+                            title="Termos de Uso"
+                            onPress={handleTermosUso}
+                        />
+                        <SettingsOption
+                            title="Política de Privacidade"
+                            onPress={handlePrivacidade}
+                        />
+                    </View>
+
+                    {isLoggedIn && (
+                        <>
+                            <Text style={[styles.heading, { color: theme.colors.text, marginTop: 24 }]}>Conta</Text>
+                            <View style={styles.optionsList}>
+                                <SettingsOption
+                                    title="Alterar Senha"
+                                    onPress={handleAlterarSenha}
+                                >
+                                    {errors.passwordReset ? <Text style={styles.errorText}>{errors.passwordReset}</Text> : null}
+                                    {success.passwordReset ? <Text style={styles.successText}>{success.passwordReset}</Text> : null}
+                                </SettingsOption>
+
+                                <SettingsOption
+                                    title="Alterar E-mail"
+                                    onPress={handleAlterarEmail}
+                                >
+                                    {errors.emailReset ? <Text style={styles.errorText}>{errors.emailReset}</Text> : null}
+                                    {success.emailReset ? <Text style={styles.successText}>{success.emailReset}</Text> : null}
+                                </SettingsOption>
+
+                                <SettingsOption
+                                    title="Excluir Conta"
+                                    onPress={handleExcluirConta}
+                                />
+                            </View>
+                        </>
+                    )}
+                </ScrollView>
+                {isLoggedIn && (
+                    <View style={styles.footer}>
+                        <Button
+                            title="Sair da Conta"
+                            onPress={handleLogout}
+                            variant="danger"
+                        />
+                    </View>
+                )}
                 <PopupModal
-                    visible={isModalVisible}
-                    title="Atenção!"
-                    message="Tem certeza que deseja sair da conta?"
+                    visible={modalConfig.visible}
+                    title={modalConfig.title}
+                    message={modalConfig.message}
                     cancelText="Cancelar"
                     confirmText="Confirmar"
-                    onCancel={cancelLogout}
-                    onConfirm={confirmLogout}
+                    hideCancelButton={modalConfig.hideCancel}
+                    onCancel={cancelModal}
+                    onConfirm={confirmModal}
                 />
             <AppFooter />
         </SafeAreaView>

@@ -1,7 +1,10 @@
+
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { PartyParticipant } from '../../types/PartyParticipant';
-import { getParticipantsByPartyId, updatePartyParticipant, confirmPresenceInParty } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
+import { getParticipantsByPartyId, updatePartyParticipant, confirmPresenceInParty, listenToParticipantsByPartyId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
+import { getPartyFromCloud, listenToParty } from '../../services/cloud/Party/PartyDb';
+import { Party } from '../../types/Party';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 
 type RouteParams = {
@@ -18,19 +21,25 @@ export function useParticipantLobbyViewModel() {
     const [isAddDependentVisible, setAddDependentVisible] = useState(false);
     const [isConfirmModalVisible, setConfirmModalVisible] = useState(false);
     const [isConfirming, setIsConfirming] = useState(false);
+    const [errorModalVisible, setErrorModalVisible] = useState(false);
+    const [errorModalMessage, setErrorModalMessage] = useState('');
+    const [party, setParty] = useState<Party | null>(null);
 
     useEffect(() => {
-        async function fetchParticipants() {
-            try {
-                const partyParticipants = await getParticipantsByPartyId(partyId);
-                setParticipantes(partyParticipants);
-            } catch (error) {
-                console.error("Erro ao buscar participantes no Firestore:", error);
-            }
-        }
-        if (partyId) {
-            fetchParticipants();
-        }
+        if (!partyId) return;
+
+        const unsubscribeParty = listenToParty(partyId, (cloudParty) => {
+            if (cloudParty) setParty(cloudParty);
+        });
+
+        const unsubscribeParticipants = listenToParticipantsByPartyId(partyId, (partyParticipants) => {
+            setParticipantes(partyParticipants);
+        });
+
+        return () => {
+            unsubscribeParty();
+            unsubscribeParticipants();
+        };
     }, [partyId]);
 
     const currentUserParticipant = participantes.find(
@@ -44,10 +53,10 @@ export function useParticipantLobbyViewModel() {
         try {
             await confirmPresenceInParty(partyId, usuarioAtual);
             setConfirmModalVisible(false);
-            const partyParticipants = await getParticipantsByPartyId(partyId);
-            setParticipantes(partyParticipants);
         } catch (error) {
             console.error("Erro ao confirmar presença:", error);
+            setErrorModalMessage("Falha ao confirmar presença.");
+            setErrorModalVisible(true);
         } finally {
             setIsConfirming(false);
         }
@@ -60,9 +69,10 @@ export function useParticipantLobbyViewModel() {
     const handleRemoveParticipant = async (participant: PartyParticipant) => {
         try {
             await updatePartyParticipant(participant.perfil.id, { 'perfil.status': 'removido' } as any);
-            setParticipantes(prev => prev.filter(p => p.perfil.id !== participant.perfil.id));
         } catch (error) {
             console.error("Erro ao remover participante:", error);
+            setErrorModalMessage("Falha ao remover participante.");
+            setErrorModalVisible(true);
         }
     };
 
@@ -71,7 +81,7 @@ export function useParticipantLobbyViewModel() {
     };
 
     const handleDependentAdded = () => {
-        getParticipantsByPartyId(partyId).then(setParticipantes);
+        // Agora atualizado via onSnapshot
     };
 
     const handleNavigateToCreateDependent = () => {
@@ -83,8 +93,28 @@ export function useParticipantLobbyViewModel() {
 
     return {
         partyId,
+        party,
         usuarioAtual,
-        participantes,
+        participantes: [...participantes].sort((a, b) => {
+            const isA_CurrentUser = a.perfil.user_id === usuarioAtual?.id && a.perfil.participant_type === 'user';
+            const isB_CurrentUser = b.perfil.user_id === usuarioAtual?.id && b.perfil.participant_type === 'user';
+            if (isA_CurrentUser && !isB_CurrentUser) return -1;
+            if (!isA_CurrentUser && isB_CurrentUser) return 1;
+
+            const isA_MyDependent = a.perfil.user_id === usuarioAtual?.id && a.perfil.participant_type === 'dependent';
+            const isB_MyDependent = b.perfil.user_id === usuarioAtual?.id && b.perfil.participant_type === 'dependent';
+            if (isA_MyDependent && !isB_MyDependent) return -1;
+            if (!isA_MyDependent && isB_MyDependent) return 1;
+
+            const isA_Admin = a.perfil.user_id === party?.admin_id && a.perfil.participant_type === 'user';
+            const isB_Admin = b.perfil.user_id === party?.admin_id && b.perfil.participant_type === 'user';
+            if (isA_Admin && !isB_Admin) return -1;
+            if (!isA_Admin && isB_Admin) return 1;
+
+            const nameA = a.perfil.participant_name || a.usuario.nome || '';
+            const nameB = b.perfil.participant_name || b.usuario.nome || '';
+            return nameA.localeCompare(nameB);
+        }),
         confirmadosCount,
         participantesTotal,
         handleBackPress,
@@ -99,5 +129,8 @@ export function useParticipantLobbyViewModel() {
         isConfirming,
         handleConfirmPresence,
         handleNavigateToCreateDependent,
+        errorModalVisible,
+        errorModalMessage,
+        setErrorModalVisible,
     };
 }

@@ -24,10 +24,12 @@ export const createStyles = (theme: ThemeType) => StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    color: theme.colors.text,
   },
   cardText: {
     fontSize: 16,
     marginTop: 8,
+    color: theme.colors.text,
   },
   button: {
     width: '100%',

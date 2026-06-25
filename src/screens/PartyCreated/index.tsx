@@ -8,6 +8,8 @@ import { Card } from "../../components/Card";
 import { createStyles } from "./styles";
 import { usePartyCreatedViewModel } from "./PartyCreatedViewModel";
 import { useAppTheme } from "../../contexts/ThemeContext";
+import { formatDate } from "../../utils/Formatting/formatDate";
+import { formatCurrency } from "../../utils/Formatting/formatCurrency";
 
 export const PartyCreatedScreen = () => {
     const { theme } = useAppTheme();
@@ -23,14 +25,19 @@ export const PartyCreatedScreen = () => {
           Party Criada!
         </Text>
         
-        <Card style={styles.card}>
-          <Text style={styles.cardTitle}>ID: {party.id}</Text>
-          <Text style={styles.cardText}>Nome: {party.name}</Text>
-          <Text style={styles.cardText}>Status: {party.status}</Text>
-          <Text style={styles.cardText}>
-            Valores: R$ {party.min_value} - R$ {party.max_value}
-          </Text>
-        </Card>
+        {party ? (
+          <Card style={styles.card}>
+            <Text style={styles.cardTitle}>{party.name}</Text>
+            <Text style={styles.cardText}>
+              Data: {formatDate(party.event_date)}
+            </Text>
+            <Text style={styles.cardText}>
+              Valores: R$ {formatCurrency(party.min_value)} - R$ {formatCurrency(party.max_value)}
+            </Text>
+          </Card>
+        ) : (
+          <Text style={styles.cardText}>Carregando informações da party...</Text>
+        )}
 
         <Button title="Ir para a Home" onPress={voltarParaHome} style={styles.button} />
       </View>

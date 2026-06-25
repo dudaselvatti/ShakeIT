@@ -33,6 +33,9 @@ export const CreatePartyScreen = ({ navigation }: any) => {
     confirmExit,
     handleCriarParty,
     isLoading,
+    isErrorModalVisible,
+    errorModalMessage,
+    closeErrorModal,
   } = useCreatePartyViewModel(navigation);
 
   return (
@@ -113,6 +116,17 @@ export const CreatePartyScreen = ({ navigation }: any) => {
         confirmText="Sair sem salvar"
         onCancel={cancelExit}
         onConfirm={confirmExit}
+      />
+      
+      <PopupModal
+        visible={isErrorModalVisible}
+        title="Alerta"
+        imageSource={require("../../../assets/alerta.png")}
+        message={errorModalMessage}
+        confirmText="Entendi"
+        hideCancelButton={true}
+        onConfirm={closeErrorModal}
+        onCancel={closeErrorModal}
       />
     </SafeAreaView>
   );

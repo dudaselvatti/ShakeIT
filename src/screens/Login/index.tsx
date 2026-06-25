@@ -41,6 +41,7 @@ export const LoginScreen = ({ navigation }: any) => {
           headerTitle="Login" 
           showBackButton={true} 
           onBackPress={handleBackPress}
+          showSettingsIcon={true}
         />
 
       <ScrollView ref={scrollViewRef} style={styles.content} showsVerticalScrollIndicator={false}>

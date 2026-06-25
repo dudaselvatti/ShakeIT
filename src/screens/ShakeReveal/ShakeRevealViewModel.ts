@@ -1,5 +1,6 @@
+import Toast from 'react-native-toast-message';
 import { useRef, useEffect, useState, useCallback } from "react";
-import { Animated, Vibration } from "react-native";
+import { Alert, Animated, Vibration } from 'react-native';
 import { Accelerometer } from "expo-sensors";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { getDrawResultByGiverProfileId } from "../../services/cloud/DrawResult/DrawResultDb";
@@ -43,6 +44,7 @@ export function useShakeRevealViewModel({ route, navigation }: any) {
       navigation.navigate("PerfilSorteado", { partyId });
     } catch (error) {
       console.error("Erro ao buscar perfil sorteado:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
     }
   }, [partyId, usuarioAtual, navigation]);
 

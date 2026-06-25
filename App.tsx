@@ -4,8 +4,13 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import Toast, { ToastConfig, ToastProps } from 'react-native-toast-message';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { AppNotificationToast } from './src/components/AppNotificationToast';
 
 import { checkFirebaseConnection } from "./src/services/testFirebase";
+import { navigationRef } from "./src/utils/RootNavigation";
 
 import { HomeScreen } from "./src/screens/Home";
 import { CreatePartyScreen } from "./src/screens/CreateParty";
@@ -25,18 +30,20 @@ import { Dependent } from "./src/types/Dependent";
 
 import { AuthProvider, useAuth } from "./src/contexts/AuthContext/AuthContext";
 import { ThemeProvider, useAppTheme } from "./src/contexts/ThemeContext";
+import { NotificationProvider } from "./src/contexts/NotificationContext/NotificationContext";
 import { RegistrationScreen } from "./src/screens/Registration";
 import { LoginScreen } from "./src/screens/Login";
 import { ForgotMyPasswordScreen } from "./src/screens/ForgotMyPassword";
 import { WelcomeScreen } from "./src/screens/Welcome";
 import { LoadingScreen } from "./src/components/LoadingScreen";
 import { PartyDrawRestrictionsScreen } from "./src/screens/PartyDrawRestrictions";
+import { NotificationsScreen } from "./src/screens/Notifications";
 
 export type RootStackParamList = {
   Welcome: undefined;
-  Home: { novaParty?: Party } | undefined;
+  Home: undefined;
   CreateParty: undefined;
-  PartyCreated: { party: Party };
+  PartyCreated: { partyId: string };
   PartyAdmin: { partyId: string };
   PartyDrawRestrictions: { partyId: string };
   ShakeReveal: { partyId: string };
@@ -50,6 +57,7 @@ export type RootStackParamList = {
   ParticipantLobby: { partyId: string };
   MeuPerfil: undefined;
   Settings: undefined;
+  Notifications: undefined;
   GestaoDependentes: undefined;
   FormDependente: { dependent?: Dependent } | undefined;
 };
@@ -86,7 +94,7 @@ function RootNavigator() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <NavigationContainer theme={customTheme}>
+      <NavigationContainer theme={customTheme} ref={navigationRef}>
         <StatusBar style={isDark ? "light" : "dark"} />
         <Stack.Navigator
           initialRouteName={usuarioAtual ? "Home" : "Welcome"}
@@ -124,6 +132,7 @@ function RootNavigator() {
             options={({ route }: any) => ({ animation: route.params?.animation || 'slide_from_right' })} 
           />
           <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen name="Notifications" component={NotificationsScreen} />
           <Stack.Screen name="GestaoDependentes" component={GestaoDependentesScreen} />
           <Stack.Screen name="FormDependente" component={FormDependenteScreen} />
         </Stack.Navigator>
@@ -132,18 +141,39 @@ function RootNavigator() {
   );
 }
 
+const queryClient = new QueryClient();
+
+const toastConfig: ToastConfig = {
+  app_notification: (props: ToastProps) => (
+    <AppNotificationToast
+      title={(props as any).text1 || 'Notificação'}
+      message={(props as any).text2 || ''}
+      onPress={() => {
+        if (props.onPress) props.onPress();
+        Toast.hide();
+      }}
+      onClose={() => Toast.hide()}
+    />
+  ),
+};
+
 export default function App() {
   useEffect(() => {
     checkFirebaseConnection();
   }, []);
 
   return (
-    <SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider>
       <ThemeProvider>
         <AuthProvider>
-          <RootNavigator />
+          <NotificationProvider>
+            <RootNavigator />
+            <Toast config={toastConfig} />
+          </NotificationProvider>
         </AuthProvider>
       </ThemeProvider>
     </SafeAreaProvider>
+    </QueryClientProvider>
   );
 }

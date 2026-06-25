@@ -12,8 +12,10 @@ import {
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
     signOut,
+    deleteUser
  } from "firebase/auth";
 import { auth, db } from "../../../config/firebase";
+import { deleteDoc } from "firebase/firestore";
 import { Usuario } from "../../../types/Usuario";
 import { usuariosMock } from "../../../mocks/usuariosMock";
 import { UserRegistrationDTO } from "../../../dto/User/UserRegistrationDTO";
@@ -21,7 +23,6 @@ import { UserLoginDTO } from "../../../dto/User/UserLoginDTO";
 import { UserForgotMyPasswordDTO } from "../../../dto/User/UserForgotMyPasswordDTO";
 
 const USERS_COLLECTION = "users";
-const FOTO_PADRAO_URL = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"; //placeholder
 
 export async function seedUsers() {
     const querySnapshot = await getDocs(collection(db, USERS_COLLECTION));
@@ -72,7 +73,7 @@ export async function storeUserInCloud(dto: UserRegistrationDTO) {
     const uid = userCredential.user.uid;
     const userRef = doc(db, USERS_COLLECTION, uid);
 
-    let finalAvatarUrl = dto.avatar_url || FOTO_PADRAO_URL;
+    let finalAvatarUrl = dto.avatar_url || "";
   
     await setDoc(userRef, {
         id: uid,
@@ -116,4 +117,14 @@ export async function updateUsuario(id: string, data: Partial<Usuario>): Promise
         ...data,
         updated_at: new Date().toISOString(),
     });
+}
+
+export async function deleteUserAccount(id: string): Promise<void> {
+    const user = auth.currentUser;
+    if (user && user.uid === id) {
+        await deleteDoc(doc(db, USERS_COLLECTION, id));
+        await deleteUser(user);
+    } else {
+        throw new Error("User not authenticated or ID mismatch.");
+    }
 }

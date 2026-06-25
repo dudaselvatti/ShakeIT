@@ -5,15 +5,15 @@ import { usePartyQRCodeViewModel, Props } from './PartyQRCodeViewModel';
 import { createStyles } from './styles';
 import { useAppTheme } from "../../contexts/ThemeContext";
 
-export const PartyQRCode = ({ partyCode }: Props) => {
+export const PartyQRCode = ({ partyCode, size }: Props) => {
     const { theme } = useAppTheme();
-    const styles = createStyles(theme);
-    const { qrCodeValue } = usePartyQRCodeViewModel({ partyCode });
+    const { qrCodeValue, size: qrSize } = usePartyQRCodeViewModel({ partyCode, size });
+    const styles = createStyles(theme, qrSize);
     return (
         <View style={styles.qrWrapper}>
             <QRCode
                 value={qrCodeValue}
-                size={150}
+                size={qrSize}
                 color="black"
                 backgroundColor="white"
             />

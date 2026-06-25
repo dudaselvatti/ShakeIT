@@ -93,7 +93,7 @@ export const ScanScreen = ({ navigation }: any) => {
                   title="Digitar Código"
                   onPress={() => setIsManualEntry(true)}
                   variant="outline"
-                  style={{ backgroundColor: theme.colors.surface, alignSelf: 'center', paddingHorizontal: 24, paddingVertical: 8, height: 'auto' }}
+                  style={{ backgroundColor: theme.colors.surface, alignSelf: 'center', width: 'auto', paddingHorizontal: 24, paddingVertical: 8, height: 'auto' }}
                 />
               </View>
             </View>
@@ -112,8 +112,12 @@ export const ScanScreen = ({ navigation }: any) => {
             <Button
               title="Entrar"
               onPress={() => {
-                if (manualCode.trim()) {
-                  navigation.navigate("PartyPreview", { partyCode: manualCode.trim().toUpperCase() });
+                let code = manualCode.trim().toUpperCase();
+                if (code) {
+                  if (!code.startsWith('#')) {
+                    code = '#' + code;
+                  }
+                  navigation.navigate("PartyPreview", { partyCode: code });
                 }
               }}
               style={{ marginTop: 24 }}

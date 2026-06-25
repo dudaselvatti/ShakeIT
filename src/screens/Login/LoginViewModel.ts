@@ -1,3 +1,5 @@
+import Toast from 'react-native-toast-message';
+import { Alert } from 'react-native';
 import { useState } from "react";
 import { isValidEmail } from "../../utils/Formatting/isValidEmail";
 import { userLogin } from "../../services/cloud/User/UserDb";
@@ -75,7 +77,8 @@ export function useLoginViewModel(navigation: any) {
           break;
         default:
           newErrors.firebase = "Ocorreu um erro ao fazer login. Tente novamente."
-      }
+      Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
+        }
       setErrors(newErrors);
       return { success: false };
     } finally {

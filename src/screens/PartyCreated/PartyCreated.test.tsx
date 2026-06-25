@@ -6,6 +6,14 @@ import { usePartyCreatedViewModel } from './PartyCreatedViewModel';
 
 jest.mock('./PartyCreatedViewModel');
 
+jest.mock('../../utils/Formatting/formatDate', () => ({
+  formatDate: jest.fn(() => '25/12/2026')
+}));
+
+jest.mock('../../utils/Formatting/formatCurrency', () => ({
+  formatCurrency: jest.fn((val) => val.toString())
+}));
+
 describe('Tela PartyCreated', () => {
   const mockVoltarParaHome = jest.fn();
 
@@ -35,9 +43,8 @@ describe('Tela PartyCreated', () => {
     const { getByText } = render(<PartyCreatedScreen />);
 
     expect(getByText('Party Criada!')).toBeTruthy();
-    expect(getByText('ID: teste123')).toBeTruthy();
-    expect(getByText('Nome: Festa da Empresa')).toBeTruthy();
-    expect(getByText('Status: aguardando_sorteio')).toBeTruthy();
+    expect(getByText('Festa da Empresa')).toBeTruthy();
+    expect(getByText('Data: 25/12/2026')).toBeTruthy();
     expect(getByText('Valores: R$ 50 - R$ 100')).toBeTruthy();
   });
 

@@ -1,13 +1,14 @@
+import Toast from 'react-native-toast-message';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { participantesMock } from "../../mocks/participantesMock";
-import { getPartyFromCloud } from '../../services/cloud/Party/PartyDb';
+import { listenToParty } from '../../services/cloud/Party/PartyDb';
 import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
 import { Party } from '../../types/Party';
 import { executeDraw } from '../../services/cloud/DrawAlgorithm/DrawAlgorithm';
 import { PartyParticipant } from '../../types/PartyParticipant';
-import { getParticipantsByPartyId, updatePartyParticipant } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
+import { updatePartyParticipant, listenToParticipantsByPartyId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
+import { useMutation } from '@tanstack/react-query';
 
 type RouteParams = {
   partyId: string;
@@ -22,47 +23,40 @@ export function usePartyAdminViewModel() {
 
     const [party, setParty] = useState<Party | null>(null);
     const [participants, setParticipants] = useState<PartyParticipant[]>([]);
+
+    useEffect(() => {
+        if (!partyId) return;
+
+        const unsubscribeParty = listenToParty(partyId, (cloudParty) => {
+            if (cloudParty) setParty(cloudParty);
+        });
+
+        const unsubscribeParticipants = listenToParticipantsByPartyId(partyId, (partyParticipants) => {
+            setParticipants(partyParticipants);
+        });
+
+        return () => {
+            unsubscribeParty();
+            unsubscribeParticipants();
+        };
+    }, [partyId]);
+
     const [isDrawing, setIsDrawing] = useState(false);
+    const [errorModalVisible, setErrorModalVisible] = useState(false);
+    const [errorModalTitle, setErrorModalTitle] = useState("");
+    const [errorModalMessage, setErrorModalMessage] = useState("");
+
+    const showError = (title: string, message: string) => {
+        setErrorModalTitle(title);
+        setErrorModalMessage(message);
+        setErrorModalVisible(true);
+    };
 
     const confirmadosCount = participants.filter(p => p.perfil.status === 'confirmado').length;
     const participantsTotal = participants.length;
     const headerTitle = "Painel do Evento";
 
     const [isEditModalVisible, setEditModalVisible] = useState(false);
-
-    const fetchParty = async () => {
-        try {
-            const cloudParty = await getPartyFromCloud(partyId);
-            if (cloudParty) {
-                setParty(cloudParty);
-            } else {
-                console.warn(`Festa com o ID ${partyId} não foi encontrada no banco.`);
-            }
-        } catch (error) {
-            console.error("Erro ao buscar a festa no Firestore:", error);
-        }
-    };
-
-    useEffect(() => {
-        if (partyId) {
-            fetchParty();
-        }
-    }, [partyId]);
-
-    useEffect(() => {
-        async function fetchParticipants() {
-          try {
-            const partyParticipants = await getParticipantsByPartyId(partyId);
-            setParticipants(partyParticipants);
-          } catch (error) {
-            console.error("Erro ao buscar participantes no Firestore:", error);
-          }
-        }
-    
-        if (partyId) {
-          fetchParticipants();
-        }
-      }, [partyId]);
 
     const partyName = party?.name ?? "Carregando...";
     const partyCode = party?.invite_code ?? "...";
@@ -73,13 +67,21 @@ export function usePartyAdminViewModel() {
 
     const [isAddDependentVisible, setAddDependentVisible] = useState(false);
 
-    const handleRemoveParticipant = async (participant: PartyParticipant) => {
-        try {
+    const removeParticipantMutation = useMutation({
+        mutationFn: async (participant: PartyParticipant) => {
             await updatePartyParticipant(participant.perfil.id, { 'perfil.status': 'removido' } as any);
-            setParticipants(prev => prev.filter(p => p.perfil.id !== participant.perfil.id));
-        } catch (error) {
+        },
+        onSuccess: () => {
+            // Atualizado via onSnapshot
+        },
+        onError: (error) => {
             console.error("Erro ao remover participante:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
         }
+    });
+
+    const handleRemoveParticipant = async (participant: PartyParticipant) => {
+        removeParticipantMutation.mutate(participant);
     };
 
     const handleAddDependent = () => {
@@ -87,29 +89,28 @@ export function usePartyAdminViewModel() {
     };
 
     const handleSorteioPress = async () => {
+        if (confirmadosCount < 3) {
+            showError("Participantes insuficientes", "São necessários pelo menos 3 participantes confirmados para realizar o sorteio. Convide mais amigos!");
+            return;
+        }
+
         try {
             setIsDrawing(true);
             const result: any = await executeDraw(partyId);
             console.log("Sucesso", result.message ?? "Sorteio realizado com sucesso.");
             navigation.navigate("ShakeReveal", { partyId });
         } catch (error: any) {
-            console.error("Erro no sorteio:", error);
-            if (error.message === "UNSOLVABLE_GRAPH") {
-                Alert.alert(
-                    "Sorteio Impossível",
-                    "Não há combinações possíveis para este sorteio devido às restrições configuradas (ou por ter apenas participantes do mesmo grupo familiar). Adicione mais pessoas ou remova restrições."
-                );
-            } else {
-                Alert.alert("Erro", error.message || "Ocorreu um erro ao realizar o sorteio.");
-            }
+            showError(
+                "Impossível realizar o sorteio!",
+                "As regras de restrições cadastradas impedem de realizar o sorteio. Ajuste elas e tente novamente."
+            );
         } finally {
             setIsDrawing(false);
         }
     };
 
     const handleDependentAdded = () => {
-        // Refresh participants
-        getParticipantsByPartyId(partyId).then(setParticipants);
+        // Agora atualizado via onSnapshot
     };
 
     const handleNavigateToCreateDependent = () => {
@@ -121,7 +122,26 @@ export function usePartyAdminViewModel() {
         partyId,
         partyName,
         partyCode,
-        participants,
+        participants: [...participants].sort((a, b) => {
+            const isA_CurrentUser = a.perfil.user_id === usuarioAtual?.id && a.perfil.participant_type === 'user';
+            const isB_CurrentUser = b.perfil.user_id === usuarioAtual?.id && b.perfil.participant_type === 'user';
+            if (isA_CurrentUser && !isB_CurrentUser) return -1;
+            if (!isA_CurrentUser && isB_CurrentUser) return 1;
+
+            const isA_MyDependent = a.perfil.user_id === usuarioAtual?.id && a.perfil.participant_type === 'dependent';
+            const isB_MyDependent = b.perfil.user_id === usuarioAtual?.id && b.perfil.participant_type === 'dependent';
+            if (isA_MyDependent && !isB_MyDependent) return -1;
+            if (!isA_MyDependent && isB_MyDependent) return 1;
+
+            const isA_Admin = a.perfil.user_id === party?.admin_id && a.perfil.participant_type === 'user';
+            const isB_Admin = b.perfil.user_id === party?.admin_id && b.perfil.participant_type === 'user';
+            if (isA_Admin && !isB_Admin) return -1;
+            if (!isA_Admin && isB_Admin) return 1;
+
+            const nameA = a.perfil.participant_name || a.usuario.nome || '';
+            const nameB = b.perfil.participant_name || b.usuario.nome || '';
+            return nameA.localeCompare(nameB);
+        }),
         confirmadosCount,
         participantsTotal,
         headerTitle,
@@ -136,7 +156,11 @@ export function usePartyAdminViewModel() {
         handleSorteioPress,
         isEditModalVisible,
         setEditModalVisible,
-        handleEditSave: fetchParty,
+        handleEditSave: () => {}, // Agora atualizado via onSnapshot
         party,
+        errorModalVisible,
+        setErrorModalVisible,
+        errorModalTitle,
+        errorModalMessage,
     };
 };

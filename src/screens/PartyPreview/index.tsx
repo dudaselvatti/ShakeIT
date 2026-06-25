@@ -21,20 +21,32 @@ export const PartyPreviewScreen = () => {
     party, 
     isLoading,
     isModalVisible,
+    isErrorModalVisible,
+    errorModalMessage,
     handleBackPress, 
     handleFooterNavigate,
     handleCancelModal,
     handleConfirmModal,
+    handleErrorModalConfirm,
     handleReady 
   } = usePartyPreviewViewModel();
 
   if (isLoading || !party) {
     return (
       <SafeAreaView style={styles.container}>
-        <AppHeader headerTitle="Carregando..." showBackButton={true} onBackPress={handleBackPress} />
+        <AppHeader headerTitle={isErrorModalVisible ? "Erro" : "Carregando..."} showBackButton={true} onBackPress={isErrorModalVisible ? handleErrorModalConfirm : handleBackPress} />
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Text style={{ color: theme.colors.text }}>Carregando dados da party...</Text>
+          <Text style={{ color: theme.colors.text }}>{isErrorModalVisible ? "Falha ao carregar a Party." : "Carregando dados da party..."}</Text>
         </View>
+        <PopupModal 
+          visible={isErrorModalVisible}
+          title="Oops!"
+          message={errorModalMessage}
+          confirmText="Voltar"
+          hideCancelButton={true}
+          onConfirm={handleErrorModalConfirm}
+          onCancel={handleErrorModalConfirm}
+        />
       </SafeAreaView>
     );
   }

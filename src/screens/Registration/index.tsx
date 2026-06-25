@@ -62,6 +62,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
           headerTitle="Cadastre-se" 
           showBackButton={true} 
           onBackPress={handleBackPress}
+          showSettingsIcon={true}
         />
 
       <ScrollView ref={scrollViewRef} style={styles.content} showsVerticalScrollIndicator={false}>

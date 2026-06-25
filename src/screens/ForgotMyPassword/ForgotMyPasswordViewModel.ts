@@ -1,3 +1,5 @@
+import Toast from 'react-native-toast-message';
+import { Alert } from 'react-native';
 import { useState } from "react";
 import { isValidEmail } from "../../utils/Formatting/isValidEmail";
 import { resetUserPassword } from "../../services/cloud/User/UserDb";
@@ -46,6 +48,7 @@ export function useForgotMyPasswordViewModel(navigation: any) {
     } catch (error: any) {
       setSuccess("");
       console.error("Erro ao resetar senha:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
       if (error.code === "auth/user-not-found") {
         setErrors({ email: "Este e-mail não está cadastrado." });
       } else if (error.code === "auth/invalid-email") {

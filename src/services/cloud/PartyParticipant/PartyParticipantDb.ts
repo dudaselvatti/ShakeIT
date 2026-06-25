@@ -6,7 +6,8 @@ import {
     collection,
     query,
     where,
-    getDocs
+    getDocs,
+    onSnapshot
 } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import { PartyParticipant } from "../../../types/PartyParticipant";
@@ -27,10 +28,10 @@ export async function createPartyParticipant(partyId: string, usuario: Usuario, 
             user_id: usuario.id,
             party_id: partyId,
             participant_type: "user",
-            participant_name: usuario.nome,
-            participant_avatar: usuario.avatar_url,
-            birth_date: usuario.birth_date,
-            gender: usuario.genero,
+            participant_name: usuario.nome || "Usuário",
+            participant_avatar: usuario.avatar_url || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+            birth_date: usuario.birth_date || "",
+            gender: usuario.genero || "",
             status: initialStatus,
             has_revealed_draw: false,
             bio: usuario.bio || "",
@@ -45,7 +46,8 @@ export async function createPartyParticipant(partyId: string, usuario: Usuario, 
         has_revealed_draw: false
     };
 
-    await setDoc(newParticipantDocRef, novoParticipante);
+    const cleanParticipante = JSON.parse(JSON.stringify(novoParticipante));
+    await setDoc(newParticipantDocRef, cleanParticipante);
     return novoParticipante;
 }
 
@@ -79,7 +81,8 @@ export async function createDependentPartyParticipant(partyId: string, usuario: 
         has_revealed_draw: false
     };
 
-    await setDoc(newParticipantDocRef, novoParticipante);
+    const cleanParticipante = JSON.parse(JSON.stringify(novoParticipante));
+    await setDoc(newParticipantDocRef, cleanParticipante);
     return novoParticipante;
 }
 
@@ -108,22 +111,30 @@ export async function getParticipantsByPartyId(partyId: string): Promise<PartyPa
     return participants;
 }
 
-export async function getPartyParticipantByUserIdAndPartyId(userId: string, partyId: string): Promise<PartyParticipant | null> {
+export function listenToParticipantsByPartyId(partyId: string, callback: (participants: PartyParticipant[]) => void): () => void {
     const participantRef = collection(db, PARTY_PARTICIPANT_COLLECTION);
+    const q = query(participantRef, where("perfil.party_id", "==", partyId));
     
-    const q = query(
-        participantRef, 
-        where("perfil.user_id", "==", userId),
-        where("perfil.party_id", "==", partyId)
+    return onSnapshot(q, (querySnapshot) => {
+        const participants: PartyParticipant[] = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data() as PartyParticipant;
+            if (data.perfil.status === "confirmado" || data.perfil.status === "pendente") {
+                participants.push(data);
+            }
+        });
+        callback(participants);
+    }, (error) => {
+        console.error("Erro no onSnapshot de participantes:", error);
+    });
+}
+
+export async function getPartyParticipantByUserIdAndPartyId(userId: string, partyId: string): Promise<PartyParticipant | null> {
+    const participants = await getParticipantsByPartyId(partyId);
+    const userParticipant = participants.find(
+        (p) => p.perfil.user_id === userId && p.perfil.participant_type === "user"
     );
-    
-    const querySnapshot = await getDocs(q);
-    
-    if (!querySnapshot.empty) {
-        return querySnapshot.docs[0].data() as PartyParticipant;
-    }
-    
-    return null;
+    return userParticipant || null;
 }
 
 export async function updatePartyParticipant(idPerfil: string, data: Partial<PartyParticipant>): Promise<void> {

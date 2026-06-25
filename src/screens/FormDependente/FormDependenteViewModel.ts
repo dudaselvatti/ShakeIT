@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import {
@@ -42,6 +43,8 @@ export function useFormDependenteViewModel(
   const [novoEvitarState, setNovoEvitarState] = useState("");
 
   const [isSaving, setIsSaving] = useState(false);
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
+  const [errorModalMessage, setErrorModalMessage] = useState("");
 
   const dependentOptions = ["Filho(a)", "Pet", "Outro"].map((size) => ({
     key: size,
@@ -291,6 +294,8 @@ export function useFormDependenteViewModel(
       navigation.goBack();
     } catch (error) {
       console.error("Erro ao salvar dependente:", error);
+      setErrorModalMessage("Sistema indisponível no momento. Tente novamente mais tarde.");
+      setIsErrorModalVisible(true);
     } finally {
       setIsSaving(false);
     }
@@ -336,5 +341,8 @@ export function useFormDependenteViewModel(
     handleAddEvitar,
     handleRemoveEvitar,
     handleSave,
+    isErrorModalVisible,
+    errorModalMessage,
+    closeErrorModal: () => setIsErrorModalVisible(false),
   };
 }

@@ -21,6 +21,10 @@ jest.mock("@react-navigation/native", () => {
       params: {},
     }),
     useFocusEffect: jest.fn((cb) => cb()),
+    createNavigationContainerRef: jest.fn(() => ({
+      isReady: jest.fn(() => true),
+      navigate: jest.fn(),
+    })),
   };
 });
 
@@ -95,4 +99,19 @@ jest.mock('expo-screen-capture', () => ({
   addScreenshotListener: jest.fn(() => ({ remove: jest.fn() })),
   preventScreenCaptureAsync: jest.fn(),
   allowScreenCaptureAsync: jest.fn(),
+}));
+
+jest.mock('./src/utils/RootNavigation', () => ({
+  navigate: jest.fn(),
+  navigationRef: { isReady: jest.fn(() => true) },
+}));
+
+jest.mock('./src/contexts/NotificationContext/NotificationContext', () => ({
+  useNotification: jest.fn(() => ({
+    notifications: [],
+    unreadCount: 0,
+    markAsRead: jest.fn(),
+    markAllAsRead: jest.fn(),
+  })),
+  NotificationProvider: ({ children }) => children,
 }));

@@ -1,3 +1,5 @@
+import Toast from 'react-native-toast-message';
+import { Alert } from 'react-native';
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { getDependentsByUser, deleteDependentFromCloud } from "../../services/cloud/Dependent/DependentDb";
@@ -32,6 +34,7 @@ export function useGestaoDependentesViewModel(navigation: any) {
             setDependents(depsWithWishlist as Dependent[]);
         } catch (error) {
             console.error("Erro ao carregar dependentes:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
             setErrorMessage("Não foi possível carregar os dependentes.");
         } finally {
             setIsLoading(false);
@@ -77,6 +80,7 @@ export function useGestaoDependentesViewModel(navigation: any) {
             await loadDependents();
         } catch (error) {
             console.error("Erro ao deletar dependente:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
             setErrorMessage("Não foi possível excluir o dependente.");
         } finally {
             setIsLoading(false);

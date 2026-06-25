@@ -10,6 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRoute } from "@react-navigation/native";
 import { AppHeader } from "../../components/AppHeader";
 import { IconButton } from "../../components/IconButton";
+import { PopupModal } from "../../components/PopupModal";
 import { AppFooter } from "../../components/AppFooter";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
@@ -64,6 +65,9 @@ export const FormDependenteScreen = ({ navigation }: any) => {
     handleAddEvitar,
     handleRemoveEvitar,
     handleSave,
+    isErrorModalVisible,
+    errorModalMessage,
+    closeErrorModal,
   } = useFormDependenteViewModel(navigation, dependentToEdit);
 
   const getTypeValue = (type: string) => {
@@ -336,6 +340,17 @@ export const FormDependenteScreen = ({ navigation }: any) => {
       </KeyboardAvoidingView>
 
       <AppFooter />
+
+      <PopupModal
+        visible={isErrorModalVisible}
+        title="Alerta"
+        imageSource={require("../../../assets/alerta.png")}
+        message={errorModalMessage}
+        confirmText="Entendi"
+        hideCancelButton={true}
+        onConfirm={closeErrorModal}
+        onCancel={closeErrorModal}
+      />
     </SafeAreaView>
   );
 };
