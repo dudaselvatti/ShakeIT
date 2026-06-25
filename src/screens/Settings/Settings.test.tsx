@@ -17,13 +17,19 @@ describe('SettingsScreen', () => {
 
   const setupHookMock = (overrides = {}) => {
     (useSettingsViewModel as jest.Mock).mockReturnValue({
-      isModalVisible: false,
-      errors: { passwordReset: '', logout: '' },
-      success: { passwordReset: '', logout: '' },
+      modalConfig: { visible: false, title: '', message: '', type: 'info', hideCancel: false },
+      isLoggedIn: true,
+      errors: { passwordReset: '', emailReset: '', logout: '' },
+      success: { passwordReset: '', emailReset: '', logout: '' },
       handleAlterarSenha: mockHandleAlterarSenha,
+      handleAlterarEmail: jest.fn(),
+      handleSuporte: jest.fn(),
+      handleTermosUso: jest.fn(),
+      handlePrivacidade: jest.fn(),
+      handleExcluirConta: jest.fn(),
       handleLogout: mockHandleLogout,
-      cancelLogout: mockCancelLogout,
-      confirmLogout: mockConfirmLogout,
+      cancelModal: mockCancelLogout,
+      confirmModal: mockConfirmLogout,
       ...overrides,
     });
   };
@@ -40,16 +46,39 @@ describe('SettingsScreen', () => {
     );
 
     expect(getByText('Configurações')).toBeTruthy();
+    expect(getByText('Aparência')).toBeTruthy();
+    expect(getByText('Modo Escuro')).toBeTruthy();
+    expect(getByText('Geral')).toBeTruthy();
+    expect(getByText('Raspadinha (Sem acelerômetro)')).toBeTruthy();
+    expect(getByText('Falar com o Suporte')).toBeTruthy();
+    expect(getByText('Termos de Uso')).toBeTruthy();
+    expect(getByText('Política de Privacidade')).toBeTruthy();
     expect(getByText('Conta')).toBeTruthy();
     expect(getByText('Alterar Senha')).toBeTruthy();
+    expect(getByText('Alterar E-mail')).toBeTruthy();
+    expect(getByText('Excluir Conta')).toBeTruthy();
     expect(getByText('Sair da Conta')).toBeTruthy();
 
     expect(queryByText('Tem certeza que deseja sair da conta?')).toBeNull();
   });
   
+  it('não deve exibir a seção Conta quando isLoggedIn for false', () => {
+    setupHookMock({ isLoggedIn: false });
+
+    const { queryByText } = render(
+      <SettingsScreen navigation={mockNavigation} />
+    );
+
+    expect(queryByText('Conta')).toBeNull();
+    expect(queryByText('Sair da Conta')).toBeNull();
+    expect(queryByText('Falar com o Suporte')).toBeTruthy(); 
+    expect(queryByText('Geral')).toBeTruthy(); 
+    expect(queryByText('Aparência')).toBeTruthy(); 
+  });
+  
   it('deve exibir a mensagem de erro ao falhar a redefinição de senha', () => {
     setupHookMock({
-      errors: { passwordReset: 'Erro ao enviar o link de redefinição.', logout: '' },
+      errors: { passwordReset: 'Erro ao enviar o link de redefinição.', emailReset: '', logout: '' },
     });
 
     const { getByText } = render(<SettingsScreen navigation={mockNavigation} />);
@@ -59,7 +88,7 @@ describe('SettingsScreen', () => {
 
   it('deve exibir a mensagem de sucesso ao enviar redefinição de senha', () => {
     setupHookMock({
-      success: { passwordReset: 'O link de redefinição foi enviado!', logout: '' },
+      success: { passwordReset: 'O link de redefinição foi enviado!', emailReset: '', logout: '' },
     });
 
     const { getByText } = render(<SettingsScreen navigation={mockNavigation} />);
@@ -89,7 +118,7 @@ describe('SettingsScreen', () => {
   
   it('deve repassar os callbacks de confirmar e cancelar para o PopupModal', () => {
     setupHookMock({
-      isModalVisible: true,
+      modalConfig: { visible: true, title: 'Atenção!', message: 'Tem certeza que deseja sair da conta?', type: 'logout', hideCancel: false },
     });
 
     const { getByText } = render(<SettingsScreen navigation={mockNavigation} />);

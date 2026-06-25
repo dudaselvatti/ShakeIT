@@ -1,3 +1,5 @@
+import Toast from 'react-native-toast-message';
+import { Alert } from 'react-native';
 import { useMemo } from 'react';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../../../../../App';
@@ -19,6 +21,7 @@ export function usePerfilSorteadoHeaderViewModel ({fotoUrl, nome, dataDeNascimen
             return calcularIdade(dataDeNascimento);
         } catch (error) {
             console.error("Erro ao calcular idade:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
             return 0;
         }
     }, [dataDeNascimento]);

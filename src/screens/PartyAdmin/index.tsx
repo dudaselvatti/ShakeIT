@@ -9,6 +9,8 @@ import { IconButton } from '../../components/IconButton';
 import { ParticipanteCard } from '../../components/ParticipanteCard';
 import { AddDependentModal } from '../../components/AddDependentModal';
 import { EditPartyModal } from '../../components/EditPartyModal';
+import { LoadingScreen } from '../../components/LoadingScreen';
+import { PopupModal } from '../../components/PopupModal';
 import { usePartyAdminViewModel } from './PartyAdminViewModel';
 import { createStyles } from './styles';
 import { useAppTheme } from "../../contexts/ThemeContext";
@@ -39,42 +41,61 @@ export const PartyAdminScreen = () => {
         isEditModalVisible,
         setEditModalVisible,
         handleEditSave,
-        party
+        party,
+        errorModalVisible,
+        setErrorModalVisible,
+        errorModalTitle,
+        errorModalMessage,
     } = usePartyAdminViewModel();
+
+    if (isDrawing) {
+        return <LoadingScreen />;
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <AppHeader headerTitle={headerTitle} showSettingsIcon={true} />
 
             <View style={styles.contentBody}>
-                <View style={styles.eventInfo}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                        <Text style={styles.partyName}>{partyName}</Text>
-                        <Text style={[styles.codeValue, { fontSize: 16, paddingHorizontal: 8 }]}>
-                            {partyCode}
-                        </Text>
-                        {party?.admin_id === usuarioAtual?.id && (
-                            <IconButton 
-                                iconName="edit-2" 
-                                onPress={() => setEditModalVisible(true)} 
-                                color={theme.colors.textLight} 
-                                size={20}
-                            />
-                        )}
+                <View style={{ flexDirection: 'row', backgroundColor: theme.colors.surface, borderRadius: 16, padding: 16, marginBottom: 16, elevation: 2, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10 }}>
+                    <View style={{ flex: 1, paddingRight: 16, justifyContent: 'center' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={[styles.partyName, { fontSize: 22, fontWeight: 'bold', flexShrink: 1 }]} numberOfLines={2}>{partyName}</Text>
+                            {party?.admin_id === usuarioAtual?.id && (
+                                <View style={{ marginLeft: 8 }}>
+                                    <IconButton 
+                                        iconName="edit-2" 
+                                        onPress={() => setEditModalVisible(true)} 
+                                        color={theme.colors.textLight} 
+                                        size={20}
+                                    />
+                                </View>
+                            )}
+                        </View>
+                        
+                        <View style={{ marginTop: 12 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                                <Image source={require('../../../assets/calendario.png')} style={{ width: 14, height: 14, marginRight: 6, tintColor: theme.colors.textLight }} />
+                                <Text style={{ color: theme.colors.textLight, fontSize: 13 }}>{party?.event_date ? formatDate(party.event_date) : "..."}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Image source={require('../../../assets/dinheiro.png')} style={{ width: 14, height: 14, marginRight: 6, tintColor: theme.colors.textLight }} />
+                                <Text style={{ color: theme.colors.textLight, fontSize: 13 }}>R$ {party?.min_value ? formatCurrency(party.min_value) : "0"} - R$ {party?.max_value ? formatCurrency(party.max_value) : "0"}</Text>
+                            </View>
+                        </View>
+                        
+                        <View style={{ marginTop: 16, alignSelf: 'flex-start', backgroundColor: theme.colors.background, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, borderWidth: 1, borderColor: theme.colors.primary }}>
+                            <Text selectable={true} style={[styles.codeValue, { fontSize: 16, color: theme.colors.primary, letterSpacing: 2, fontWeight: 'bold' }]}>
+                                {partyCode}
+                            </Text>
+                        </View>
                     </View>
                     
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8, padding: 8, width: '100%' }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image source={require('../../../assets/calendario.png')} style={{ width: 16, height: 16, marginRight: 6, tintColor: theme.colors.textLight }} />
-                            <Text style={{ color: theme.colors.textLight, fontSize: 12 }}>{party?.event_date ? formatDate(party.event_date) : "..."}</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image source={require('../../../assets/dinheiro.png')} style={{ width: 16, height: 16, marginRight: 6, tintColor: theme.colors.textLight }} />
-                            <Text style={{ color: theme.colors.textLight, fontSize: 12 }}>R$ {party?.min_value ? formatCurrency(party.min_value) : "0"} - R$ {party?.max_value ? formatCurrency(party.max_value) : "0"}</Text>
-                        </View>
+                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        <PartyQRCode partyCode={partyCode} size={90} />
+                        <Text style={{ fontSize: 10, color: theme.colors.textLight, marginTop: 8 }}>Ler QR Code</Text>
                     </View>
                 </View>
-
-                <PartyQRCode partyCode={partyCode} />
                 
                 {party?.status === 'sorteio_revelado' && (
                     <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.surface, padding: 12, borderRadius: 8, marginBottom: 12, borderWidth: 1, borderColor: theme.colors.success }}>
@@ -120,13 +141,15 @@ export const PartyAdminScreen = () => {
                         data={participants}
                         keyExtractor={(item) => item.perfil.id}
                         renderItem={({ item }) => {
-                            // O adm pode remover qualquer um, exceto ele mesmo
                             const isCurrentUser = item.perfil.user_id === usuarioAtual?.id && item.perfil.participant_type === 'user';
+                            const isAdmin = item.perfil.user_id === party?.admin_id && item.perfil.participant_type === 'user';
                             return (
                                 <ParticipanteCard 
                                     participante={item} 
                                     onRemove={handleRemoveParticipant}
                                     showRemoveIcon={!isCurrentUser} // admin can remove anyone except themselves
+                                    isCurrentUser={isCurrentUser}
+                                    isAdmin={isAdmin}
                                 />
                             );
                         }}
@@ -146,7 +169,7 @@ export const PartyAdminScreen = () => {
             <View style={styles.footer}>
                 <Button style={styles.btnSorteio}
                     title={isDrawing ? "Realizando sorteio..." : "Realizar sorteio"}
-                    disabled={isDrawing || confirmadosCount < 3}
+                    disabled={isDrawing}
                     onPress={handleSorteioPress}
                 />
             </View>
@@ -176,6 +199,16 @@ export const PartyAdminScreen = () => {
                     }}
                 />
             )}
+            <PopupModal
+                visible={errorModalVisible}
+                title={errorModalTitle}
+                imageSource={require('../../../assets/alerta.png')}
+                message={errorModalMessage}
+                confirmText="OK"
+                hideCancelButton={true}
+                onConfirm={() => setErrorModalVisible(false)}
+                onCancel={() => setErrorModalVisible(false)}
+            />
         </SafeAreaView>
     );
 }

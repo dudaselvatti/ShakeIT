@@ -1,3 +1,4 @@
+import Toast from 'react-native-toast-message';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { useEffect, useState, useCallback } from 'react';
 import { Alert } from 'react-native';
@@ -92,6 +93,7 @@ export function usePerfilSorteadoViewModel() {
             
         } catch (error) {
             console.error(error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
         } finally {
             setIsLoading(false);
         }
@@ -124,6 +126,7 @@ export function usePerfilSorteadoViewModel() {
             await loadAllData();
         } catch (error) {
             console.error("Erro ao revelar sorteio", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
         } finally {
             setIsLoading(false);
         }

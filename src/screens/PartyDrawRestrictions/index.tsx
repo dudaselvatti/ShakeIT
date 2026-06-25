@@ -8,6 +8,7 @@ import { Button } from '../../components/Button';
 import { SelectInput } from '../../components/SelectInput';
 import { usePartyDrawRestrictionsViewModel } from './PartyDrawRestrictionsViewModel';
 import { RestrictionCard } from "../../components/RestrictionCard";
+import { PopupModal } from "../../components/PopupModal";
 
 export const PartyDrawRestrictionsScreen = () => {
   const { theme } = useAppTheme();
@@ -26,6 +27,10 @@ export const PartyDrawRestrictionsScreen = () => {
         handleDeleteRestriction,
         blockDependentDraw,
         handleToggleBlockDependentDraw,
+        isClearModalVisible,
+        handleClearAllRestrictions,
+        cancelClearAll,
+        confirmClearAll,
      } = usePartyDrawRestrictionsViewModel();
 
     return (
@@ -107,6 +112,26 @@ export const PartyDrawRestrictionsScreen = () => {
                         onPress={() => handleDeleteRestriction(item.id)}
                     />
                 )}
+                ListFooterComponent={
+                    (restrictionsList.length > 0 || blockDependentDraw) ? (
+                        <View style={{ marginTop: 24, marginHorizontal: 24 }}>
+                            <Button
+                                title="Limpar Regras"
+                                onPress={handleClearAllRestrictions}
+                                variant="danger"
+                            />
+                        </View>
+                    ) : null
+                }
+            />
+            <PopupModal
+                visible={isClearModalVisible}
+                title="Atenção!"
+                message="Tem certeza que deseja limpar TODAS as restrições cadastradas? Esta ação não poderá ser desfeita."
+                cancelText="Cancelar"
+                confirmText="Limpar Regras"
+                onCancel={cancelClearAll}
+                onConfirm={confirmClearAll}
             />
         </SafeAreaView>
     );

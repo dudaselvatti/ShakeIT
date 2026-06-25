@@ -127,7 +127,7 @@ describe('Tela CreateParty', () => {
     });
 
     expect(mockNavigation.navigate).toHaveBeenCalledWith('PartyCreated', {
-      party: mockPartyResponse,
+      partyId: 'mockPartyId',
     });
   });
 

@@ -19,7 +19,38 @@ jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
           usuario: { id: '550e8400-e29b-41d4-a716-446655440002', nome: "Maria" },
           perfil: { id: '550e8400-e29b-41d4-a716-556655440002', status: 'pendente' }
       }
-  ]))
+  ])),
+  listenToParticipantsByPartyId: jest.fn((partyId, callback) => {
+    callback([
+      {
+          usuario: { id: '550e8400-e29b-41d4-a716-446655440001', nome: "João" },
+          perfil: { id: '550e8400-e29b-41d4-a716-556655440001', status: 'confirmado' }
+      },
+      {
+          usuario: { id: '550e8400-e29b-41d4-a716-446655440002', nome: "Maria" },
+          perfil: { id: '550e8400-e29b-41d4-a716-556655440002', status: 'pendente' }
+      }
+    ]);
+    return () => {};
+  })
+}));
+
+jest.mock('../../services/cloud/Party/PartyDb', () => ({
+  getPartyFromCloud: jest.fn(() => Promise.resolve({
+      id: 'mock1',
+      name: 'Festa Mock',
+      invite_code: 'CODE123',
+      admin_id: 'admin-123'
+  })),
+  listenToParty: jest.fn((partyId, callback) => {
+    callback({
+      id: 'mock1',
+      name: 'Festa Mock',
+      invite_code: 'CODE123',
+      admin_id: 'admin-123'
+    });
+    return () => {};
+  })
 }));
 
 describe('Tela ParticipantLobby', () => {
@@ -42,8 +73,7 @@ describe('Tela ParticipantLobby', () => {
 
     await findByText(/Participantes \(1\/2\)/);
 
-    // Não deve existir botões ou convites do PartyAdmin
+    // Não deve existir o botão de Realizar Sorteio na visão de participante comum
     expect(queryByText('Realizar Sorteio')).toBeNull();
-    expect(queryByText('Código:')).toBeNull();
   });
 });

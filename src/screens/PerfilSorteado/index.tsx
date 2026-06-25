@@ -211,8 +211,8 @@ export const PerfilSorteadoScreen = () => {
                 visible={isScreenshotModalVisible}
                 title="Atenção!"
                 message="Não vá espalhar seu amigo secreto por aí, é secreto sabia..."
-                cancelText="Fechar"
                 confirmText="Foi mal!"
+                hideCancelButton={true}
                 onCancel={() => setIsScreenshotModalVisible(false)}
                 onConfirm={() => setIsScreenshotModalVisible(false)}
             />
@@ -237,6 +237,7 @@ export const PerfilSorteadoScreen = () => {
                 iconName="clock"
                 message="A revelação do gabarito só estará disponível no dia do evento ou depois."
                 confirmText="Entendi"
+                hideCancelButton={true}
                 onCancel={() => setIsRevealErrorVisible(false)}
                 onConfirm={() => setIsRevealErrorVisible(false)}
             />

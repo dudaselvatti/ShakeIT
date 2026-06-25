@@ -28,10 +28,10 @@ describe('useSettingsViewModel', () => {
   it('deve inicializar com os estados corretos', () => {
     const { result } = renderHook(() => useSettingsViewModel(mockNavigation));
 
-    expect(result.current.isModalVisible).toBe(false);
+    expect(result.current.modalConfig.visible).toBe(false);
     expect(result.current.isLoading).toBe(true);
-    expect(result.current.errors).toEqual({ passwordReset: '', logout: '' });
-    expect(result.current.success).toEqual({ passwordReset: '', logout: '' });
+    expect(result.current.errors).toEqual({ passwordReset: '', emailReset: '', logout: '' });
+    expect(result.current.success).toEqual({ passwordReset: '', emailReset: '', logout: '' });
   });
 
   it('deve abrir o modal de logout ao chamar handleLogout', () => {
@@ -41,16 +41,17 @@ describe('useSettingsViewModel', () => {
       result.current.handleLogout();
     });
 
-    expect(result.current.isModalVisible).toBe(true);
+    expect(result.current.modalConfig.visible).toBe(true);
+    expect(result.current.modalConfig.type).toBe('logout');
   });
 
-  it('deve fechar o modal de logout ao chamar cancelLogout', () => {
+  it('deve fechar o modal ao chamar cancelModal', () => {
     const { result } = renderHook(() => useSettingsViewModel(mockNavigation));
 
     act(() => { result.current.handleLogout(); });
-    act(() => { result.current.cancelLogout(); });
+    act(() => { result.current.cancelModal(); });
 
-    expect(result.current.isModalVisible).toBe(false);
+    expect(result.current.modalConfig.visible).toBe(false);
   });
   
   it('deve alterar a senha com sucesso quando houver usuário logado', async () => {
@@ -107,10 +108,13 @@ describe('useSettingsViewModel', () => {
     const { result } = renderHook(() => useSettingsViewModel(mockNavigation));
 
     await act(async () => {
-      await result.current.confirmLogout();
+      result.current.handleLogout(); // define o tipo do modal para 'logout'
+    });
+    await act(async () => {
+      await result.current.confirmModal();
     });
 
-    expect(result.current.isModalVisible).toBe(false);
+    expect(result.current.modalConfig.visible).toBe(false);
     expect(mockLogoutContext).toHaveBeenCalled();
     expect(mockReset).toHaveBeenCalledWith({
       index: 0,
@@ -126,7 +130,10 @@ describe('useSettingsViewModel', () => {
     const { result } = renderHook(() => useSettingsViewModel(mockNavigation));
 
     await act(async () => {
-      await result.current.confirmLogout();
+      result.current.handleLogout(); // define o tipo do modal para 'logout'
+    });
+    await act(async () => {
+      await result.current.confirmModal();
     });
 
     expect(result.current.errors.logout).toBe('Erro ao sair da conta. Tente novamente.');

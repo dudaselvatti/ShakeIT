@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { useState, useEffect } from "react";
 import { createPartyInCloud } from "../../services/cloud/Party/PartyDb";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
@@ -13,6 +14,8 @@ export function useCreatePartyViewModel(navigation: any) {
   const [errors, setErrors] = useState({ nome: "", data: "", valores: "" });
   const [pendingAction, setPendingAction] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
+  const [errorModalMessage, setErrorModalMessage] = useState("");
 
   const { usuarioAtual } = useAuth();
 
@@ -132,10 +135,12 @@ export function useCreatePartyViewModel(navigation: any) {
       const partyCreatorParticipant = await createPartyParticipant(createdParty.id, usuarioAtual, "confirmado");
       console.log("Criador da party registrado como participante:", partyCreatorParticipant);
 
-      navigation.navigate("PartyCreated", { party: createdParty, });
+      navigation.navigate("PartyCreated", { partyId: createdParty.id });
 
     } catch (error) {
       console.error("Erro ao criar Party no Firebase:", error);
+      setErrorModalMessage("Sistema indisponível no momento. Tente novamente.");
+      setIsErrorModalVisible(true);
       setErrors((prev) => ({
         ...prev,
         nome: "Erro ao criar a Party. Tente novamente.",
@@ -162,5 +167,8 @@ export function useCreatePartyViewModel(navigation: any) {
     confirmExit,
     handleCriarParty,
     isLoading,
+    isErrorModalVisible,
+    errorModalMessage,
+    closeErrorModal: () => setIsErrorModalVisible(false),
   };
 };

@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 jest.mock('expo-image-picker', () => ({
   requestMediaLibraryPermissionsAsync: jest.fn(),
   launchImageLibraryAsync: jest.fn(),
-  MediaTypeOptions: {
+  MediaType: {
     Images: 'Images',
   },
 }));
@@ -74,15 +74,7 @@ describe('useImagePickerViewModel', () => {
     const mockBase64 = 'abcde12345';
     (ImagePicker.launchImageLibraryAsync as jest.Mock).mockResolvedValue({
       canceled: false,
-      assets: [{ uri: mockUri }],
-    });
-
-    const ImageManipulator = require('expo-image-manipulator');
-    ImageManipulator.manipulateAsync.mockResolvedValue({
-      uri: 'file://manipulada.jpg',
-      width: 500,
-      height: 500,
-      base64: mockBase64,
+      assets: [{ uri: mockUri, base64: mockBase64 }],
     });
 
     const { result } = renderHook(() => useImagePickerViewModel(defaultProps));
@@ -92,17 +84,12 @@ describe('useImagePickerViewModel', () => {
     });
 
     expect(ImagePicker.launchImageLibraryAsync).toHaveBeenCalledWith({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1, // Let ImageManipulator handle the compression
+      quality: 0.1,
+      base64: true,
     });
-
-    expect(ImageManipulator.manipulateAsync).toHaveBeenCalledWith(
-        mockUri,
-        [{ resize: { width: 500, height: 500 } }],
-        { compress: 0.5, format: 'jpeg', base64: true }
-    );
 
     expect(mockOnChangeImage).toHaveBeenCalledWith(`data:image/jpeg;base64,${mockBase64}`);
     expect(global.alert).not.toHaveBeenCalled();

@@ -42,7 +42,7 @@ describe("PartyDb Service", () => {
         invite_code: "#MOCK123",
         admin_id: "ouefhgaijgnadpspiujfgsu",
         status: "aguardando_sorteio",
-        block_dependent_draw: true,
+        block_dependent_draw: false,
         allow_wishlist_changes_after_draw: false,
         created_at: "mocked-timestamp",
         updated_at: "mocked-timestamp",

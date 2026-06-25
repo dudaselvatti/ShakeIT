@@ -1,3 +1,5 @@
+import Toast from 'react-native-toast-message';
+import { Alert } from 'react-native';
 import { useState } from "react";
 import { isValidEmail } from "../../utils/Formatting/isValidEmail";
 import { UserRegistrationDTO } from "../../dto/User/UserRegistrationDTO";
@@ -165,7 +167,8 @@ export function useRegistrationViewModel(navigation: any) {
     console.log("Erro no processo de cadastro:", error.code);
     if (error.code === "auth/email-already-in-use") {
       newErrors.email = "Este e-mail já está em uso. Tente outro ou faça login.";
-    } else if (error.code === "auth/weak-password") {
+    Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
+        } else if (error.code === "auth/weak-password") {
       newErrors.senha = "A senha é muito fraca. Ela deve ter no mínimo 6 caracteres.";
     } else if (error.code === "auth/invalid-email") {
       newErrors.email = "Este formato de e-mail é inválido.";

@@ -4,10 +4,17 @@ export interface Props {
     participante: PartyParticipant;
     onRemove?: (participante: PartyParticipant) => void;
     showRemoveIcon?: boolean;
+    isAdmin?: boolean;
+    isCurrentUser?: boolean;
 }
 
-export function useParticipanteCardViewModel({ participante, onRemove, showRemoveIcon }: Props) {
-    const nome = participante.perfil.participant_name || participante.usuario.nome;
+export function useParticipanteCardViewModel({ participante, onRemove, showRemoveIcon, isAdmin, isCurrentUser }: Props) {
+    let nome = participante.perfil.participant_name || participante.usuario.nome;
+    if (isCurrentUser) {
+        nome += " (Você)";
+    } else if (isAdmin) {
+        nome += " (Admin)";
+    }
 
     const isConfirmado = participante.perfil.status === 'confirmado';
 
@@ -15,7 +22,9 @@ export function useParticipanteCardViewModel({ participante, onRemove, showRemov
 
     const statusText = isConfirmado ? "" : participante.perfil.status;
 
-    const avatarUrl = participante.perfil.participant_type === 'dependent' ? participante.perfil.participant_avatar : (participante.perfil.participant_avatar || participante.usuario.avatar_url);
+    const rawAvatarUrl = participante.perfil.participant_type === 'dependent' ? participante.perfil.participant_avatar : (participante.perfil.participant_avatar || participante.usuario.avatar_url);
+    const avatarUrl = rawAvatarUrl === "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" ? null : rawAvatarUrl;
+
     let avatarSource = require('../../../assets/perfil-padrao.png');
     if (avatarUrl) {
         avatarSource = { uri: avatarUrl };

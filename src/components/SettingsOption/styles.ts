@@ -5,7 +5,7 @@ export const createStyles = (theme: ThemeType) => StyleSheet.create({
     container: {
         paddingVertical: 16,
         borderBottomWidth: 1,
-        borderBottomColor: '#E5E5E5',
+        borderBottomColor: theme.colors.border,
     },
     header: {
         flexDirection: 'row',

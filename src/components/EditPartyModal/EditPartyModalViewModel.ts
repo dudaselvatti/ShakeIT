@@ -1,3 +1,5 @@
+import Toast from 'react-native-toast-message';
+import { Alert } from 'react-native';
 import { useState, useEffect } from "react";
 import { updateParty } from "../../services/cloud/Party/PartyDb";
 import { formatCurrency } from "../../utils/Formatting/formatCurrency";
@@ -100,6 +102,7 @@ export function useEditPartyModalViewModel(props: Props) {
             props.onClose();
         } catch (error) {
             console.error("Erro ao atualizar a Party:", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
             setErrors((prev) => ({
                 ...prev,
                 nome: "Erro ao salvar as alterações. Tente novamente.",

@@ -4,11 +4,13 @@ export interface Props extends ModalProps {
     visible: boolean;
     title: string;
     iconName?: string;
+    imageSource?: any;
     message: string;
     cancelText?: string;
     confirmText?: string;
     onCancel: () => void;
     onConfirm: () => void;
+    hideCancelButton?: boolean;
 }
 
 export function usePopupModalViewModel({
@@ -20,6 +22,7 @@ export function usePopupModalViewModel({
     confirmText = "OK",
     onCancel,
     onConfirm,
+    hideCancelButton = false,
     ...modalProps
 }: Props) {
 
@@ -32,6 +35,7 @@ export function usePopupModalViewModel({
         confirmText,
         onCancel,
         onConfirm,
+        hideCancelButton,
         ...modalProps
     };
 }

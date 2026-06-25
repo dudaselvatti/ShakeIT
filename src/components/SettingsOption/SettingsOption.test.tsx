@@ -17,9 +17,6 @@ describe('SettingsOption Component', () => {
   
   const mockViewModelProps = {
     title: 'Minha Conta',
-    iconName: 'user' as const,
-    iconSize: 24,
-    iconColor: '#000',
     onPress: mockOnPress,
     children: <Text>Conteúdo Extra</Text>,
   };
@@ -31,7 +28,7 @@ describe('SettingsOption Component', () => {
 
   it('deve renderizar o título e o ícone corretamente', () => {
     const { getByText } = render(
-      <SettingsOption title="Minha Conta" iconName="user" />
+      <SettingsOption title="Minha Conta" />
     );
 
     expect(getByText('Minha Conta')).toBeTruthy();
@@ -39,7 +36,7 @@ describe('SettingsOption Component', () => {
 
   it('deve renderizar os elementos filhos (children) corretamente', () => {
     const { getByText } = render(
-      <SettingsOption title="Minha Conta" iconName="user" />
+      <SettingsOption title="Minha Conta" />
     );
 
     expect(getByText('Conteúdo Extra')).toBeTruthy();
@@ -47,7 +44,7 @@ describe('SettingsOption Component', () => {
 
   it('deve repassar as propriedades do TouchableOpacity e responder ao clique', () => {
     const { getByRole } = render(
-      <SettingsOption title="Minha Conta" iconName="user" />
+      <SettingsOption title="Minha Conta" />
     );
 
     const touchableElement = getByRole('button');

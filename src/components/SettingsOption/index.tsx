@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
-import { PixelIcon as Feather } from "../PixelIcon";
+
 import { createStyles } from './styles';
 import { useSettingsOptionViewModel, Props } from './SettingsOptionViewModel';
 import { useAppTheme } from "../../contexts/ThemeContext";
@@ -8,7 +8,7 @@ import { useAppTheme } from "../../contexts/ThemeContext";
 export const SettingsOption = (props: Props) => {
     const { theme } = useAppTheme();
     const styles = createStyles(theme);
-    const { title, iconName, iconSize, iconColor, children, ...touchableOpacityProps } = useSettingsOptionViewModel(props)
+    const { title, rightElement, children, ...touchableOpacityProps } = useSettingsOptionViewModel(props)
 
     return (
         <TouchableOpacity
@@ -19,11 +19,11 @@ export const SettingsOption = (props: Props) => {
         >
             <View style={styles.header}>
                 <Text style={styles.title}>{title}</Text>
-                <Feather
-                    name={iconName}
-                    size={iconSize}
-                    color={iconColor}
-                />
+                {rightElement && (
+                    <View style={{ marginLeft: 'auto' }}>
+                        {rightElement}
+                    </View>
+                )}
             </View>
             <View style={styles.children}>
                 {children}

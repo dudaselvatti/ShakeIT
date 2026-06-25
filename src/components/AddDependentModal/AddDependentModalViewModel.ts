@@ -1,3 +1,5 @@
+import Toast from 'react-native-toast-message';
+import { Alert } from 'react-native';
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { getDependentsByUser } from "../../services/cloud/Dependent/DependentDb";
@@ -37,6 +39,7 @@ export function useAddDependentModalViewModel({ visible, partyId, onClose, onDep
             onDependentAdded();
         } catch (error) {
             console.error("Error adding dependent to party", error);
+            Toast.show({ type: "error", text1: "Oops!", text2: "Sistema indisponível no momento." });
         } finally {
             setAddingIds(prev => prev.filter(id => id !== dependent.id));
         }

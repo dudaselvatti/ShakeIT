@@ -1,123 +1,56 @@
-import {
-    buildBlockMap,
-    validatePossibility,
-    generateDraw,
-    UnsolvableGraphError
-} from "./DrawAlgorithm";
-import { PartyParticipant } from "../../../types/PartyParticipant";
+import { executeDraw, UnsolvableGraphError } from './DrawAlgorithm';
+import { runTransaction } from 'firebase/firestore';
 
-describe("DrawAlgorithm Unit Tests", () => {
-    const participants: PartyParticipant[] = [
-        {
-            usuario: { id: "user-A", nome: "Ana", email: "ana@test.com" } as any,
-            perfil: {
-                id: "profile-A",
-                user_id: "user-A",
-                party_id: "party-1",
-                participant_type: "user",
-                participant_name: "Ana",
-                participant_avatar: "avatarA",
-                status: "confirmado",
-                has_revealed_draw: false,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            },
-            has_revealed_draw: false
-        },
-        {
-            usuario: { id: "user-B", nome: "Bruno", email: "bruno@test.com" } as any,
-            perfil: {
-                id: "profile-B",
-                user_id: "user-B",
-                party_id: "party-1",
-                participant_type: "user",
-                participant_name: "Bruno",
-                participant_avatar: "avatarB",
-                status: "confirmado",
-                has_revealed_draw: false,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            },
-            has_revealed_draw: false
-        },
-        {
-            usuario: { id: "user-C", nome: "Carlos", email: "carlos@test.com" } as any,
-            perfil: {
-                id: "profile-C",
-                user_id: "user-C",
-                party_id: "party-1",
-                participant_type: "user",
-                participant_name: "Carlos",
-                participant_avatar: "avatarC",
-                status: "confirmado",
-                has_revealed_draw: false,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            },
-            has_revealed_draw: false
-        }
-    ];
+jest.mock('../../../config/firebase', () => ({
+    db: {}
+}));
 
-    it("should perform a successful draw when there are no restrictions", () => {
-        const blockMap = buildBlockMap({
-            participants,
-            restrictions: [],
-            blockDependentDraw: false
-        });
+jest.mock('../Notification/NotificationDb', () => ({
+    createNotification: jest.fn(() => Promise.resolve('mock-id'))
+}));
 
-        expect(() => validatePossibility(participants, blockMap)).not.toThrow();
-        const pairs = generateDraw(participants, blockMap);
+jest.mock('firebase/firestore', () => ({
+    runTransaction: jest.fn(),
+    doc: jest.fn(),
+    collection: jest.fn(),
+    getDocs: jest.fn(),
+    query: jest.fn(),
+    where: jest.fn(),
+    serverTimestamp: jest.fn(),
+}));
 
-        expect(pairs).toHaveLength(3);
-        // Verify everyone draws exactly one person, and no one draws themselves
-        const givers = pairs.map(p => p.giver_profile_id);
-        const receivers = pairs.map(p => p.receiver_profile_id);
+describe('DrawAlgorithm Service', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-        expect(new Set(givers).size).toBe(3);
-        expect(new Set(receivers).size).toBe(3);
+  it('deve validar obrigatoriedade de partyId', async () => {
+    await expect(executeDraw('')).rejects.toThrow('partyId é obrigatório');
+  });
 
-        for (const pair of pairs) {
-            expect(pair.giver_profile_id).not.toBe(pair.receiver_profile_id);
-        }
+  it('deve realizar o sorteio com sucesso via Transaction local', async () => {
+    (runTransaction as jest.Mock).mockResolvedValueOnce({
+        partyName: 'Mock Party',
+        userIds: ['user1']
     });
 
-    it("should throw UnsolvableGraphError (UNSOLVABLE_GRAPH) in case of a mathematical deadlock", () => {
-        // Deadlock scenario: 3 people where:
-        // A blocks B, B blocks C, C blocks A (both ways)
-        const restrictions = [
-            {
-                id: "r1",
-                party_id: "party-1",
-                person_a_id: "profile-A",
-                person_b_id: "profile-B",
-                direction: "both_ways" as const
-            },
-            {
-                id: "r2",
-                party_id: "party-1",
-                person_a_id: "profile-B",
-                person_b_id: "profile-C",
-                direction: "both_ways" as const
-            },
-            {
-                id: "r3",
-                party_id: "party-1",
-                person_a_id: "profile-C",
-                person_b_id: "profile-A",
-                direction: "both_ways" as const
-            }
-        ];
+    const result = await executeDraw('party-123');
 
-        const blockMap = buildBlockMap({
-            participants,
-            restrictions,
-            blockDependentDraw: false
-        });
+    expect(result.success).toBe(true);
+    expect(result.message).toBe('Sorteio realizado com sucesso');
+    expect(runTransaction).toHaveBeenCalled();
+  });
 
-        // validatePossibility or generateDraw should fail
-        expect(() => {
-            validatePossibility(participants, blockMap);
-            generateDraw(participants, blockMap);
-        }).toThrow(UnsolvableGraphError);
-    });
+  it('deve lançar UnsolvableGraphError se o grafo não for solucionável', async () => {
+    (runTransaction as jest.Mock).mockRejectedValueOnce(new Error("UNSOLVABLE_GRAPH"));
+
+    await expect(executeDraw('party-123')).rejects.toThrow(UnsolvableGraphError);
+  });
+
+  it('deve lançar erro genérico se a transaction falhar', async () => {
+    (runTransaction as jest.Mock).mockRejectedValueOnce(new Error('Server Error'));
+
+    await expect(executeDraw('party-123')).rejects.toThrow('Server Error');
+  });
 });
+

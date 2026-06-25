@@ -8,6 +8,7 @@ import {
     getDocs,
     query,
     where,
+    onSnapshot
 } from "firebase/firestore";
 import { Party } from "../../../types/Party";
 import { db } from '../../../config/firebase';
@@ -25,7 +26,7 @@ export async function createPartyInCloud(party: PartyCreationDTO) {
         invite_code: gerarPartyCode(),
         admin_id: party.admin_id,
         status: "aguardando_sorteio",
-        block_dependent_draw: true,
+        block_dependent_draw: false,
         allow_wishlist_changes_after_draw: false,
         created_at: serverTimestamp(),
         updated_at: serverTimestamp(),
@@ -56,6 +57,23 @@ export async function getPartyFromCloud(partyId: string): Promise<Party | null> 
     }
 
     return null;
+}
+
+export function listenToParty(partyId: string, callback: (party: Party | null) => void): () => void {
+    const partyDocRef = doc(db, "parties", partyId);
+    return onSnapshot(partyDocRef, (partySnapshot) => {
+        if (partySnapshot.exists()) {
+            const data = partySnapshot.data();
+            callback({
+                id: partySnapshot.id,
+                ...data,
+            } as Party);
+        } else {
+            callback(null);
+        }
+    }, (error) => {
+        console.error("Erro no onSnapshot de party:", error);
+    });
 }
 
 export async function getPartyByInviteCodeFromCloud(inviteCode: string): Promise<Party | null> {

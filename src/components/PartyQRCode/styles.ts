@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
 import { ThemeType } from "../../styles/theme";
 
-export const createStyles = (theme: ThemeType) => StyleSheet.create({
+export const createStyles = (theme: ThemeType, size: number) => StyleSheet.create({
     qrWrapper: {
-        width: 150,
-        height: 150,
+        width: size,
+        height: size,
         backgroundColor: theme.colors.background,
         borderWidth: 2,
         borderColor: theme.colors.border,
@@ -12,6 +12,5 @@ export const createStyles = (theme: ThemeType) => StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
-        marginVertical: 20,
     },
 });

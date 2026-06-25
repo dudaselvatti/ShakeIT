@@ -5,17 +5,13 @@ import { PixelIcon as Feather } from "../PixelIcon";
 export interface Props extends TouchableOpacityProps {
     title: string;
     children?: ReactNode;
-    iconName?: string;
-    iconSize?: number;
-    iconColor?: string;
+    rightElement?: ReactNode;
 }
 
-export function useSettingsOptionViewModel({ title, iconName = "chevron-right", iconSize, iconColor, children, ...touchableOpacityProps }: Props) {
+export function useSettingsOptionViewModel({ title, rightElement, children, ...touchableOpacityProps }: Props) {
     return {
         title,
-        iconName,
-        iconSize,
-        iconColor,
+        rightElement,
         children,
         ...touchableOpacityProps
     };

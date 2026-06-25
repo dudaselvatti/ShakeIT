@@ -5,10 +5,11 @@ export interface Props {
     headerTitle: string;
     showBackButton?: boolean;
     showSettingsIcon?: boolean;
+    showNotificationsIcon?: boolean;
     onBackPress?: () => void;
 }
 
-export function useAppHeaderViewModel({ headerTitle, showBackButton = true, showSettingsIcon = false, onBackPress }: Props) {
+export function useAppHeaderViewModel({ headerTitle, showBackButton = true, showSettingsIcon = false, showNotificationsIcon = showSettingsIcon, onBackPress }: Props) {
     const title = useMemo(() => headerTitle, [headerTitle]);
     const navigation = useNavigation<any>();
 
@@ -29,11 +30,17 @@ export function useAppHeaderViewModel({ headerTitle, showBackButton = true, show
         navigation.navigate("Settings");
     };
 
+    const handleNotificationsPress = () => {
+        navigation.navigate("Notifications");
+    };
+
     return {
         title,
         showBackButton,
         showSettingsIcon,
+        showNotificationsIcon,
         handleBackPress,
         handleSettingsPress,
+        handleNotificationsPress,
     };
 };
