@@ -23,6 +23,7 @@ export const useMeuPerfilViewModel = () => {
     const [novoEvitarState, setNovoEvitarState] = useState('');
     const [originalGostos, setOriginalGostos] = useState<string[]>([]);
     const [originalEvitar, setOriginalEvitar] = useState<string[]>([]);
+    const [hasChanges, setHasChanges] = useState(false);
 
     const generoOptions = ["Masculino", "Feminino", "Outro"].map((size) => ({
         key: size,
@@ -96,6 +97,35 @@ export const useMeuPerfilViewModel = () => {
             }
         };
     }, []);
+
+    useEffect(() => {
+        let changed = false;
+        if (usuarioAtual) {
+            if (nome !== (usuarioAtual.nome || '')) changed = true;
+            if (genero !== (usuarioAtual.genero || '')) changed = true;
+            if (avatarUrl !== (usuarioAtual.avatar_url || '')) changed = true;
+            if (bio !== (usuarioAtual.bio || '')) changed = true;
+            if (camisa !== (usuarioAtual.sizes?.camisa || '')) changed = true;
+            if (calca !== (usuarioAtual.sizes?.calca || '')) changed = true;
+            if (calcado !== (usuarioAtual.sizes?.calcado || '')) changed = true;
+
+            let parsedDate: Date | undefined = undefined;
+            if (usuarioAtual.birth_date) {
+                if (typeof usuarioAtual.birth_date === 'string') {
+                    parsedDate = new Date(usuarioAtual.birth_date);
+                } else if (typeof (usuarioAtual.birth_date as any).toDate === 'function') {
+                    parsedDate = (usuarioAtual.birth_date as any).toDate();
+                } else if ((usuarioAtual.birth_date as any).seconds) {
+                    parsedDate = new Date((usuarioAtual.birth_date as any).seconds * 1000);
+                }
+            }
+            if (dataNascimento?.getTime() !== parsedDate?.getTime()) changed = true;
+
+            if (JSON.stringify(gostos) !== JSON.stringify(originalGostos)) changed = true;
+            if (JSON.stringify(evitar) !== JSON.stringify(originalEvitar)) changed = true;
+        }
+        setHasChanges(changed);
+    }, [nome, genero, avatarUrl, bio, camisa, calca, calcado, dataNascimento, gostos, evitar, originalGostos, originalEvitar, usuarioAtual]);
 
     const clearMessages = () => {
         setSuccessMessage('');
@@ -244,5 +274,6 @@ export const useMeuPerfilViewModel = () => {
         usuarioAtual,
         isEditing,
         setIsEditing,
+        hasChanges,
     };
 };

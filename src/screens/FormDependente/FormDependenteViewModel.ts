@@ -45,6 +45,7 @@ export function useFormDependenteViewModel(
   const [isSaving, setIsSaving] = useState(false);
   const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
   const [errorModalMessage, setErrorModalMessage] = useState("");
+  const [hasChanges, setHasChanges] = useState(false);
 
   const dependentOptions = ["Filho(a)", "Pet", "Outro"].map((size) => ({
     key: size,
@@ -113,6 +114,36 @@ export function useFormDependenteViewModel(
       });
     }
   }, [dependentToEdit]);
+
+  useEffect(() => {
+    let changed = false;
+    if (dependentToEdit) {
+        if (name !== dependentToEdit.name) changed = true;
+        if (dependentType !== dependentToEdit.dependent_type) changed = true;
+        if (gender !== (dependentToEdit.gender || '')) changed = true;
+        if (bio !== (dependentToEdit.bio || '')) changed = true;
+        if (avatarUrl !== (dependentToEdit.avatar_url || '')) changed = true;
+        if (relationship !== (dependentToEdit.relationship || '')) changed = true;
+        
+        if (dependentToEdit.birth_date) {
+           const [year, month, day] = dependentToEdit.birth_date.split("-").map(Number);
+           const originalDate = new Date(year, month - 1, day, 12, 0, 0);
+           if (birthDate?.getTime() !== originalDate.getTime()) changed = true;
+        } else if (birthDate) {
+           changed = true;
+        }
+
+        if (tamanhoCamisa !== (dependentToEdit.sizes?.camisa || '')) changed = true;
+        if (tamanhoCalca !== (dependentToEdit.sizes?.calca || '')) changed = true;
+        if (tamanhoCalcado !== (dependentToEdit.sizes?.calcado || '')) changed = true;
+        
+        if (JSON.stringify(gostos) !== JSON.stringify(originalGostos)) changed = true;
+        if (JSON.stringify(evitar) !== JSON.stringify(originalEvitar)) changed = true;
+    } else {
+        changed = name !== "" || dependentType !== "" || birthDate !== undefined;
+    }
+    setHasChanges(changed);
+  }, [name, dependentType, gender, bio, avatarUrl, relationship, birthDate, tamanhoCamisa, tamanhoCalca, tamanhoCalcado, gostos, evitar, originalGostos, originalEvitar, dependentToEdit]);
 
   const updateName = (text: string) => {
     setName(text);
@@ -344,5 +375,6 @@ export function useFormDependenteViewModel(
     isErrorModalVisible,
     errorModalMessage,
     closeErrorModal: () => setIsErrorModalVisible(false),
+    hasChanges,
   };
 }

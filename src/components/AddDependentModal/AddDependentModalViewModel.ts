@@ -3,19 +3,22 @@ import { Alert } from 'react-native';
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import { getDependentsByUser } from "../../services/cloud/Dependent/DependentDb";
-import { createDependentPartyParticipant } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
+import { createDependentPartyParticipant, getPartyParticipantByUserIdAndPartyId } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
 import { getOrCreateWishlist } from "../../services/cloud/Wishlist/WishlistDb";
 import { Dependent } from "../../types/Dependent";
+import { createNotification } from "../../services/cloud/Notification/NotificationDb";
 
 export interface Props {
     visible: boolean;
     partyId: string;
+    adminId?: string;
     onClose: () => void;
     onDependentAdded: () => void;
     onNavigateToCreate?: () => void;
 }
 
-export function useAddDependentModalViewModel({ visible, partyId, onClose, onDependentAdded, onNavigateToCreate }: Props) {
+export function useAddDependentModalViewModel(props: Props) {
+    const { visible, partyId, onClose, onDependentAdded, onNavigateToCreate, adminId } = props;
     const { usuarioAtual } = useAuth();
     const [dependents, setDependents] = useState<Dependent[]>([]);
     const [loading, setLoading] = useState(false);
@@ -35,7 +38,22 @@ export function useAddDependentModalViewModel({ visible, partyId, onClose, onDep
         try {
             setAddingIds(prev => [...prev, dependent.id]);
             const wishlist = await getOrCreateWishlist(dependent.id, "dependent");
-            await createDependentPartyParticipant(partyId, usuarioAtual, dependent, wishlist.likes_tags || [], wishlist.avoids_tags || []);
+            
+            const userParticipant = await getPartyParticipantByUserIdAndPartyId(usuarioAtual.id, partyId);
+            const status = userParticipant?.perfil.status === "confirmado" ? "confirmado" : "pendente";
+
+            await createDependentPartyParticipant(partyId, usuarioAtual, dependent, wishlist.likes_tags || [], wishlist.avoids_tags || [], status);
+            
+            if (adminId && adminId !== usuarioAtual.id) {
+                createNotification({
+                    user_id: adminId,
+                    title: "Novo dependente!",
+                    message: `${usuarioAtual.nome} adicionou o dependente ${dependent.name} no evento`,
+                    type: 'system',
+                    related_party_id: partyId
+                }).catch(console.error);
+            }
+
             onDependentAdded();
         } catch (error) {
             console.error("Error adding dependent to party", error);

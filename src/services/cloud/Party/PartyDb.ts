@@ -8,7 +8,8 @@ import {
     getDocs,
     query,
     where,
-    onSnapshot
+    onSnapshot,
+    deleteDoc
 } from "firebase/firestore";
 import { Party } from "../../../types/Party";
 import { db } from '../../../config/firebase';
@@ -126,4 +127,18 @@ export async function updateParty(partyId: string, updates: Partial<Party>) {
         ...updates,
         updated_at: serverTimestamp(),
     });
+}
+
+export async function deletePartyFromCloud(partyId: string) {
+    // Apaga a party
+    const partyDocRef = doc(db, "parties", partyId);
+    await deleteDoc(partyDocRef);
+    
+    // Apaga os participantes (opcionalmente) - ou marca como removido
+    // Para simplificar, vou deletar os docs dos participantes relacionados
+    const participantRef = collection(db, "PARTY_PARTICIPANT");
+    const q = query(participantRef, where("perfil.party_id", "==", partyId));
+    const snapshot = await getDocs(q);
+    const deletePromises = snapshot.docs.map(docSnap => deleteDoc(doc(db, "PARTY_PARTICIPANT", docSnap.id)));
+    await Promise.all(deletePromises);
 }

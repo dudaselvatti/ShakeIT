@@ -178,12 +178,15 @@ export async function executeDraw(partyId: string) {
             // Pass data out of transaction to notify later
             return {
                 partyName: partyData.name,
+                adminId: partyData.admin_id,
                 userIds: [...new Set(participants.map(p => p.perfil.user_id))] // Unique user IDs
             };
         });
 
         // Fire and forget notifications
-        const notificationPromises = result.userIds.map(userId => 
+        const notificationPromises = result.userIds
+            .filter(userId => userId !== result.adminId)
+            .map(userId => 
             createNotification({
                 user_id: userId,
                 title: "Sorteio Realizado!",

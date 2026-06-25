@@ -4,14 +4,14 @@ import { AppNotification } from "../../types/AppNotification";
 
 export function useNotificationsViewModel() {
     const navigation = useNavigation<any>();
-    const { notifications, markAsRead, markAllAsRead } = useNotification();
+    const { notifications, markAsRead, markAllAsRead, clearAll } = useNotification();
 
     const handleNotificationPress = async (notification: AppNotification) => {
         if (!notification.read) {
             await markAsRead(notification.id);
         }
         if (notification.related_party_id) {
-            navigation.navigate("Home"); 
+            navigation.navigate("Home", { openPartyId: notification.related_party_id, notificationType: notification.type }); 
         }
     };
 
@@ -19,9 +19,14 @@ export function useNotificationsViewModel() {
         await markAllAsRead();
     };
 
+    const handleClearAll = async () => {
+        await clearAll();
+    };
+
     return {
         notifications,
         handleNotificationPress,
-        handleMarkAllAsRead
+        handleMarkAllAsRead,
+        handleClearAll
     };
 }

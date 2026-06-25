@@ -1,12 +1,12 @@
 import Toast from 'react-native-toast-message';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
 import { Party } from "../../types/Party";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Alert } from "react-native";
 import { getDrawResultByGiverProfileId } from "../../services/cloud/DrawResult/DrawResultDb";
 import { getPartyParticipantByUserIdAndPartyId } from "../../services/cloud/PartyParticipant/PartyParticipantDb";
-import { getPartiesByUserId } from "../../services/cloud/Party/PartyDb";
+import { getPartiesByUserId, deletePartyFromCloud, getPartyFromCloud } from "../../services/cloud/Party/PartyDb";
 import { getUserById } from "../../services/cloud/User/UserDb";
 
 import { useQuery } from '@tanstack/react-query';
@@ -15,12 +15,16 @@ export type PartyWithAdmin = Party & { adminName: string };
 
 export function useHomeViewModel() {
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
   const { usuarioAtual } = useAuth();
 
   const [hideFinished, setHideFinished] = useState(false);
   const [filterType, setFilterType] = useState<"todos" | "meus" | "outros">("todos");
+  
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [partyToDelete, setPartyToDelete] = useState<Party | null>(null);
 
-  const { data: parties = [] } = useQuery({
+  const { data: parties = [], refetch } = useQuery({
     queryKey: ['parties', usuarioAtual?.id],
     queryFn: async () => {
       if (!usuarioAtual?.id) return [];
@@ -65,6 +69,12 @@ export function useHomeViewModel() {
     enabled: !!usuarioAtual?.id,
   });
 
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
+
   let visibleParties = parties;
   if (hideFinished) {
     visibleParties = visibleParties.filter(party => {
@@ -106,7 +116,9 @@ export function useHomeViewModel() {
           if (!participant) {
             throw new Error("Participante não encontrado");
           }
-          if (!participant.perfil.has_revealed_draw && !participant.has_revealed_draw) {
+          if (party.status === 'sorteio_revelado') {
+            navigation.navigate("PerfilSorteado", { partyId: party.id });
+          } else if (!participant.perfil.has_revealed_draw && !participant.has_revealed_draw) {
             navigation.navigate("ShakeReveal", { partyId: party.id });
           } else {
             const draw = await getDrawResultByGiverProfileId(party.id, participant.perfil.id);
@@ -129,6 +141,46 @@ export function useHomeViewModel() {
     navigation.navigate("CreateParty");
   };
 
+  useEffect(() => {
+    async function checkDeepLink() {
+      if (route.params?.openPartyId) {
+          const targetId = route.params.openPartyId;
+          // Clear params immediately to prevent loops if state updates
+          navigation.setParams({ openPartyId: undefined, notificationType: undefined });
+          
+          try {
+            const freshParty = await getPartyFromCloud(targetId);
+            if (freshParty) {
+                handleCardPress(freshParty as PartyWithAdmin);
+            }
+          } catch (e) {
+            console.error("Deep link falhou", e);
+          }
+      }
+    }
+    checkDeepLink();
+  }, [route.params?.openPartyId]);
+
+  const handleDeletePress = (party: Party) => {
+    setPartyToDelete(party);
+    setDeleteModalVisible(true);
+  };
+
+  const confirmDeleteParty = async () => {
+    if (!partyToDelete) return;
+    try {
+      await deletePartyFromCloud(partyToDelete.id);
+      Toast.show({ type: "success", text1: "Evento apagado com sucesso!" });
+      refetch();
+    } catch (error) {
+      console.error(error);
+      Toast.show({ type: "error", text1: "Erro ao apagar evento." });
+    } finally {
+      setDeleteModalVisible(false);
+      setPartyToDelete(null);
+    }
+  };
+
   const handleScanPress = () => {
     navigation.navigate("Scan");
   };
@@ -143,5 +195,9 @@ export function useHomeViewModel() {
     handleCreateParty,
     handleScanPress,
     userName: usuarioAtual?.nome || "Visitante",
+    isDeleteModalVisible,
+    setDeleteModalVisible,
+    confirmDeleteParty,
+    handleDeletePress,
   };
 };

@@ -28,7 +28,10 @@ export const PartyPreviewScreen = () => {
     handleCancelModal,
     handleConfirmModal,
     handleErrorModalConfirm,
-    handleReady 
+    handleReady,
+    isExistingModalVisible,
+    handleOpenExistingParty,
+    handleCancelExistingParty
   } = usePartyPreviewViewModel();
 
   if (isLoading || !party) {
@@ -113,6 +116,15 @@ export const PartyPreviewScreen = () => {
         confirmText="Voltar para Home"
         onCancel={handleCancelModal}
         onConfirm={handleConfirmModal}
+      />
+      <PopupModal 
+        visible={isExistingModalVisible}
+        title="Você já está neste evento!"
+        message="Você já faz parte deste evento. Deseja abri-lo ou voltar?"
+        cancelText="Voltar"
+        confirmText="Abrir Evento"
+        onCancel={handleCancelExistingParty}
+        onConfirm={handleOpenExistingParty}
       />
     </SafeAreaView>
   );

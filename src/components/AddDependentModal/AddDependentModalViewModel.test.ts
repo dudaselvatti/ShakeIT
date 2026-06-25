@@ -15,6 +15,7 @@ jest.mock('../../services/cloud/Dependent/DependentDb', () => ({
 
 jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
     createDependentPartyParticipant: jest.fn(),
+    getPartyParticipantByUserIdAndPartyId: jest.fn(() => Promise.resolve({ has_revealed_draw: false, perfil: { status: 'confirmado' } })),
 }));
 
 jest.mock('../../services/cloud/Wishlist/WishlistDb', () => ({

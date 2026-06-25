@@ -33,9 +33,13 @@ export const ParticipantLobbyScreen = () => {
         isCurrentUserPendente,
         isConfirmModalVisible,
         setConfirmModalVisible,
+        isLeaveModalVisible,
+        setLeaveModalVisible,
         isConfirming,
         handleConfirmPresence,
+        handleLeaveEvent,
         handleNavigateToCreateDependent,
+        handleNavigateToResults,
         errorModalVisible,
         errorModalMessage,
         setErrorModalVisible,
@@ -54,9 +58,21 @@ export const ParticipantLobbyScreen = () => {
             <View style={styles.contentBody}>
                 <View style={styles.statusHighlight}>
                     <Text style={styles.statusText}>
-                        Aguardando o organizador iniciar o sorteio...
+                        {party?.status === 'aguardando_sorteio' 
+                            ? "Aguardando o organizador iniciar o sorteio..." 
+                            : party?.status === 'sorteio_realizado' 
+                                ? "O sorteio foi realizado!" 
+                                : "O resultado foi revelado!"}
                     </Text>
                 </View>
+
+                {(party?.status === 'sorteio_realizado' || party?.status === 'sorteio_revelado') && (
+                    <Button 
+                        title="Ver Sorteio"
+                        onPress={handleNavigateToResults}
+                        style={{ marginBottom: 16 }}
+                    />
+                )}
 
                 {party && (
                     <View style={{ flexDirection: 'row', backgroundColor: theme.colors.surface, borderRadius: 16, padding: 16, marginBottom: 16, elevation: 2, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10 }}>
@@ -129,18 +145,26 @@ export const ParticipantLobbyScreen = () => {
             </View>
 
             {/* Footer Global com navegação */}
-            {isCurrentUserPendente && (
-                <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+            <View style={{ paddingHorizontal: 20, paddingBottom: 20, gap: 12 }}>
+                {isCurrentUserPendente && (
                     <Button 
                         title="Confirmar Presença" 
                         onPress={() => setConfirmModalVisible(true)} 
                     />
-                </View>
-            )}
+                )}
+                {party?.admin_id !== usuarioAtual?.id && (
+                    <Button 
+                        title="Sair do Evento" 
+                        variant="outline"
+                        onPress={() => setLeaveModalVisible(true)} 
+                    />
+                )}
+            </View>
             <AppFooter />
             <AddDependentModal 
                 visible={isAddDependentVisible}
                 partyId={partyId}
+                adminId={party?.admin_id}
                 onClose={() => setAddDependentVisible(false)}
                 onDependentAdded={() => {
                     setAddDependentVisible(false);
@@ -156,6 +180,15 @@ export const ParticipantLobbyScreen = () => {
                 confirmText={isConfirming ? "Confirmando..." : "Sim, confirmar"}
                 onCancel={() => setConfirmModalVisible(false)}
                 onConfirm={handleConfirmPresence}
+            />
+            <PopupModal 
+                visible={isLeaveModalVisible}
+                title="Sair do Evento"
+                message="Você tem certeza que deseja sair deste evento? Seus dependentes também serão removidos."
+                cancelText="Cancelar"
+                confirmText={isConfirming ? "Saindo..." : "Sim, sair"}
+                onCancel={() => setLeaveModalVisible(false)}
+                onConfirm={handleLeaveEvent}
             />
             <PopupModal
                 visible={errorModalVisible}

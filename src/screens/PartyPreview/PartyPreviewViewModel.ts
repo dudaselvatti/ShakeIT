@@ -21,6 +21,8 @@ export function usePartyPreviewViewModel() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isErrorModalVisible, setErrorModalVisible] = useState(false);
   const [errorModalMessage, setErrorModalMessage] = useState("");
+  const [isExistingModalVisible, setExistingModalVisible] = useState(false);
+  const [existingPartyId, setExistingPartyId] = useState<string | null>(null);
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
   const [party, setParty] = useState<Party | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +38,15 @@ export function usePartyPreviewViewModel() {
             return;
           }
           setParty(fetchedParty);
+          
+          if (usuarioAtual) {
+              const existing = await getPartyParticipantByUserIdAndPartyId(usuarioAtual.id, fetchedParty.id);
+              if (existing && existing.perfil.status !== 'removido') {
+                  setExistingPartyId(fetchedParty.id);
+                  setExistingModalVisible(true);
+              }
+          }
+
         } catch (error) {
           console.error("Erro ao carregar party:", error);
           setErrorModalMessage("Sistema indisponível no momento.");
@@ -106,6 +117,18 @@ export function usePartyPreviewViewModel() {
     navigation.goBack();
   };
 
+  const handleOpenExistingParty = () => {
+      setExistingModalVisible(false);
+      if (existingPartyId) {
+          navigation.navigate("ParticipantLobby", { partyId: existingPartyId });
+      }
+  };
+
+  const handleCancelExistingParty = () => {
+      setExistingModalVisible(false);
+      navigation.goBack();
+  };
+
   return {
     party,
     isLoading,
@@ -118,5 +141,8 @@ export function usePartyPreviewViewModel() {
     handleConfirmModal,
     handleErrorModalConfirm,
     handleReady,
+    isExistingModalVisible,
+    handleOpenExistingParty,
+    handleCancelExistingParty,
   };
 }
