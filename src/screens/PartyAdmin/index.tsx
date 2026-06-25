@@ -77,7 +77,7 @@ export const PartyAdminScreen = () => {
                 <PartyQRCode partyCode={partyCode} />
                 
                 {party?.status === 'sorteio_revelado' && (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.surfaceVariant, padding: 12, borderRadius: 8, marginBottom: 12, borderWidth: 1, borderColor: theme.colors.success }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.surface, padding: 12, borderRadius: 8, marginBottom: 12, borderWidth: 1, borderColor: theme.colors.success }}>
                         <Image source={require('../../../assets/check-confirmacao.png')} style={{ width: 20, height: 20, marginRight: 8, tintColor: theme.colors.success }} />
                         <Text style={{ color: theme.colors.text, fontWeight: 'bold', fontSize: 14, flex: 1 }}>Evento Revelado e Encerrado!</Text>
                     </View>

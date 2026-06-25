@@ -150,7 +150,7 @@ export const PerfilSorteadoScreen = () => {
                         </Card>
 
                         {activeTab.party?.status === 'sorteio_revelado' && (
-                            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.surfaceVariant, padding: 16, borderRadius: 12, marginBottom: 24, borderWidth: 1, borderColor: theme.colors.success }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.surface, padding: 16, borderRadius: 12, marginBottom: 24, borderWidth: 1, borderColor: theme.colors.success }}>
                                 <Image source={require('../../../assets/check-confirmacao.png')} style={{ width: 24, height: 24, marginRight: 12, tintColor: theme.colors.success }} />
                                 <Text style={{ color: theme.colors.text, fontWeight: 'bold', fontSize: 16, flex: 1 }}>Evento Revelado e Encerrado!</Text>
                             </View>
