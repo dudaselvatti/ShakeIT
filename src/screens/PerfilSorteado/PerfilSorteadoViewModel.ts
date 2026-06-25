@@ -5,6 +5,7 @@ import { Alert } from 'react-native';
 import { getParticipantsByPartyId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
 import { getPartyFromCloud, updateParty } from '../../services/cloud/Party/PartyDb';
 import { getDrawResultByGiverProfileId, getAllDrawResultsByPartyId } from '../../services/cloud/DrawResult/DrawResultDb';
+import { createNotification } from '../../services/cloud/Notification/NotificationDb';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 import { PartyParticipant } from '../../types/PartyParticipant';
 import { Party } from '../../types/Party';
@@ -123,6 +124,22 @@ export function usePerfilSorteadoViewModel() {
         setIsLoading(true);
         try {
             await updateParty(partyId, { status: 'sorteio_revelado' });
+            
+            const eventTab = tabs.find(t => t.type === 'event');
+            if (eventTab?.allParticipants && eventTab?.party) {
+                const uniqueUserIds = [...new Set(eventTab.allParticipants.map(p => p.perfil.user_id))];
+                const notificationPromises = uniqueUserIds.map(userId => 
+                    createNotification({
+                        user_id: userId,
+                        title: "Gabarito Revelado!",
+                        message: `O organizador acabou de revelar o gabarito do evento ${eventTab.party!.name}. Corre pra ver quem tirou quem!`,
+                        type: 'general',
+                        related_party_id: partyId
+                    })
+                );
+                Promise.all(notificationPromises).catch(() => {});
+            }
+
             await loadAllData();
         } catch (error) {
             console.error("Erro ao revelar sorteio", error);
