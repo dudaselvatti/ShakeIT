@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react-native';
 import { usePerfilSorteadoViewModel } from './PerfilSorteadoViewModel';
 import { useRoute } from '@react-navigation/native';
-import { getPartyFromCloud } from '../../services/cloud/Party/PartyDb';
+import { getPartyFromCloud, updateParty } from '../../services/cloud/Party/PartyDb';
 import { getParticipantsByPartyId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
 import { getDrawResultByGiverProfileId, getAllDrawResultsByPartyId } from '../../services/cloud/DrawResult/DrawResultDb';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
@@ -12,6 +12,11 @@ jest.mock('@react-navigation/native', () => ({
 
 jest.mock('../../services/cloud/Party/PartyDb', () => ({
   getPartyFromCloud: jest.fn(),
+  updateParty: jest.fn(),
+}));
+
+jest.mock('../../services/cloud/Notification/NotificationDb', () => ({
+  createNotification: jest.fn(),
 }));
 
 jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
@@ -132,5 +137,35 @@ describe('ViewModel: usePerfilSorteadoViewModel', () => {
     });
 
     expect(result.current.handleRevealAll()).toBe(true);
+  });
+
+  it('deve chamar updateParty e disparar notificacoes em confirmRevealAll', async () => {
+    mockedUseRoute.mockReturnValue({ params: { partyId: 'party-1' } });
+    mockedUseAuth.mockReturnValue({ usuarioAtual: { id: 'user-1' } });
+    
+    mockedGetPartyFromCloud.mockResolvedValue({ id: 'party-1', name: 'Festa Mock', event_date: '2023-01-01' });
+    mockedGetParticipantsByPartyId.mockResolvedValue([
+      { perfil: { id: 'prof-1', user_id: 'user-1', status: 'confirmado' } },
+      { perfil: { id: 'prof-2', user_id: 'user-2', status: 'confirmado' } }
+    ]);
+    const mockUpdateParty = require('../../services/cloud/Party/PartyDb').updateParty;
+    const mockCreateNotification = require('../../services/cloud/Notification/NotificationDb').createNotification;
+    mockUpdateParty.mockResolvedValue({});
+    mockCreateNotification.mockResolvedValue('notif-id');
+
+    const { result } = renderHook(() => usePerfilSorteadoViewModel());
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    await waitFor(async () => {
+      await result.current.confirmRevealAll();
+    });
+
+    expect(mockUpdateParty).toHaveBeenCalledWith('party-1', { status: 'sorteio_revelado' });
+    expect(mockCreateNotification).toHaveBeenCalledTimes(2);
+    expect(mockCreateNotification).toHaveBeenCalledWith(expect.objectContaining({ user_id: 'user-1', type: 'general' }));
+    expect(mockCreateNotification).toHaveBeenCalledWith(expect.objectContaining({ user_id: 'user-2', type: 'general' }));
   });
 });
