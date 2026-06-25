@@ -30,16 +30,16 @@ export const PerfilSorteadoScreen = () => {
         if (tab.type === 'event') {
             return require('../../../assets/presente.png');
         }
-        if (tab.type === 'receiver' && tab.participant) {
-            const avatarUrl = tab.participant.perfil.participant_avatar || tab.participant.usuario?.avatar_url;
+        if (tab.type === 'receiver' && tab.giver) {
+            const avatarUrl = tab.giver.perfil.participant_avatar || tab.giver.usuario?.avatar_url;
             if (avatarUrl && !avatarUrl.includes('gravatar')) {
                 return { uri: avatarUrl };
             }
 
-            const pType = tab.participant.perfil.participant_type;
+            const pType = tab.giver.perfil.participant_type;
             if (pType === 'dependent') {
-                if (tab.participant.perfil.dependent_type === 'child') return require('../../../assets/crianca.png');
-                if (tab.participant.perfil.dependent_type === 'pet') return require('../../../assets/pet.png');
+                if (tab.giver.perfil.dependent_type === 'child') return require('../../../assets/crianca.png');
+                if (tab.giver.perfil.dependent_type === 'pet') return require('../../../assets/pet.png');
             }
         }
         return require('../../../assets/perfil-padrao.png');

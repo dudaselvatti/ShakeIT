@@ -53,3 +53,18 @@ export async function markAllNotificationsAsRead(userId: string): Promise<void> 
     
     await batch.commit();
 }
+
+export async function deleteAllNotificationsForUser(userId: string): Promise<void> {
+    const q = query(
+        collection(db, NOTIFICATIONS_COLLECTION),
+        where("user_id", "==", userId)
+    );
+    const snapshot = await getDocs(q);
+    
+    const batch = writeBatch(db);
+    snapshot.forEach((document) => {
+        batch.delete(doc(db, NOTIFICATIONS_COLLECTION, document.id));
+    });
+    
+    await batch.commit();
+}

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AppNotification } from '../../types/AppNotification';
-import { listenToUserNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '../../services/cloud/Notification/NotificationDb';
+import { listenToUserNotifications, markNotificationAsRead, markAllNotificationsAsRead, deleteAllNotificationsForUser } from '../../services/cloud/Notification/NotificationDb';
 import { useAuth } from '../AuthContext/AuthContext';
 import Toast from 'react-native-toast-message';
 import { navigate } from '../../utils/RootNavigation';
@@ -11,6 +11,7 @@ interface NotificationContextData {
     unreadCount: number;
     markAsRead: (id: string) => Promise<void>;
     markAllAsRead: () => Promise<void>;
+    clearAll: () => Promise<void>;
 }
 
 const NotificationContext = createContext<NotificationContextData>({} as NotificationContextData);
@@ -43,8 +44,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
                         visibilityTime: 5000,
                         onPress: () => {
                             if (n.related_party_id) {
-                                // Navigate differently based on type or just let Home fetch it
-                                navigate("Home"); // Simplest: throw them to Home, they can click the party
+                                navigate("Home", { openPartyId: n.related_party_id, notificationType: n.type }); 
                             }
                             markNotificationAsRead(n.id);
                         }
@@ -69,10 +69,16 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         }
     };
 
+    const clearAllAction = async () => {
+        if (usuarioAtual?.id) {
+            await deleteAllNotificationsForUser(usuarioAtual.id);
+        }
+    };
+
     const unreadCount = notifications.filter(n => !n.read).length;
 
     return (
-        <NotificationContext.Provider value={{ notifications, unreadCount, markAsRead, markAllAsRead: markAllAsReadAction }}>
+        <NotificationContext.Provider value={{ notifications, unreadCount, markAsRead, markAllAsRead: markAllAsReadAction, clearAll: clearAllAction }}>
             {children}
         </NotificationContext.Provider>
     );

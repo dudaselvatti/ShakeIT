@@ -20,8 +20,15 @@ export const PartyCard = (props: Props) => {
             accessibilityRole="button"
         >
             <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>{title}</Text>
-                <Feather name={statusIcon} size={20} color={theme.colors.primary} testID="party-card-icon"/>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, paddingRight: 8 }}>
+                    <Text style={[styles.cardTitle, { flex: 1 }]} numberOfLines={1}>{title}</Text>
+                    <Feather name={statusIcon} size={20} color={theme.colors.primary} testID="party-card-icon"/>
+                </View>
+                {props.showDelete && (
+                    <TouchableOpacity onPress={props.onDeletePress} style={{ padding: 4 }}>
+                        <Feather name="trash-2" size={20} color={theme.colors.danger} />
+                    </TouchableOpacity>
+                )}
             </View>
 
             <View style={styles.cardInfoRow}>

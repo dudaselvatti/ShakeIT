@@ -49,7 +49,7 @@ describe('NotificationsViewModel', () => {
         });
 
         expect(mockMarkAsRead).toHaveBeenCalledWith('1');
-        expect(mockNavigate).toHaveBeenCalledWith('Home');
+        expect(mockNavigate).toHaveBeenCalledWith('Home', { openPartyId: 'party-1', notificationType: undefined });
     });
 
     it('deve apenas navegar ao clicar em notificação lida com party', async () => {
@@ -61,7 +61,7 @@ describe('NotificationsViewModel', () => {
         });
 
         expect(mockMarkAsRead).not.toHaveBeenCalled();
-        expect(mockNavigate).toHaveBeenCalledWith('Home');
+        expect(mockNavigate).toHaveBeenCalledWith('Home', { openPartyId: 'party-1', notificationType: undefined });
     });
 
     it('deve chamar markAllAsRead ao handleMarkAllAsRead', async () => {

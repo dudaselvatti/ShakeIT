@@ -7,6 +7,7 @@ import { Party } from '../../types/Party';
 import { executeDraw } from '../../services/cloud/DrawAlgorithm/DrawAlgorithm';
 import { PartyParticipant } from '../../types/PartyParticipant';
 import { updatePartyParticipant, listenToParticipantsByPartyId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
+import { deletePartyFromCloud } from '../../services/cloud/Party/PartyDb';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 import { useMutation } from '@tanstack/react-query';
 
@@ -57,6 +58,8 @@ export function usePartyAdminViewModel() {
     const headerTitle = "Painel do Evento";
 
     const [isEditModalVisible, setEditModalVisible] = useState(false);
+    const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const partyName = party?.name ?? "Carregando...";
     const partyCode = party?.invite_code ?? "...";
@@ -117,6 +120,21 @@ export function usePartyAdminViewModel() {
         navigation.navigate('FormDependente');
     };
 
+    const handleDeleteParty = async () => {
+        setIsDeleting(true);
+        try {
+            await deletePartyFromCloud(partyId);
+            Toast.show({ type: "success", text1: "Evento apagado com sucesso!" });
+            navigation.navigate("Home");
+        } catch (error) {
+            console.error("Erro ao apagar evento:", error);
+            showError("Erro", "Falha ao apagar o evento.");
+        } finally {
+            setIsDeleting(false);
+            setDeleteModalVisible(false);
+        }
+    };
+
     return {
         usuarioAtual,
         partyId,
@@ -162,5 +180,9 @@ export function usePartyAdminViewModel() {
         setErrorModalVisible,
         errorModalTitle,
         errorModalMessage,
+        isDeleteModalVisible,
+        setDeleteModalVisible,
+        isDeleting,
+        handleDeleteParty,
     };
 };

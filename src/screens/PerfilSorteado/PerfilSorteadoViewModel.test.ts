@@ -13,6 +13,9 @@ jest.mock('@react-navigation/native', () => ({
 jest.mock('../../services/cloud/Party/PartyDb', () => ({
   getPartyFromCloud: jest.fn(),
   updateParty: jest.fn(),
+  listenToParty: jest.fn((partyId, callback) => {
+    return () => {};
+  }),
 }));
 
 jest.mock('../../services/cloud/Notification/NotificationDb', () => ({
@@ -164,8 +167,7 @@ describe('ViewModel: usePerfilSorteadoViewModel', () => {
     });
 
     expect(mockUpdateParty).toHaveBeenCalledWith('party-1', { status: 'sorteio_revelado' });
-    expect(mockCreateNotification).toHaveBeenCalledTimes(2);
-    expect(mockCreateNotification).toHaveBeenCalledWith(expect.objectContaining({ user_id: 'user-1', type: 'general' }));
+    expect(mockCreateNotification).toHaveBeenCalledTimes(1);
     expect(mockCreateNotification).toHaveBeenCalledWith(expect.objectContaining({ user_id: 'user-2', type: 'general' }));
   });
 });

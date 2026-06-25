@@ -62,6 +62,7 @@ export const MeuPerfilScreen = () => {
         clearMessages,
         isEditing,
         setIsEditing,
+        hasChanges,
     } = useMeuPerfilViewModel();
 
     const opacityAnim = useRef(new Animated.Value(0)).current;
@@ -264,32 +265,38 @@ export const MeuPerfilScreen = () => {
                         )}
                     </Card>
 
-                    <Text style={styles.sectionTitle}>Dependentes (Filhos / Pets)</Text>
-                    <Card style={styles.interestsCard}>
-                        <View style={{ paddingVertical: 8 }}>
-                            <Button
-                                title="Gerenciar Dependentes"
-                                onPress={() => navigation.navigate("GestaoDependentes")}
-                                variant="outline"
-                                testID="btn-gerenciar-dependentes"
-                            />
-                        </View>
-                    </Card>
+                    {!isEditing && (
+                        <>
+                            <Text style={styles.sectionTitle}>Dependentes (Filhos / Pets)</Text>
+                            <Card style={styles.interestsCard}>
+                                <View style={{ paddingVertical: 8 }}>
+                                    <Button
+                                        title="Gerenciar Dependentes"
+                                        onPress={() => navigation.navigate("GestaoDependentes")}
+                                        variant="outline"
+                                        testID="btn-gerenciar-dependentes"
+                                    />
+                                </View>
+                            </Card>
+                        </>
+                    )}
                 </ScrollView>
 
                 <View style={styles.footer}>
                     {isEditing ? (
                         <>
-                            <Button
-                                title="Salvar Alterações"
-                                onPress={handleSalvar}
-                                isLoading={isSaving}
-                            />
+                            {hasChanges && (
+                                <Button
+                                    title="Salvar Alterações"
+                                    onPress={handleSalvar}
+                                    isLoading={isSaving}
+                                />
+                            )}
                             <Button
                                 title="Cancelar"
                                 onPress={() => setIsEditing(false)}
                                 variant="outline"
-                                style={{ marginTop: 16 }}
+                                style={{ marginTop: hasChanges ? 16 : 0 }}
                             />
                         </>
                     ) : (

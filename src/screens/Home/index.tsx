@@ -6,6 +6,7 @@ import { AppFooter } from "../../components/AppFooter";
 import { PartyCard } from "../../components/PartyCard";
 import { IconButton } from "../../components/IconButton";
 import { SelectInput } from "../../components/SelectInput";
+import { PopupModal } from "../../components/PopupModal";
 import { useHomeViewModel } from "./HomeViewModel";
 import { createStyles } from "./styles";
 import { useAppTheme } from "../../contexts/ThemeContext";
@@ -13,7 +14,7 @@ import { useAppTheme } from "../../contexts/ThemeContext";
 export const HomeScreen = () => {
     const { theme } = useAppTheme();
     const styles = createStyles(theme);
-  const { parties, handleCardPress, handleCreateParty, userName, hideFinished, setHideFinished, filterType, setFilterType } = useHomeViewModel();
+  const { parties, handleCardPress, handleCreateParty, userName, hideFinished, setHideFinished, filterType, setFilterType, isDeleteModalVisible, setDeleteModalVisible, confirmDeleteParty, handleDeletePress } = useHomeViewModel();
   const insets = useSafeAreaInsets();
 
   return (
@@ -65,6 +66,8 @@ export const HomeScreen = () => {
             status={item.status}
             eventDate={item.event_date}
             onPress={() => handleCardPress(item)}
+            showDelete={item.adminName === "Você"}
+            onDeletePress={() => handleDeletePress(item)}
           />
         )}
       />
@@ -80,6 +83,16 @@ export const HomeScreen = () => {
       </View>
 
       <AppFooter />
+
+      <PopupModal
+        visible={isDeleteModalVisible}
+        title="Apagar Evento"
+        message="Tem certeza que deseja apagar este evento? Todos os participantes serão removidos. Esta ação não pode ser desfeita."
+        cancelText="Cancelar"
+        confirmText="Apagar"
+        onCancel={() => setDeleteModalVisible(false)}
+        onConfirm={confirmDeleteParty}
+      />
     </SafeAreaView>
   );
 };

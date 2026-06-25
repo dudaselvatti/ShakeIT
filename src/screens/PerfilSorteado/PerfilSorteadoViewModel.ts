@@ -3,7 +3,7 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 import { useEffect, useState, useCallback } from 'react';
 import { Alert } from 'react-native';
 import { getParticipantsByPartyId } from '../../services/cloud/PartyParticipant/PartyParticipantDb';
-import { getPartyFromCloud, updateParty } from '../../services/cloud/Party/PartyDb';
+import { getPartyFromCloud, updateParty, listenToParty } from '../../services/cloud/Party/PartyDb';
 import { getDrawResultByGiverProfileId, getAllDrawResultsByPartyId } from '../../services/cloud/DrawResult/DrawResultDb';
 import { createNotification } from '../../services/cloud/Notification/NotificationDb';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
@@ -22,6 +22,7 @@ export interface TabData {
     label: string;
     type: 'receiver' | 'event';
     participant?: PartyParticipant; // the receiver profile
+    giver?: PartyParticipant; // the giver profile
     party?: Party;
     allParticipants?: PartyParticipant[];
     allDrawResults?: DrawResult[];
@@ -60,6 +61,7 @@ export function usePerfilSorteadoViewModel() {
                             label: label,
                             type: 'receiver',
                             participant: receiver,
+                            giver: profile,
                         });
                     }
                 }
@@ -76,7 +78,7 @@ export function usePerfilSorteadoViewModel() {
                 return a.label.localeCompare(b.label);
             });
 
-            const newTabs: TabData[] = [...receiverTabs];
+            const newTabs: TabData[] = party?.status === 'sorteio_revelado' ? [] : [...receiverTabs];
 
             newTabs.push({
                 key: 'evento',
@@ -88,7 +90,7 @@ export function usePerfilSorteadoViewModel() {
             });
             
             setTabs(newTabs);
-            if (newTabs.length > 0 && !activeTabKey) {
+            if (newTabs.length > 0 && (!activeTabKey || !newTabs.find(t => t.key === activeTabKey))) {
                 setActiveTabKey(newTabs[0].key);
             }
             
@@ -102,7 +104,22 @@ export function usePerfilSorteadoViewModel() {
 
     useEffect(() => {
         loadAllData();
-    }, [loadAllData]);
+
+        const unsubscribe = listenToParty(partyId, (updatedParty) => {
+            if (updatedParty) {
+                // If it became revealed, reload data to fetch all draw results
+                setTabs(prevTabs => {
+                    const eventTab = prevTabs.find(t => t.type === 'event');
+                    if (eventTab && eventTab.party?.status !== 'sorteio_revelado' && updatedParty.status === 'sorteio_revelado') {
+                        // Instead of trying to update state directly with async, just call loadAllData
+                        setTimeout(() => loadAllData(), 100);
+                    }
+                    return prevTabs;
+                });
+            }
+        });
+        return () => unsubscribe();
+    }, [loadAllData, partyId]);
 
     const handleRevealAll = () => {
         const eventTab = tabs.find(t => t.type === 'event');
@@ -126,9 +143,11 @@ export function usePerfilSorteadoViewModel() {
             await updateParty(partyId, { status: 'sorteio_revelado' });
             
             const eventTab = tabs.find(t => t.type === 'event');
-            if (eventTab?.allParticipants && eventTab?.party) {
+            if (eventTab?.allParticipants && eventTab?.party && usuarioAtual) {
                 const uniqueUserIds = [...new Set(eventTab.allParticipants.map(p => p.perfil.user_id))];
-                const notificationPromises = uniqueUserIds.map(userId => 
+                const notificationPromises = uniqueUserIds
+                    .filter(userId => userId !== usuarioAtual.id)
+                    .map(userId => 
                     createNotification({
                         user_id: userId,
                         title: "Gabarito Revelado!",

@@ -22,7 +22,8 @@ export const EditPartyModal = (props: Props) => {
         updateValorMaximo,
         errors,
         handleSalvar,
-        isLoading
+        isLoading,
+        hasChanges
     } = useEditPartyModalViewModel(props);
 
     if (!props.visible) return null;
@@ -83,13 +84,17 @@ export const EditPartyModal = (props: Props) => {
                             disabled={isLoading}
                         />
                         <View style={{ width: 16 }} />
-                        <Button 
-                            title="Salvar" 
-                            onPress={handleSalvar} 
-                            style={styles.button}
-                            isLoading={isLoading}
-                            disabled={isLoading || !nomeParty}
-                        />
+                        {hasChanges ? (
+                            <Button 
+                                title="Salvar" 
+                                onPress={handleSalvar} 
+                                style={styles.button}
+                                isLoading={isLoading}
+                                disabled={isLoading || !nomeParty}
+                            />
+                        ) : (
+                            <View style={styles.button} />
+                        )}
                     </View>
                 </View>
             </KeyboardAvoidingView>

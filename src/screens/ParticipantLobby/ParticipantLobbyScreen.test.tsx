@@ -40,14 +40,16 @@ jest.mock('../../services/cloud/Party/PartyDb', () => ({
       id: 'mock1',
       name: 'Festa Mock',
       invite_code: 'CODE123',
-      admin_id: 'admin-123'
+      admin_id: 'admin-123',
+      status: 'aguardando_sorteio'
   })),
   listenToParty: jest.fn((partyId, callback) => {
     callback({
       id: 'mock1',
       name: 'Festa Mock',
       invite_code: 'CODE123',
-      admin_id: 'admin-123'
+      admin_id: 'admin-123',
+      status: 'aguardando_sorteio'
     });
     return () => {};
   })

@@ -8,6 +8,8 @@ export interface Props {
     adminName: string;
     status: PartyStatus;
     eventDate: string;
+    showDelete?: boolean;
+    onDeletePress?: () => void;
     onPress?: () => void;
 }
 
@@ -61,6 +63,8 @@ export function usePartyCardViewModel(props: Props) {
             statusIcon: config.icon,
             tagColor: config.color,
             onPress: props.onPress,
+            showDelete: props.showDelete,
+            onDeletePress: props.onDeletePress,
         };
-    }, [props.name, props.status, props.eventDate, props.onPress, props.adminName]); 
+    }, [props.name, props.status, props.eventDate, props.onPress, props.adminName, props.showDelete, props.onDeletePress]); 
 };

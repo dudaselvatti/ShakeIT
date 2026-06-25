@@ -46,6 +46,10 @@ export const PartyAdminScreen = () => {
         setErrorModalVisible,
         errorModalTitle,
         errorModalMessage,
+        isDeleteModalVisible,
+        setDeleteModalVisible,
+        isDeleting,
+        handleDeleteParty,
     } = usePartyAdminViewModel();
 
     if (isDrawing) {
@@ -62,11 +66,18 @@ export const PartyAdminScreen = () => {
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={[styles.partyName, { fontSize: 22, fontWeight: 'bold', flexShrink: 1 }]} numberOfLines={2}>{partyName}</Text>
                             {party?.admin_id === usuarioAtual?.id && (
-                                <View style={{ marginLeft: 8 }}>
+                                <View style={{ marginLeft: 8, flexDirection: 'row' }}>
                                     <IconButton 
                                         iconName="edit-2" 
                                         onPress={() => setEditModalVisible(true)} 
                                         color={theme.colors.textLight} 
+                                        size={20}
+                                    />
+                                    <View style={{ width: 8 }} />
+                                    <IconButton 
+                                        iconName="trash-2" 
+                                        onPress={() => setDeleteModalVisible(true)} 
+                                        color={theme.colors.danger} 
                                         size={20}
                                     />
                                 </View>
@@ -208,6 +219,15 @@ export const PartyAdminScreen = () => {
                 hideCancelButton={true}
                 onConfirm={() => setErrorModalVisible(false)}
                 onCancel={() => setErrorModalVisible(false)}
+            />
+            <PopupModal
+                visible={isDeleteModalVisible}
+                title="Apagar Evento"
+                message="Tem certeza que deseja apagar este evento? Esta ação não pode ser desfeita."
+                cancelText="Cancelar"
+                confirmText={isDeleting ? "Apagando..." : "Apagar"}
+                onCancel={() => setDeleteModalVisible(false)}
+                onConfirm={handleDeleteParty}
             />
         </SafeAreaView>
     );
