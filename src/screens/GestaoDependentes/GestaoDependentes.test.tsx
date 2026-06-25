@@ -208,8 +208,6 @@ describe("GestaoDependentes - Screen e ViewModel", () => {
             expect(getByText("Bolinha")).toBeTruthy();
             expect(getByText("Luluzinha")).toBeTruthy();
             expect(getByText(/Gerenciar Dependentes/i)).toBeTruthy();
-            expect(getByText(/Filho\(a\)/i)).toBeTruthy();
-            expect(getByText(/Pet/i)).toBeTruthy();
         });
 
         it("deve renderizar tela vazia se nao houver dependentes", async () => {

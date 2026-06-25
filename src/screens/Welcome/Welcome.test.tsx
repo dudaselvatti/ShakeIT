@@ -7,8 +7,8 @@ jest.mock("./WelcomeViewModel", () => ({
     useWelcomeViewModel: jest.fn(),
 }));
 
-jest.mock("@expo/vector-icons", () => ({
-    Feather: "Feather",
+jest.mock("../../components/PixelIcon", () => ({
+    PixelIcon: "PixelIcon",
 }));
 
 describe("WelcomeScreen", () => {
@@ -25,8 +25,8 @@ describe("WelcomeScreen", () => {
 
     it("deve renderizar os elementos da tela de boas vindas", () => {
         const { getByText } = render(<WelcomeScreen />);
-        expect(getByText("Bem vindo ao ShakeIT")).toBeTruthy();
-        expect(getByText("A forma mais fácil e divertida de organizar sorteios e compartilhar suas listas de desejos com amigos e familiares!")).toBeTruthy();
+        expect(getByText("Bem-vindo(a) ao ShakeIT!")).toBeTruthy();
+        expect(getByText("A magia do Amigo Secreto na palma da sua mão! Crie eventos, adicione suas listas de desejos e sorteie com um chacoalhar!")).toBeTruthy();
         expect(getByText("Criar uma conta")).toBeTruthy();
         expect(getByText("Já tenho uma conta")).toBeTruthy();
     });

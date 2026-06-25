@@ -29,12 +29,12 @@ describe('Componente ImagePicker', () => {
       handlePickImage: mockHandlePickImage,
     });
 
-    const { getByText, queryByRole } = render(<ImagePicker {...defaultProps} />);
+    const { getByText, UNSAFE_getByType } = render(<ImagePicker {...defaultProps} />);
 
     expect(getByText('Profile Photo')).toBeTruthy();
-    expect(getByText('Selecionar Foto')).toBeTruthy();
     
-    expect(queryByRole('image')).toBeNull();
+    const imageComponent = UNSAFE_getByType(Image);
+    expect(imageComponent.props.source).toEqual(require('../../../assets/perfil-padrao.png'));
   });
 
   it('renderiza a imagem quando um valor de URI é providenciado', () => {
@@ -47,10 +47,9 @@ describe('Componente ImagePicker', () => {
       handlePickImage: mockHandlePickImage,
     });
 
-    const { getByText, queryByText, UNSAFE_getByType } = render(<ImagePicker {...defaultProps} />);
+    const { getByText, UNSAFE_getByType } = render(<ImagePicker {...defaultProps} />);
 
     expect(getByText('Profile Photo')).toBeTruthy();
-    expect(queryByText('Selecionar Foto')).toBeNull();
 
     const imageComponent = UNSAFE_getByType(Image);
     expect(imageComponent.props.source).toEqual({ uri: mockUri });
@@ -64,8 +63,8 @@ describe('Componente ImagePicker', () => {
       handlePickImage: mockHandlePickImage,
     });
 
-    const { getByText } = render(<ImagePicker {...defaultProps} />);
-    const touchable = getByText('Selecionar Foto');
+    const { getByTestId } = render(<ImagePicker {...defaultProps} />);
+    const touchable = getByTestId('image-picker-button');
     fireEvent.press(touchable);
 
     expect(mockHandlePickImage).toHaveBeenCalledTimes(1);

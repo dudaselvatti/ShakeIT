@@ -13,10 +13,6 @@ export const createStyles = (theme: ThemeType) => StyleSheet.create({
         paddingHorizontal: 24,
     },
     iconWrapper: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
-        backgroundColor: theme.colors.primary + '15',
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 32,

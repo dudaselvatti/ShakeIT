@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 import { TouchableOpacityProps } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../PixelIcon";
 
 export interface Props extends TouchableOpacityProps {
     title: string;
     children?: ReactNode;
-    iconName?: keyof typeof Feather.glyphMap;
+    iconName?: string;
     iconSize?: number;
     iconColor?: string;
 }

@@ -1,12 +1,14 @@
 import { renderHook } from '@testing-library/react-native';
 import { usePartyCardViewModel, Props } from './PartyCardViewModel';
 import { theme } from "../../styles/theme";
+import { formatDate } from "../../utils/Formatting/formatDate";
 
 describe('usePartyCardViewModel', () => {
   const defaultProps: Props = {
     name: 'Festa de Natal',
+    adminName: 'Ana',
     status: 'aguardando_sorteio',
-    eventDate: '2024-12-02',
+    eventDate: '3000-12-02',
     onPress: jest.fn(),
   };
 
@@ -14,8 +16,8 @@ describe('usePartyCardViewModel', () => {
     const { result } = renderHook(() => usePartyCardViewModel(defaultProps));
 
     expect(result.current.title).toBe(defaultProps.name);
-    expect(result.current.statusLabel).toBe(defaultProps.status);
-    expect(result.current.eventDate).toBe(`Evento: ${defaultProps.eventDate}`);
+    expect(result.current.statusLabel).toBe("Aguardando Sorteio");
+    expect(result.current.eventDate).toBe(`Evento: ${formatDate(defaultProps.eventDate)}`);
     expect(result.current.onPress).toBe(defaultProps.onPress);
   });
 
@@ -31,7 +33,7 @@ describe('usePartyCardViewModel', () => {
     const props: Props = { ...defaultProps, status: 'aguardando_sorteio' };
     const { result } = renderHook(() => usePartyCardViewModel(props));
 
-    expect(result.current.statusIcon).toBe('check-circle');
+    expect(result.current.statusIcon).toBe('clock');
     expect(result.current.tagColor).toBe(theme.colors.textLight);
   });
 
@@ -39,7 +41,8 @@ describe('usePartyCardViewModel', () => {
     const props: Props = { ...defaultProps, status: 'aguardando_pessoas' };
     const { result } = renderHook(() => usePartyCardViewModel(props));
 
-    expect(result.current.statusIcon).toBe('clock');
+    expect(result.current.statusLabel).toBe("Aguardando Pessoas");
+    expect(result.current.statusIcon).toBe('users');
     expect(result.current.tagColor).toBe(theme.colors.primary);
   });
 

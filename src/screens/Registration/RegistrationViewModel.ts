@@ -13,7 +13,8 @@ export function useRegistrationViewModel(navigation: any) {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [bio, setBio] = useState("");
   const [sizes, setSizes] = useState<Map<string, string>>(new Map());
-  const [errors, setErrors] = useState({ nome: "", email: "", senha: "", genero: "", data: "" });
+  const [errors, setErrors] = useState({ nome: "", email: "", senha: "", genero: "", data: "", firebase: "" });
+  const [isLoading, setIsLoading] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
   const generoOptions = ["Masculino", "Feminino", "Outro"].map((size) => ({
@@ -103,7 +104,7 @@ export function useRegistrationViewModel(navigation: any) {
 
   const handleCadastrarUsuario = async () => {
     let isValid = true;
-    let newErrors = { nome: "", email: "", senha: "", genero: "", data: "" };
+    let newErrors = { nome: "", email: "", senha: "", genero: "", data: "", firebase: "" };
 
     if (!nomeUsuario.trim()) {
       newErrors.nome = "O nome de usuário é obrigatório.";
@@ -135,8 +136,9 @@ export function useRegistrationViewModel(navigation: any) {
 
     setErrors(newErrors);
 
-    if (!isValid) return;
+    if (!isValid) return { success: false };
 
+  setIsLoading(true);
   try {
     const userRegistrationDTO: UserRegistrationDTO = {
       email: email,
@@ -148,24 +150,32 @@ export function useRegistrationViewModel(navigation: any) {
       avatar_url: avatarUrl,
       bio: bio,
       sizes: {
-        camisa: sizes.get("camiseta"),
-        calca: sizes.get("calca"),
-        calcado: sizes.get("calcado"),
+        camisa: sizes.get("camiseta") || "",
+        calca: sizes.get("calca") || "",
+        calcado: sizes.get("calcado") || "",
       },
     };
     const loggedUser = await storeUserInCloud(userRegistrationDTO);
     if (loggedUser) {
       navigation.replace("Home"); 
+      return { success: true };
     }
 
   } catch (error: any) {
-    console.error("Erro no processo de cadastro:", error);
+    console.log("Erro no processo de cadastro:", error.code);
     if (error.code === "auth/email-already-in-use") {
-      newErrors.email = "Este e-mail já está em uso por outra conta.";
+      newErrors.email = "Este e-mail já está em uso. Tente outro ou faça login.";
     } else if (error.code === "auth/weak-password") {
-      newErrors.senha = "A senha fornecida é muito fraca.";
+      newErrors.senha = "A senha é muito fraca. Ela deve ter no mínimo 6 caracteres.";
+    } else if (error.code === "auth/invalid-email") {
+      newErrors.email = "Este formato de e-mail é inválido.";
+    } else {
+      newErrors.firebase = "Ocorreu um erro ao realizar o cadastro. Tente novamente.";
     }
     setErrors(newErrors);
+    return { success: false };
+  } finally {
+    setIsLoading(false);
   }
 };
 
@@ -196,5 +206,6 @@ export function useRegistrationViewModel(navigation: any) {
     handleBackPress,
     confirmExit,
     handleCadastrarUsuario,
+    isLoading,
   };
 };

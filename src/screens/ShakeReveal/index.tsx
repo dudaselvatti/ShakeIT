@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Animated } from "react-native";
+import { View, Text, Animated, Image } from "react-native";
 import { createStyles } from "./styles";
 import { useShakeRevealViewModel } from "./ShakeRevealViewModel";
 import { useAppTheme } from "../../contexts/ThemeContext";
@@ -39,7 +39,7 @@ export const ShakeRevealScreen = ({ route, navigation }: any) => {
                 onReveal={handleRevealScratch} 
                 underneathComponent={
                     <View style={{ width: 300, height: 300, backgroundColor: theme.colors.surface, borderRadius: 16, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: theme.colors.primary }}>
-                        <Text style={styles.emoji}>🎁</Text>
+                        <Image source={require('../../../assets/presente.png')} style={{ width: 64, height: 64, resizeMode: 'contain' }} />
                         <Text style={{ fontSize: 20, color: theme.colors.text, marginTop: 16, fontWeight: 'bold' }}>Revelado!</Text>
                     </View>
                 }
@@ -58,7 +58,7 @@ export const ShakeRevealScreen = ({ route, navigation }: any) => {
             }
             ]}
         >
-            <Text style={styles.emoji}>🎁</Text>
+            <Image source={require('../../../assets/presente.png')} style={{ width: 120, height: 120, resizeMode: 'contain' }} testID="present-image" />
         </Animated.View>
       )}
 

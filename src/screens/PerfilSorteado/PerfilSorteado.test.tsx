@@ -10,6 +10,7 @@ jest.mock('expo-screen-capture', () => ({
 }));
 
 
+
 jest.mock('./PerfilSorteadoViewModel');
 
 jest.mock('./components/PerfilSorteadoHeader', () => ({
@@ -45,7 +46,18 @@ describe('Screen: PerfilSorteado', () => {
 
   beforeEach(() => {
     (usePerfilSorteadoViewModel as jest.Mock).mockReturnValue({
-      participante: mockParticipante,
+      tabs: [
+        {
+          key: '1',
+          label: 'Eu',
+          type: 'receiver',
+          participant: mockParticipante
+        }
+      ],
+      activeTabKey: '1',
+      setActiveTabKey: jest.fn(),
+      isLoading: false,
+      handleRevealAll: jest.fn(),
     });
   });
 

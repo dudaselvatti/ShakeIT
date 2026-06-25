@@ -49,3 +49,10 @@ export async function getDrawResultByReceiverProfile(partyId: string, receiverPr
         ...doc.data()
     } as DrawResult;
 }
+
+export async function getAllDrawResultsByPartyId(partyId: string): Promise<DrawResult[]> {
+    const drawRef = collection(db, DRAW_RESULT_COLLECTION);
+    const q = query(drawRef, where("party_id", "==", partyId));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as DrawResult));
+}

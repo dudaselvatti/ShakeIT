@@ -1,10 +1,15 @@
 export function calcularIdade(dataDeNascimento: string): number {
+    let ano, mes, dia;
+    if (dataDeNascimento.includes('T')) {
+        dataDeNascimento = dataDeNascimento.split('T')[0];
+    }
+    
     const regexData = /^\d{4}-\d{2}-\d{2}$/;
     if (!regexData.test(dataDeNascimento)) {
         throw new Error("Formato de data inválido. Use o padrão 'YYYY-MM-DD'.");
     }
 
-    const [ano, mes, dia] = dataDeNascimento.split('-').map(Number);
+    [ano, mes, dia] = dataDeNascimento.split('-').map(Number);
     const nascimento = new Date(ano, mes - 1, dia);
 
     if (

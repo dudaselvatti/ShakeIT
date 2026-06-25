@@ -59,7 +59,7 @@ describe("useParticipanteCardViewModel", () => {
     );
 
     expect(result.current.isConfirmado).toBe(false);
-    expect(result.current.statusIcon).toBe("🔓");
+    expect(result.current.statusIcon).toEqual(require('../../../assets/cadeado-aberto.png'));
     expect(result.current.statusText).toBe("pendente");
   });
 
@@ -74,7 +74,7 @@ describe("useParticipanteCardViewModel", () => {
     );
 
     expect(result.current.isConfirmado).toBe(true);
-    expect(result.current.statusIcon).toBe("🔒");
+    expect(result.current.statusIcon).toEqual(require('../../../assets/cadeado-fechado.png'));
     expect(result.current.statusText).toBe("");
   });
 
@@ -97,6 +97,34 @@ describe("useParticipanteCardViewModel", () => {
     });
 
     expect(result.current.isConfirmado).toBe(true);
-    expect(result.current.statusIcon).toBe("🔒");
+    expect(result.current.statusIcon).toEqual(require('../../../assets/cadeado-fechado.png'));
+  });
+
+  it("deve retornar o avatar padrao quando nao houver imagem e for usuario", () => {
+    const participanteSemFoto = {
+      ...mockParticipanteBase,
+      perfil: { ...mockParticipanteBase.perfil, participant_avatar: "" },
+      usuario: { ...mockParticipanteBase.usuario, avatar_url: "" }
+    };
+    const { result } = renderHook(() => useParticipanteCardViewModel({ participante: participanteSemFoto as any }));
+    expect(result.current.avatarSource).toEqual(require('../../../assets/perfil-padrao.png'));
+  });
+
+  it("deve retornar o avatar de crianca quando for dependente do tipo child", () => {
+    const dependenteCrianca = {
+      ...mockParticipanteBase,
+      perfil: { ...mockParticipanteBase.perfil, participant_type: "dependent", dependent_type: "child", participant_avatar: "" },
+    };
+    const { result } = renderHook(() => useParticipanteCardViewModel({ participante: dependenteCrianca as any }));
+    expect(result.current.avatarSource).toEqual(require('../../../assets/crianca.png'));
+  });
+
+  it("deve retornar o avatar de pet quando for dependente do tipo pet", () => {
+    const dependentePet = {
+      ...mockParticipanteBase,
+      perfil: { ...mockParticipanteBase.perfil, participant_type: "dependent", dependent_type: "pet", participant_avatar: "" },
+    };
+    const { result } = renderHook(() => useParticipanteCardViewModel({ participante: dependentePet as any }));
+    expect(result.current.avatarSource).toEqual(require('../../../assets/pet.png'));
   });
 });

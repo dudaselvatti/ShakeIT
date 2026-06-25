@@ -12,9 +12,9 @@ jest.mock('@react-navigation/native', () => {
 
 jest.mock('../../mocks/partiesMock', () => ({
   partiesMock: [
-    { id: '1', name: 'Festa A', status: 'aguardando_sorteio' },
-    { id: '2', name: 'Festa B', status: 'sorteio_realizado' },
-    { id: '4', name: 'Festa D', status: 'Status Invalido' },
+    { id: '1', admin_id: 'mock-user-uuid-1', name: 'Festa A', status: 'aguardando_sorteio', event_date: '2024-12-01', adminName: 'Você' },
+    { id: '4', admin_id: 'mock-user-uuid-1', name: 'Festa D', status: 'Status Invalido', event_date: '2024-12-03', adminName: 'Você' },
+    { id: '2', admin_id: 'outra-pessoa', name: 'Festa B', status: 'sorteio_realizado', event_date: '2024-12-02', adminName: 'João' },
   ]
 }));
 
@@ -32,10 +32,14 @@ jest.mock('../../contexts/AuthContext/AuthContext', () => ({
 
 jest.mock('../../services/cloud/Party/PartyDb', () => ({
   getPartiesByUserId: jest.fn(() => Promise.resolve([
-    { id: '1', name: 'Festa A', status: 'aguardando_sorteio' },
-    { id: '2', name: 'Festa B', status: 'sorteio_realizado' },
-    { id: '4', name: 'Festa D', status: 'Status Invalido' },
+    { id: '1', admin_id: 'mock-user-uuid-1', name: 'Festa A', status: 'aguardando_sorteio', event_date: '2024-12-01' },
+    { id: '2', admin_id: 'outra-pessoa', name: 'Festa B', status: 'sorteio_realizado', event_date: '2024-12-02' },
+    { id: '4', admin_id: 'mock-user-uuid-1', name: 'Festa D', status: 'Status Invalido', event_date: '2024-12-03' },
   ]))
+}));
+
+jest.mock('../../services/cloud/User/UserDb', () => ({
+  getUserById: jest.fn(() => Promise.resolve({ nome: 'João' }))
 }));
 
 jest.mock('../../services/cloud/PartyParticipant/PartyParticipantDb', () => ({
@@ -115,7 +119,7 @@ describe('useHomeViewModel', () => {
       result.current.handleCardPress(party);
     });
 
-    expect(mockNavigate).toHaveBeenCalledWith('ParticipantLobby', {
+    expect(mockNavigate).toHaveBeenCalledWith('PartyAdmin', {
       partyId: party.id,
     });
     unmount();
@@ -127,12 +131,12 @@ describe('useHomeViewModel', () => {
     await waitFor(() => {
       expect(result.current.parties).toEqual(partiesMock);
     });
-    const party = partiesMock[1];
+    const party = partiesMock[2];
 
     await result.current.handleCardPress(party);
 
     expect(mockNavigate).toHaveBeenCalledWith('PerfilSorteado', { 
-      idPerfil: 'profile-id-1' 
+      partyId: party.id 
     });
     unmount();
   });
@@ -143,7 +147,7 @@ describe('useHomeViewModel', () => {
     await waitFor(() => {
       expect(result.current.parties).toEqual(partiesMock);
     });
-    const party = partiesMock[2];
+    const party = partiesMock[1];
 
     act(() => {
       result.current.handleCardPress(party);

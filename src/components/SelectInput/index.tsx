@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../PixelIcon";
 import { createStyles } from "./styles";
 import { theme } from "../../styles/theme";
 import { useSelectInputViewModel, Props } from "./SelectInputViewModel";

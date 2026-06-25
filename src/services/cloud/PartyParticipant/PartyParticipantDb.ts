@@ -33,6 +33,7 @@ export async function createPartyParticipant(partyId: string, usuario: Usuario, 
             gender: usuario.genero,
             status: initialStatus,
             has_revealed_draw: false,
+            bio: usuario.bio || "",
             sizes: usuario.sizes || {},
             preferencias: {
                 coisasQueAmo: usuario.interesses || [],
@@ -63,8 +64,10 @@ export async function createDependentPartyParticipant(partyId: string, usuario: 
             participant_avatar: dependent.avatar_url || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
             birth_date: dependent.birth_date,
             gender: dependent.gender,
+            dependent_type: dependent.dependent_type,
             status: "confirmado",
             has_revealed_draw: false,
+            bio: dependent.bio || "",
             sizes: dependent.sizes || {},
             preferencias: {
                 coisasQueAmo: gostos,
@@ -146,6 +149,7 @@ export async function confirmPresenceInParty(partyId: string, usuario: Usuario):
     
     await updatePartyParticipant(userParticipant.perfil.id, {
         "perfil.status": "confirmado",
+        "perfil.bio": usuario.bio || "",
         "perfil.sizes": usuario.sizes || {},
         "perfil.preferencias.coisasQueAmo": usuario.interesses || [],
         "perfil.preferencias.melhorEvitar": usuario.evitar || []

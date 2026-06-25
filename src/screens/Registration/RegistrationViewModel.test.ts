@@ -40,7 +40,7 @@ describe("useRegistrationViewModel", () => {
       expect(result.current.bio).toBe("");
       expect(result.current.sizes.size).toBe(0);
       expect(result.current.isModalVisible).toBe(false);
-      expect(result.current.errors).toEqual({ nome: "", email: "", senha: "", genero: "", data: "" });
+      expect(result.current.errors).toEqual({ nome: "", email: "", senha: "", genero: "", data: "", firebase: "" });
     });
 
     it("deve atualizar o nome de usuário e limpar o erro correspondente", () => {
@@ -236,7 +236,7 @@ describe("useRegistrationViewModel", () => {
         await result.current.handleCadastrarUsuario();
       });
 
-      expect(result.current.errors).toEqual({ nome: "", email: "", senha: "", genero: "", data: "" });
+      expect(result.current.errors).toEqual({ nome: "", email: "", senha: "", genero: "", data: "", firebase: "" });
       expect(mockStoreUserInCloud).toHaveBeenCalled();
       expect(mockNavigation.replace).toHaveBeenCalledWith("Home");
     });
@@ -259,7 +259,7 @@ describe("useRegistrationViewModel", () => {
         await result.current.handleCadastrarUsuario();
       });
 
-      expect(result.current.errors.email).toBe("Este e-mail já está em uso por outra conta.");
+      expect(result.current.errors.email).toBe("Este e-mail já está em uso. Tente outro ou faça login.");
     });
   });
 });

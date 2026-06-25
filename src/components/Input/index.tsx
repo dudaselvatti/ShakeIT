@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../PixelIcon";
 import { createStyles } from "./styles";
 import { theme } from "../../styles/theme";
 import { useInputViewModel, Props } from "./InputViewModel";

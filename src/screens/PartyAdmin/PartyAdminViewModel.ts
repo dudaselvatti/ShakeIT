@@ -28,19 +28,22 @@ export function usePartyAdminViewModel() {
     const participantsTotal = participants.length;
     const headerTitle = "Painel do Evento";
 
-    useEffect(() => {
-        async function fetchParty() {
-            try {
-                const cloudParty = await getPartyFromCloud(partyId);
-                if (cloudParty) {
-                    setParty(cloudParty);
-                } else {
-                    console.warn(`Festa com o ID ${partyId} não foi encontrada no banco.`);
-                }
-            } catch (error) {
-                console.error("Erro ao buscar a festa no Firestore:", error);
+    const [isEditModalVisible, setEditModalVisible] = useState(false);
+
+    const fetchParty = async () => {
+        try {
+            const cloudParty = await getPartyFromCloud(partyId);
+            if (cloudParty) {
+                setParty(cloudParty);
+            } else {
+                console.warn(`Festa com o ID ${partyId} não foi encontrada no banco.`);
             }
+        } catch (error) {
+            console.error("Erro ao buscar a festa no Firestore:", error);
         }
+    };
+
+    useEffect(() => {
         if (partyId) {
             fetchParty();
         }
@@ -131,5 +134,9 @@ export function usePartyAdminViewModel() {
         handleNavigateToCreateDependent,
         handleNavigatePartyDrawRestrictions,
         handleSorteioPress,
+        isEditModalVisible,
+        setEditModalVisible,
+        handleEditSave: fetchParty,
+        party,
     };
 };

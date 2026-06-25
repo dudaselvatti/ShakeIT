@@ -2,13 +2,14 @@ import React, { useRef, useEffect, useState } from 'react';
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform, Pressable, Animated, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Feather } from '@expo/vector-icons';
+import { PixelIcon as Feather } from "../../components/PixelIcon";
 import { Picker } from '@react-native-picker/picker';
 import { AppHeader } from '../../components/AppHeader';
 import { AppFooter } from '../../components/AppFooter';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Input } from '../../components/Input';
+import { IconButton } from '../../components/IconButton';
 import { Tag } from '../../components/Tag';
 import { PopupModal } from '../../components/PopupModal';
 import { createStyles } from './styles';
@@ -20,66 +21,7 @@ import { DateInput } from "../../components/DateInput";
 import { calcularIdade } from '../../utils/Usuario/calcularIdade';
 import { useAppTheme } from "../../contexts/ThemeContext";
 
-interface SizeCardProps {
-    title: string;
-    emoji: string;
-    placeholder: string;
-    selectedValue: string;
-    onValueChange: (val: string) => void;
-    options: string[];
-    isEditing: boolean;
-}
-
-const SizeCard = ({ title, emoji, placeholder, selectedValue, onValueChange, options, isEditing }: SizeCardProps) => {
-    const { theme } = useAppTheme();
-    const styles = createStyles(theme);
-    const renderPlaceholderText = (text: string) => {
-        if (!isEditing) return <Text style={styles.dropdownPlaceholderText}>-</Text>;
-        if (text.startsWith("Selecione o tamanho")) {
-            const example = text.substring("Selecione o tamanho".length).trim();
-            return (
-                <Text style={styles.dropdownPlaceholderText}>
-                    {"Selecione o\ntamanho\n" + example}
-                </Text>
-            );
-        }
-        return <Text style={styles.dropdownPlaceholderText}>{text}</Text>;
-    };
-
-    return (
-        <Card style={styles.card}>
-            <View style={styles.cardIconContainer}>
-                <Text style={styles.cardEmoji}>{emoji}</Text>
-            </View>
-            <Text style={styles.cardTitle}>{title}</Text>
-            <View style={styles.dropdownContainer}>
-                <View style={styles.dropdownVisual}>
-                    <View style={styles.dropdownTextWrapper}>
-                        {selectedValue ? (
-                            <Text style={styles.dropdownValueText}>{selectedValue}</Text>
-                        ) : (
-                            renderPlaceholderText(placeholder)
-                        )}
-                    </View>
-                    {isEditing && <Feather name="chevron-down" size={14} color={theme.colors.textLight} style={styles.chevron} />}
-                </View>
-                {isEditing && (
-                    <Picker
-                        selectedValue={selectedValue}
-                        onValueChange={onValueChange}
-                        style={styles.picker}
-                        mode="dropdown"
-                    >
-                        <Picker.Item label={placeholder} value="" />
-                        {options.map((option) => (
-                            <Picker.Item key={option} label={option} value={option} />
-                        ))}
-                    </Picker>
-                )}
-            </View>
-        </Card>
-    );
-};
+import { SizeCard } from '../../components/SizeCard';
 
 export const MeuPerfilScreen = () => {
     const { theme } = useAppTheme();
@@ -167,7 +109,7 @@ export const MeuPerfilScreen = () => {
 
                     {!isEditing ? (
                         <View style={{ alignItems: 'center', marginBottom: 24, marginTop: 16 }}>
-                            <Image source={{ uri: avatarUrl || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y' }} style={{ width: 100, height: 100, borderRadius: 50, marginBottom: 16 }} />
+                            <Image source={avatarUrl ? { uri: avatarUrl } : require('../../../assets/perfil-padrao.png')} style={{ width: 100, height: 100, borderRadius: 50, marginBottom: 16 }} />
                             <Text style={{ fontSize: 24, fontWeight: 'bold', color: theme.colors.text }}>{nome}</Text>
                             <Text style={{ fontSize: 16, color: theme.colors.textLight, marginTop: 4 }}>
                                 {genero} • {dataNascimento ? `${calcularIdade(dataNascimento.toISOString().split('T')[0])} anos` : 'Data de nascimento não informada'}
@@ -221,7 +163,7 @@ export const MeuPerfilScreen = () => {
                     <View style={styles.sizesRow}>
                         <SizeCard
                             title="Tamanho de Camisa"
-                            emoji="👕"
+                            imageSource={require('../../../assets/camisa.png')}
                             placeholder="Selecione o tamanho (ex: P, M, G)"
                             selectedValue={camisa}
                             onValueChange={setCamisa}
@@ -231,7 +173,7 @@ export const MeuPerfilScreen = () => {
 
                         <SizeCard
                             title="Tamanho de Calça"
-                            emoji="👖"
+                            imageSource={require('../../../assets/calca.png')}
                             placeholder="Selecione o tamanho (ex: 38, 40, 42)"
                             selectedValue={calca}
                             onValueChange={setCalca}
@@ -241,7 +183,7 @@ export const MeuPerfilScreen = () => {
 
                         <SizeCard
                             title="Tamanho de Calçado"
-                            emoji="👟"
+                            imageSource={require('../../../assets/tenis.png')}
                             placeholder="Selecione o tamanho (ex: 39, 40, 41)"
                             selectedValue={calcado}
                             onValueChange={setCalcado}
@@ -250,7 +192,10 @@ export const MeuPerfilScreen = () => {
                         />
                     </View>
 
-                    <Text style={styles.sectionTitle}>Coisas que você gosta:</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
+                        <Image source={require("../../../assets/coracao.png")} style={{ width: 24, height: 24, marginRight: 8, resizeMode: 'contain' }} />
+                        <Text style={[styles.sectionTitle, { marginTop: 0 }]}>Coisas que você gosta:</Text>
+                    </View>
                     <Card style={styles.interestsCard}>
                         <View style={styles.interestsContainer}>
                             {gostos.map((item) => (
@@ -275,16 +220,20 @@ export const MeuPerfilScreen = () => {
                                     containerStyle={{ flex: 1, marginBottom: 0, marginRight: 8 }}
                                     testID="gostos-input"
                                 />
-                                <Button
-                                    title="+"
+                                <IconButton
+                                    iconName="plus"
                                     onPress={handleAddGosto}
-                                    style={{ width: 48, height: 48 }}
+                                    variant="solid"
+                                    size={24}
                                 />
                             </View>
                         )}
                     </Card>
 
-                    <Text style={styles.sectionTitle}>Coisas para evitar:</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
+                        <Image source={require("../../../assets/coracao-partido.png")} style={{ width: 24, height: 24, marginRight: 8, resizeMode: 'contain' }} />
+                        <Text style={[styles.sectionTitle, { marginTop: 0 }]}>Coisas para evitar:</Text>
+                    </View>
                     <Card style={styles.interestsCard}>
                         <View style={styles.interestsContainer}>
                             {evitar.map((item) => (
@@ -309,10 +258,11 @@ export const MeuPerfilScreen = () => {
                                     containerStyle={{ flex: 1, marginBottom: 0, marginRight: 8 }}
                                     testID="evitar-input"
                                 />
-                                <Button
-                                    title="+"
+                                <IconButton
+                                    iconName="plus"
                                     onPress={handleAddEvitar}
-                                    style={{ width: 48, height: 48 }}
+                                    variant="solid"
+                                    size={24}
                                 />
                             </View>
                         )}

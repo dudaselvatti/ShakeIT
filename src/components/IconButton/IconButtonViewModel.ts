@@ -1,12 +1,12 @@
 import { TouchableOpacityProps } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { PixelIcon as Feather } from "../PixelIcon";
 import { theme } from "../../styles/theme";
 import { createStyles } from "./styles";
 import { useAppTheme } from "../../contexts/ThemeContext";
 
 export interface Props extends TouchableOpacityProps {
-  iconName: keyof typeof Feather.glyphMap;
-  variant?: "fab" | "transparent";
+  iconName: string;
+  variant?: "fab" | "transparent" | "solid";
   color?: string;
   size?: number;
 }

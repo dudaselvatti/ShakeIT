@@ -28,10 +28,11 @@ describe('PartyAdminScreen', () => {
       { usuario: { id: 1, nome: 'Duda' }, perfil: { isConfirmado: true } },
       { usuario: { id: 2, nome: 'João' }, perfil: { isConfirmado: false } },
     ],
-    confirmadosCount: 1,
+    confirmadosCount: 3,
     participantsTotal: 2,
     headerTitle: 'Painel do Evento',
     handleSorteioPress: mockHandleSorteioPress,
+    canDraw: true,
   };
 
   beforeEach(() => {
@@ -57,7 +58,7 @@ describe('PartyAdminScreen', () => {
 
   it('deve exibir o contador de perfis confirmados formatado', () => {
     render(<PartyAdminScreen />);
-    expect(screen.getByText('Perfis confirmados (1/2)')).toBeTruthy();
+    expect(screen.getByText('Perfis confirmados (3/2)')).toBeTruthy();
   });
 
   it('deve renderizar a lista de participantes baseada nos dados do ViewModel', () => {

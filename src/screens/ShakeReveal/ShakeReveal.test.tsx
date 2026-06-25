@@ -50,11 +50,11 @@ describe('Ecrã ShakeReveal (Tela 6)', () => {
   });
 
   it('deve renderizar os textos de instrução visual e a caixa de presente', () => {
-    const { getByText } = render(<ShakeRevealScreen route={{ params: { partyId: "party-id" } }} navigation={{}} />);
+    const { getByText, getByTestId } = render(<ShakeRevealScreen route={{ params: { partyId: "party-id" } }} navigation={{}} />);
 
     expect(getByText('O Sorteio realizado!')).toBeTruthy();
     expect(getByText('Chacoalhe o celular para descobrir o seu amigo secreto...')).toBeTruthy();
-    expect(getByText('🎁')).toBeTruthy();
+    expect(getByTestId('present-image')).toBeTruthy();
   });
 
   it('deve vibrar, acionar explosao e navegar para a Tela 7 ao detetar shake real pelo sensor', async () => {
@@ -77,9 +77,8 @@ describe('Ecrã ShakeReveal (Tela 6)', () => {
       jest.advanceTimersByTime(600);
     });
 
-    const expectedId = participantesMock[0]?.usuario.id || "550e8400-e29b-41d4-a716-446655440001";
     await waitFor(() => {
-      expect(mockNavigation.navigate).toHaveBeenCalledWith('PerfilSorteado', { idPerfil: expectedId });
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('PerfilSorteado', { partyId: 'party-id' });
     });
   });
 });

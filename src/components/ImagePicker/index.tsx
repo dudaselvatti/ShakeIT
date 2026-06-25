@@ -21,14 +21,18 @@ export const ImagePicker = (props: Props) => {
             <TouchableOpacity
                 style={styles.touchableOpacity}
                 onPress={handlePickImage}
+                testID="image-picker-button"
             >
-            {value ? (
+            {value && !value.includes('gravatar') ? (
                 <Image
                     source={{ uri: value }}
                     style={styles.image}
                 />
             ) : (
-                <Text style={styles.placeholder}>Selecionar Foto</Text>
+                <Image
+                    source={require('../../../assets/perfil-padrao.png')}
+                    style={styles.image}
+                />
             )}
             </TouchableOpacity>
         </View>

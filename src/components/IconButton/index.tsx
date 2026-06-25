@@ -1,7 +1,7 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { TouchableOpacity, Image } from "react-native";
 import { useIconButtonViewModel, Props } from "./IconButtonViewModel"
+import { PixelIcon as Feather } from "../PixelIcon";
 
 export const IconButton = (props: Props) => {
   const { iconName, iconColor, iconSize, touchableOpacityStyles, ...touchableOpacityProps } = useIconButtonViewModel(props)
@@ -12,11 +12,7 @@ export const IconButton = (props: Props) => {
       activeOpacity={0.8}
       {...touchableOpacityProps}
     >
-      <Feather
-        name={iconName}
-        size={iconSize}
-        color={iconColor}
-      />
+      <Feather name={iconName} size={iconSize} color={iconColor} />
     </TouchableOpacity>
   );
 };
